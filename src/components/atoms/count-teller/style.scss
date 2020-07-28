@@ -1,0 +1,54 @@
+.das_blocks {
+    .count-teller {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background:#fff;
+        border-radius: 7px;
+        box-shadow: 0 0 10px #dbdbdb;
+        padding:18px;
+        margin-bottom: 30px;
+        .teller-icon {
+            background-color: #f32737;
+            padding: 10px;
+            border-radius: 7px;
+            min-width: 70px;
+            height: 70px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 50px;
+                height: auto;
+            }
+        }
+                
+    }
+    
+}
+
+.das_blocks .col-md-4:nth-child(even) {         
+    .count-teller {
+        .teller-icon {
+            background: #6DCFF6;
+        }
+    }           
+}
+
+.count-text-wrapper {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    text-align: right;
+    padding-left: 10px;
+    h2 {
+        margin-bottom: 18px;
+        font-weight:500;        
+    }
+    span{
+        font-weight: 400;
+        font-size:18px;
+        line-height: 16px;
+        text-transform: capitalize;
+    }
+}

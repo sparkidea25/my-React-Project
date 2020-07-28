@@ -1,0 +1,50 @@
+.form-checkbox {
+    // padding-left: 32px;
+    position: relative;
+  }
+  .form-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }  
+  .radio {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    height: 30px;
+    width: 30px;
+    background-color: #fff;
+    border: 2px solid #707070;
+    border-radius: 15px;
+  }
+  
+  .form-checkbox input~.radio {
+    background-color: #fff;
+  }
+  
+  .form-checkbox input:checked~.radio {
+    background-color: #fff;
+  }
+  
+  .radio:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  .form-checkbox input:checked~.radio:after {
+    display: block;
+  }
+  .radio:after {
+    top: 4.5px;
+    right: 5px;
+    border-radius: 8px;
+    width: 16px;
+    background-color: #707070;
+    height: 16px;
+  }
+  .MuiFormGroup-row{
+    flex-direction: column!important;
+  }

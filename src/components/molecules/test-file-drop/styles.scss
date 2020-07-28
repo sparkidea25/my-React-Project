@@ -1,0 +1,112 @@
+.test-file-drop{     
+    hr{
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    h3{
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin: 1.3rem 0;
+    }
+    .drop_area{
+        display: flex;        
+        justify-content: space-between;
+        align-items: center;  
+         @media screen and (max-width:768px){
+            flex-direction: column;
+            margin: auto;
+            .dzu-dropzone{
+                width: 100%;
+                margin: 0;
+            }
+        }      
+        .dzu-dropzone{      
+            min-height: initial;      
+            width: 100%;
+            margin: 0;            
+            overflow: visible;
+            justify-content: start;
+            border:0;
+            .dzu-previewContainer {
+                padding: 0;
+                min-height: initial;
+                max-width:100%;
+                width:280px;
+                position: relative;
+                @media (max-width:767px){
+                    width:100%;
+                }
+                .dzu-previewImage {
+                     width:100%;
+                     max-height: initial;
+                     max-width: initial;
+                }
+                .dzu-previewStatusContainer{
+                    position: absolute;
+                    top:-10px;
+                    right:-10px;
+                    width: 30px;
+                    height:30px;
+                    border-radius: 30px;
+                    background: #F32836;
+                    justify-content: center;
+                    box-shadow: 0 0 10px #d4d4d4;
+                    .dzu-previewButton {
+                        background-size: 11px;
+                        width: 30px;
+                        height:30px;
+                    }
+                } 
+                .dzu-previewFileName {
+                    padding-right: 25px;
+                }
+            }   
+        }       
+        h4{
+            font-size: 1.1rem;
+            font-weight:400;
+            text-align: center;
+        }    
+        .dzu-inputLabel {
+            width:100%;
+            align-items: start;
+            position: static;
+            i {
+                display: flex;
+                align-items: center;
+                background-color: #F2F2F2;
+                border-radius: 10px;
+                min-width:200px;
+                text-align: center;
+                justify-content: center;
+                min-height:120px;                
+            }
+        }          
+    }    
+    .error_msg {padding-left: 15px;}
+}
+
+div.btn-res {
+    @media(max-width:480px){
+        flex-wrap:wrap;        
+        flex-direction: column-reverse!important;
+    }
+    .btn {
+        height:47px;
+        @media(max-width:480px){
+            width:100%;
+            margin-right:0!important;
+            margin:5px 0!important;
+        }       
+    }
+     .form-group {
+        @media(max-width:480px){
+            margin-bottom: 10px;
+        }
+    }
+}
+
+
+

@@ -1,0 +1,44 @@
+button.MuiPickersDay-day {
+    padding:0!important;
+}
+.MuiPickersDay-dayDisabled{
+    .MuiIconButton-label{
+        color:lightgrey;
+    }
+}
+.MuiPickersToolbar-toolbar{
+    background-color: #f22637!important;
+}
+.MuiPickersDay-daySelected{
+    background-color: #f22637!important;
+    .MuiIconButton-label{
+        color: #fff;
+    }
+}
+.MuiPickersCalendar-transitionContainer {
+    .MuiIconButton-root {
+        &:hover, &:focus {
+            background:#f22637!important;
+            color: #fff!important;
+            span {
+                color:inherit;
+            }
+        }
+    }
+}
+.MuiDialogActions-spacing {
+    button {
+        &:first-child {
+            background: transparent;
+            span{
+                 color:#f22637!important;
+            }     
+            &:hover {
+                background:#f22637;
+                span {
+                    color:#fff!important;
+                }
+            }      
+        }
+    }
+}

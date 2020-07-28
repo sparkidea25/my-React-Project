@@ -1,0 +1,48 @@
+.MuiSnackbar-root {
+    .MuiSnackbarContent-root {
+        position: relative;
+        width: 100%;        
+        padding-right: 40px;        
+    }
+}
+
+.MuiSnackbar-root{
+    position: static!important;
+    width: 100%;
+    top: 25px;
+    margin-bottom:25px;
+    left: 0!important;
+    right: 0!important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#screen-content {
+    .MuiSnackbar-root{
+        position: fixed !important;
+        top: 95px;
+        left: 15px !important; 
+         width: calc(100% - 30px);
+        @media (min-width:991px) {            
+            width: calc(100% - 320px);
+            left: 305px !important; 
+        }
+    }
+}
+.MuiSnackbarContent-action {
+     position: absolute;
+     right:18px;    
+}
+.message-text {
+    //white-space: pre;
+    display: inline-block!important;
+    padding-left:30px;
+    position: relative;
+    @media(max-width: 575px){ 
+        line-height: 15px;
+    }
+    svg.MuiSvgIcon-root {
+        position: absolute;
+        left:0;
+    }
+}

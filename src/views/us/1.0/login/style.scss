@@ -1,0 +1,26 @@
+.top_rht_bg {
+  // background: url(../../../../assets/top_right.png) no-repeat;
+  background-size: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 5% 11%;
+   z-index: -1;
+}
+
+.btm_rht_bg {
+  // background: url(../../../../assets/bottom_left.png) no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 3% 11%;
+  z-index: -1;
+}
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 30px;
+}

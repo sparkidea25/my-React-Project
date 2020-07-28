@@ -1,0 +1,167 @@
+.text-editor{
+width: 100%;
+font-size: 18px;
+@media screen and (max-width:769px) {
+    width: 100% !important;
+}
+}
+
+.ql-picker-options{
+    border-color: #ccc;
+    min-width: 160px;
+}
+.form-group{
+    width: 100%;
+    .quill {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 6px!important;
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+.ql-formats{
+    button{
+        border:1px solid #ccc!important;
+        margin:2px;
+        font-size: 20px;
+        height: 26px!important;
+    }
+    .ql-header.ql-picker{
+        border:1px solid #aaa!important;
+        margin:2px 0px;
+        min-width: 160px;
+        height: 26px!important;
+        border-collapse: collapse!important;
+        .ql-picker-item{
+            padding:0px!important;
+        }
+        span{
+            margin:0px;
+            border:1px solid transparent!important;
+        }
+    }
+    &:last-child{
+        min-width: 160px;
+    }
+    
+}
+
+.ql-tooltip{
+    top:-10px !important;
+    left: 0 !important;
+    @media screen and (max-width:769px) {
+        display: flex ;
+        right: 0 !important;
+        flex-direction: column !important;
+        z-index: 9999999 !important;
+    }
+   
+}
+#toolbar{
+    outline: none !important;
+    background-color: white;
+    border-top: 1px solid #aaa !important;
+    display: flex;
+    border-radius: 6px 6px 0 0 ;
+    flex-direction: row;
+    padding: 10px 15px !important;
+    justify-content: space-between;
+    @media screen and (max-width:769px){
+        justify-content: center;
+    }
+    div{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        .list-div{
+            display: inline-flex;
+            margin: 0 5px 6px !important;
+          
+        }
+        button{
+            border-collapse: collapse !important;
+            width: 35px !important;
+            height: 35px !important;
+            border: 1px solid #aaa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            outline: none;
+            float:none !important;
+        }
+       
+        select{
+            outline: none !important;
+            float:none !important;
+             border: 1px solid #aaa;
+        }
+      
+        .ql-picker{
+            float: none !important;
+            border: 1px solid #aaaa;
+            height: 35px !important;
+            min-width:180px !important;
+            display: inline-flex;
+            justify-content: center;
+           line-height: 30px !important;
+           vertical-align: -webkit-baseline-middle !important;
+        }
+    }
+    
+
+}
+.ql-snow{
+    border-bottom: none !important;
+    border-top: none !important;
+
+        flex-wrap: wrap !important;
+        &::after{
+            clear: none !important;
+            content: none !important;
+        }
+}
+.ql-container.ql-snow,.ql-toolbar.ql-snow{
+    border: 1px solid transparent;
+}
+.ql-toolbar{
+    display: none;
+}
+.ql-editor{
+    font-size: 16px;
+    padding: 0 7px 7px !important;
+    line-height: 1.6 !important;
+    min-height: 252px !important;
+}
+.redo-icon{
+    transform: rotate(100deg);
+}
+.img{
+    vertical-align: middle;
+}
+.block-label{
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.ql-editor.ql-blank::before{
+    font-style: inherit !important;
+}
+
+.ql-preview{
+        float: right !important;
+        width:auto!important;
+        height: auto !important;
+        border: none !important;
+        margin-top:7px!important;
+        font-size: 16px !important;
+        span{
+            label{
+                color:#428DFC !important ;
+                border-bottom:1px solid #428DFC !important;
+                cursor: pointer;
+            }
+        }
+       
+       
+    } 

@@ -1,0 +1,44 @@
+.options{
+    .option-list{
+        counter-reset: chapter;
+    }
+    .option-list::before{
+        counter-increment: chapter; 
+        content:counter(chapter,upper-alpha);
+    }
+}
+
+.question_sec {
+    padding: 0 10px 0 40px;
+    .title_qus {
+        margin-left: -50px;
+    }
+    .question_group {
+        counter-reset: listStyle; 
+        > .row {
+            counter-increment: listStyle;
+            position: relative;
+            &:before {
+                content: "(" counter(listStyle, upper-alpha) ") ";
+                position: absolute;
+                left:-26px;
+                top:18%;               
+            }
+        }  
+        label {
+            font-weight:400;
+        }     
+    }
+
+    .question_group + .col-lg-1 legend {display: none;}
+    .question_group + .col-lg-1 .error_msg {bottom: 0; line-height: 12px;}
+
+     .MuiFormControlLabel-root {
+        display: block;
+        margin-left: 0;
+        margin-right: 0;
+        .MuiButtonBase-root  {
+            padding:0;
+        }
+    }
+}

@@ -1,0 +1,35 @@
+.tabs-container{
+   hr{
+    margin-top: -2px;
+    margin-bottom: 0;
+    border: 0;
+    border-top: 2px solid rgba(0, 0, 0, 0.1)
+   }
+    .MuiTabs-root{
+        .MuiTabs-scroller{
+            .MuiTabs-flexContainer{                
+                button{                        
+                    padding: 18px 12px;                    
+                    font-size:16px;
+                    text-transform: capitalize;
+                    @media screen and (max-width:768px) {
+                        width: 50%;
+                    }
+                    &.Mui-selected{
+                        .MuiTab-wrapper{
+                            color: #F42634;
+                        }
+                    }
+                }
+               
+            }
+            .MuiTabs-indicator{
+                background-color: #F42634;
+                height: 3px;
+                @media screen and (max-width:768px) {
+                    width: 50%;
+                }
+            }
+        }
+    }
+}

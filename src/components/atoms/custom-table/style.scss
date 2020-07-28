@@ -1,0 +1,200 @@
+.MuiTable-root {     
+    th {
+        background: #F2F2F2!important;
+        word-break: keep-all;
+    }
+    .MuiTableCell-head {
+        font-weight: 600!important;
+        font-size: 16px!important;   
+    }
+    .MuiTableCell-root {
+         font-size: 16px!important;   
+    }
+    td {
+       word-break: keep-all;
+           white-space: nowrap;
+        &:nth-child(2){
+            max-width: 180px;
+            min-width: 170px;
+            word-break: break-word;
+            white-space: normal; 
+        }
+        &:first-child{
+            min-width: 120px;
+        }
+    }
+}
+.user-name {
+    // cursor: pointer;
+    min-width: 180px;
+    // &:hover {
+    //     color: #f22637;
+    // }
+    i {
+        margin-right: 1rem;
+    }
+}
+.user-action-div{
+    min-width: 64px;
+    i {
+        margin-right: 1rem;        
+    }
+}
+.reject-button {
+    border:1px solid #4d4d4f;
+    color: #4d4d4f;
+    display: inline-block;
+    padding: 8px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    min-width: 100px;
+    text-align: center;
+    height: 42px;
+    margin:2px 6px;
+    border-radius:7px;
+    background: transparent;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    &:hover{
+        border:1px solid #4d4d4f;
+        background: #4d4d4f;
+        color:#fff;
+    }
+}
+.accept-button {
+    border:1px solid #f22637;
+    background: #f22637; 
+    color: #fff;
+    display: inline-block;
+    padding: 8px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    min-width: 100px;
+    text-align: center;
+    height: 42px; 
+    margin:2px 6px;
+    margin-right:0;
+    border-radius:7px;
+    cursor: pointer;
+     &:hover  {
+        border:1px solid #e31422;
+        background: #e31422; 
+     }
+}
+.btn-st-remove {
+    min-width: 100px!important;
+    line-height:1.1!important;
+    text-transform:capitalize!important;
+}
+.switch-button{
+    label{
+        text-align: center;
+        margin-right: 3.5rem;
+        display: inline-flex;
+        vertical-align: middle;
+        line-height: 1.9rem;
+        cursor: pointer;
+        @media screen and (max-width:769px) {
+            padding:10px;
+        }
+        input{
+            appearance: none;
+            outline: none;
+            width: 47px;
+            position: relative;
+            height: 26px;
+            border-radius: 13px;
+            margin-left: 0;
+            cursor: pointer;
+            background-color:#E7EAF1;
+            border: 1px solid #E7EAF1;
+            
+            &::before{
+                content:'';
+                position: absolute;
+                top: 3px;
+                left: 4px;
+                background-color: #fff;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;                    
+            }            
+        }
+        input:checked{                    
+            background-color: #82CFF4;
+            border: 1px solid #82CFF4;
+            &::before{
+                transition:all 2000 ease-in-out;
+                transform: translateX(20px);   
+            }
+        }        
+    }
+}
+input::-webkit-input-placeholder {
+    line-height:normal!important;
+}
+
+.invited-label {
+    margin-bottom: 0;
+    font-weight: 400;
+    padding: 5px 10px;
+    font-size: 1rem;
+    background-color: #82CFF4;
+    display: inline-block;   
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.info-icon,.edit-icon{
+    cursor: pointer;
+}
+.edit_btn {
+    &:hover, &:focus {
+        background-color: #F42634;
+        border-color: #F42634;
+        color:#fff;
+        svg {
+            path {
+                fill:#fff;
+            }
+        }
+    }
+}
+.edit-icon {
+    img {
+        width: 14px;
+        height:auto;
+    }
+    svg {
+        width:16px;
+    }    
+}
+.group-details {
+    .edit-icon {
+        img {
+            width: 20px;
+        }
+    }
+}
+/** Total Attempts **/
+.total_attempts {
+  border-top:1px solid #dbdbdb;
+  border-bottom:1px solid #dbdbdb;
+  padding:15px 0;
+  max-height: 250px;
+  overflow-x:hidden;
+  overflow-y: auto;
+   .col-md-12 {
+     padding-top:5px;
+     padding-bottom:5px;
+    }
+    span {
+     min-width:150px;
+      display: inline-block;
+    }
+} 
+.pointer{
+    cursor: pointer;
+}

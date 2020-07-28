@@ -1,0 +1,60 @@
+div[data-test="sentinelEnd"] {
+    background: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    z-index: -1;
+    top: 0;
+    display: none;
+}
+ 
+.drop-down {
+    .MuiSelect-root {
+        height: 30px;
+        line-height: 30px;
+        padding: 8px 14px;
+        border-radius: 4px!important;
+        &:focus {
+            background-color: #fff!important;
+        }
+        &:first-letter {
+            text-transform: capitalize;
+        }
+    }
+    .MuiSelect-select{
+        border-color: #DBDBDB;
+        border-width: 1px;
+        border-style: solid;
+    }
+    .MuiOutlinedInput-root.Mui-focused { 
+        border-color: #4D4D4F;
+    }    
+    .MuiInput-underline {
+        &:after {
+            display:none!important;
+        }
+    }
+    .MuiFormControl-root {
+        margin: 0!important;
+        @media (min-width:1280px){
+            max-width: 200px;
+        }
+    }
+}
+
+.MuiPopover-root {
+    .MuiMenuItem-root {
+        border-bottom: 1px solid #eee!important;
+        .MuiIconButton-root {
+            padding:0 12px 0 0!important;
+        }
+        .Mui-checked {
+            svg {
+                path{
+                    fill: #F32836;
+                }
+            }
+        }
+    }
+}

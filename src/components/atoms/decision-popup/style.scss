@@ -1,0 +1,56 @@
+.MuiDialog-paperWidthSm {
+    min-width:400px;
+    @media (max-width:575px){
+        min-width:94%;
+    }
+}
+#alert-dialog-title {
+   padding:25px 25px 15px; 
+}
+.MuiDialogContent-root {text-align: center;}
+h2.MuiTypography-h6 {
+    font-size: 1.7rem;
+    line-height: 1.1;
+    text-align: center;
+}
+.MuiDialogActions-root {
+    border-top:1px solid #DBDBDB;
+    .MuiButtonBase-root {    
+        display: inline-block;
+        padding: 5px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        min-width: 110px;
+        text-align: center;      
+    }    
+    .MuiButton-textPrimary {
+        border:1px solid #f22736;
+        background: #f22736;
+        color:#fff;
+        .MuiButton-label {
+            color:#fff;
+        }
+        &:hover {
+            .MuiButton-label {
+                color: #f22736;
+            }
+        }
+    }
+    button.button-outline{
+        border:1px solid #4d4d4f;
+        background: transparent;
+        color:#4d4d4f;
+        .MuiButton-label {
+            color:#4d4d4f;
+        }
+        &:hover {
+             background-color: #4d4d4f;
+            .MuiButton-label {               
+                color:#fff;
+            }
+        }
+    }
+}
+.MuiDialog-container{
+    background-color: rgba(0,0,0,0.7);
+}
