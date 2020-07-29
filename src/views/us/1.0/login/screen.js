@@ -12,12 +12,9 @@ const {
     PAGE_TITLES
 } = require(`../../../../shared/constants`);
 
-
 export const Screen = ({
     checkLogin,
     history,
-    rememberCredentials,
-    rememberMe,
     stopLoader
 }) => {
     const [openSnackBar, setOpenSnackbar] = useState(false);
@@ -25,10 +22,8 @@ export const Screen = ({
         variant: '',
         message: ''
     });
-    const [rememberChecked, setRememberChecked] = useState(!!rememberCredentials);
-    var _secretKey = "some-unique-key";
-    var simpleCrypto = new SimpleCrypto(_secretKey);
-    const [credentials, setCredentials] = useState({ email: rememberCredentials ? rememberCredentials.email : '', password: rememberCredentials ? simpleCrypto.decrypt(rememberCredentials.password) : '' });
+  
+    const [credentials, setCredentials] = useState({ email: '', password: '' });
     return (
         <React.Fragment>
             <Helmet>
@@ -60,10 +55,6 @@ export const Screen = ({
                                 email: credentials.email,
                                 password: credentials.password
                             }, () => {
-                                rememberChecked ? rememberMe({
-                                    ...credentials,
-                                    password: simpleCrypto.encrypt(credentials.password)
-                                }) : rememberMe(null)
                                 stopLoader();
                                 history.push(ROUTES.DASHBOARD);
                             },
@@ -84,10 +75,6 @@ export const Screen = ({
                                 ...credentials,
                                 password: value
                             })}
-                            rememberChecked={rememberChecked}
-                            onRememberChange={(value) => {
-                                setRememberChecked(value);
-                            }}
                         />
                     </div>
                 </FormWrapper>

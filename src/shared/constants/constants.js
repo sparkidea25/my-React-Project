@@ -1,4 +1,5 @@
 import { ROUTES } from "./routes";
+import { STRINGS } from "./us/strings";
 export const SUB_ADMIN_PLATFORM = 7;
 
 export const EMAIL_REGX = /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -20,8 +21,9 @@ export const KEY_CODES = {
 };
 
 export const VALIDATION_MESSAGES = {
-  // EMAIL_REQUIRED: STRINGS.EMAIL_REQUIRED,
- 
+   EMAIL_REQUIRED: STRINGS.EMAIL_REQUIRED,
+   EMAIL_INVALID: STRINGS.EMAIL_INVALID,
+   PASSWORD_REQUIRED: STRINGS.PASSWORD_REQUIRED
 };
 
 export const MESSAGES = {

@@ -40,7 +40,6 @@ function* checkAdminLogin({ credentials, success, onError }) {
         else {
             yield put(setAuthorization(response.data.data.token));
             yield put(setPlatformType(response.data.data.role));
-            yield put(saveChampionship(response.data.data.championship))
             success();
             yield put(stopLoader());
         }
