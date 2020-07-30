@@ -12,24 +12,20 @@ export const InputSubmit = ({
   containerStyle
 }) => {
   return (
-    <div className="row">
-      <div className="col-md-12 text-center text-sm-right">
-        <div className={classNames(["form-group", containerStyle])}>
-          <button
-            disabled={disabled}
-            type={buttonType}
-            onClick={(e) => { buttonAction() }}
-            className={classNames([
-              "btn btn-lg btn-primary",
-              buttonStyle
-            ])}>
-            {buttonLabel}{" "}
-            {buttonLabel === loginText && <i>
-              {/* <img src={next} alt="" /> */}
-            </i>}
-          </button>
-        </div>
-      </div>
-    </div >
+
+    <div className={classNames(["btn-full mt-4", containerStyle])}>
+      <button
+        disabled={disabled}
+        type={buttonType}
+        onClick={(e) => { buttonAction() }}
+        className={classNames([
+          "btn btn-lg btn-primary w-100",
+        ])}>
+        {buttonLabel}{" "}
+        {buttonLabel === loginText && <i>
+          {/* <img src={next} alt="" /> */}
+        </i>}
+      </button>
+    </div>
   );
 };

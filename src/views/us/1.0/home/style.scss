@@ -1,79 +1,17 @@
-.table_filter {padding:16px;}
-.table-search {              
-    .MuiInput-underline:before, .MuiInput-underline:after {
-        display: none;
-    }
-    .MuiFormControl-root{
-        width:100%;
-    }
-    .MuiInputBase-input {
-        border:1px solid #D3D3D3;
-        border-radius: 7px;     
-        height: 33px;   
-        padding-left: 35px;
-    }
-    i {
-        position: absolute;
-        left:13px;
-        top:11px;
-        img {
-            width:18px;
-        }
-    }
+.content-panel {
+    padding:30px 0;
+    min-height:calc(100vh - 120px)
 }
-.rows_div {
-    padding-right: 10px;
-    .Dropdown-root {
-        width: 100px;
-    }
-}
-.search-role {
-    .Dropdown-root {
-        min-width:160px;
-        @media (max-width: 768px){
-                margin-right: auto;
-        }
-    }
-}
-/** Test Blocks css**/
-.test-blocks {
-    .card-block {
-        margin-bottom: 30px;
-        box-shadow: 0 0 10px rgba(0,0,0,.2);
-        border-radius: 7px;
-        padding: 30px;
-        // background: url(../../../../assets/test/test_block_bg.png) no-repeat;
-        background-size: cover;
-        h3 {
+
+.content_section {
+    li {
+        a {
+            color:#61d1fc;
+            font-size: 20px;
             font-weight: 700;
-            border-bottom: 1px solid #DBDBDB;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            text-transform: capitalize;
         }
-        ul {
-            li {
-                font-size: 18px;
-            }
-        }
-        .d-flex {
-            @media (max-width:480px) {
-                flex-direction: column!important;
-                align-items: flex-start!important;
-            }
-            .btn-primary {
-                 @media (max-width:480px) {
-                     margin:10px 0 0;
-                 }
-            }
-        }
-
     }
 }
 
-
-.makeStyles-success {     
-    .MuiSvgIcon-root {
-        fill:#fff!important;
-        color:#fff!important
-    }
-}
+.MuiDrawer-docked {display: none;}

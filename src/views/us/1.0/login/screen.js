@@ -22,34 +22,26 @@ export const Screen = ({
         variant: '',
         message: ''
     });
-  
+
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     return (
         <React.Fragment>
             <Helmet>
                 <title>{PAGE_TITLES.login}</title>
             </Helmet>
-            <div className="top_rht_bg"></div>
-            <div className="btm_rht_bg"></div>
-            <div className={'container'}>
-                <div className="header-main">
-                    <span className="logo d-inline-block">
-                        {/* <img src={require(`../../../../assets/logo.png`)} alt="SEF" className="img-fluid" width="200px" /> */}
-                    </span>
-                </div>
-                <FormWrapper>
-                    <div className="col-md-12 position-relative">
-                        <div className="form_title text-center">
-                            <SnackbarWrapper
-                                visible={openSnackBar}
-                                onClose={() => setOpenSnackbar(false)}
-                                variant={snackbarData.variant}
-                                message={snackbarData.message}
-                            />
-                            {/* <i><img src="/static/media/forgot_icon.3c8499a5.png" alt="" className="img-fluid" width="130px" />
-                            </i> */}
-                            <h3 className="mb-4">{LABELS.login}</h3>
+            <div className="front-form d-flex align-items-center ">
+                <div className={'container'}>
+                    <div className="login-form">
+                        <div className="logo-header text-center mb-4">
+                            <img src={require(`../../../../assets/img/logo.png`)} alt="SEF" width="325px" className="img-fluid" />
                         </div>
+                        <SnackbarWrapper
+                            visible={openSnackBar}
+                            onClose={() => setOpenSnackbar(false)}
+                            variant={snackbarData.variant}
+                            message={snackbarData.message}
+                        />
+
                         <LoginReduxForm onSubmit={(credentials) => {
                             checkLogin({
                                 email: credentials.email,
@@ -77,7 +69,8 @@ export const Screen = ({
                             })}
                         />
                     </div>
-                </FormWrapper>
+
+                </div>
             </div>
         </React.Fragment>
     );

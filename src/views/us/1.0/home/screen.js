@@ -13,16 +13,12 @@ export const Screen = ({
             <Helmet>
                 <title>{PAGE_TITLES.dashboard}</title>
             </Helmet>
-            <div className="main-panel d-flex flex-column">
-                <div className="content-wrapper">
-                   
-                    <div className="row text-center align-items-center py-3 py-md-5 mt-2 mt-md-5">
-                        <div className="col-12">
-                            <figure>
-                                <img src={DASHBOARD_PAGE_LOGO} alt={'dashboard-logo'} className="img-fluid" />
-                            </figure>
-                        </div>
-                    </div>
+            <div className="container-fluid">
+                <div className="content-panel">
+                    <ul className="content_section">
+                        <li><a href="#">Content Managment </a></li>
+                        <li><a href="#">User Managment</a></li>
+                    </ul>
                 </div>
             </div>
         </>

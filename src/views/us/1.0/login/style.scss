@@ -1,26 +1,28 @@
-.top_rht_bg {
-  // background: url(../../../../assets/top_right.png) no-repeat;
-  background-size: 100%;
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding: 5% 11%;
-   z-index: -1;
+.front-form {
+  background: #414959;
+  min-height:100vh;
+}
+.logo-header { 
+  max-width: 325px;  
 }
 
-.btm_rht_bg {
-  // background: url(../../../../assets/bottom_left.png) no-repeat;
-  background-size: 100%;
-  background-position: bottom;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 3% 11%;
-  z-index: -1;
+.login-form {
+  width:395px;
+  margin:0 auto;
+  @media (max-width:575px) {
+    width:90%;
+  }
+  .form-group {
+    margin-bottom: 4px;
+  }
 }
-.login-page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px 30px;
+.btn-full .btn {
+  border-radius: 40px;
+}
+
+.error_msg {
+  font-size: 14px;
+  margin:5px 0;
+  display: block;
+  line-height: 14px;
 }

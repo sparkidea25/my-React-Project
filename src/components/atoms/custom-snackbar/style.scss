@@ -17,18 +17,6 @@
     justify-content: center;
     align-items: center;
 }
-#screen-content {
-    .MuiSnackbar-root{
-        position: fixed !important;
-        top: 95px;
-        left: 15px !important; 
-         width: calc(100% - 30px);
-        @media (min-width:991px) {            
-            width: calc(100% - 320px);
-            left: 305px !important; 
-        }
-    }
-}
 .MuiSnackbarContent-action {
      position: absolute;
      right:18px;    
