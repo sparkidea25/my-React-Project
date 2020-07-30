@@ -53,6 +53,9 @@ const AuthenticatedRouter = (props) => {
           history.replace(ROUTES.DASHBOARD)
         }}
         backArrow={CLOSE_ICON}
+        logout={() => {
+          setPopVisible(true)
+      }}
       >
         <DecisionPopup
           modalVisibility={popupVisible}
@@ -88,7 +91,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setAuthorization: (userData) => dispatch(setAuthorization(userData)),
     stopLoader: () => dispatch(stopLoader()),
-    logout: (token, success) => dispatch(logout(token, success))
+    logout: (token, success,failure) => dispatch(logout(token, success,failure))
   }
 }
 

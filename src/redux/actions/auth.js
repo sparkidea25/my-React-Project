@@ -20,13 +20,6 @@ export const setPlatformType = (role) => {
     }
 };
 
-export const saveChampionship = (data) => {
-    return {
-        type: SAVE_CHAMPIONSHIP,
-        data
-    }
-}
-
 export const checkLogin = (credentials, success, onError) => {
     return {
         type: CHECK_LOGIN,
@@ -45,17 +38,11 @@ export const sendForgotEmail = (email, success, error) => {
     }
 };
 
-export const rememberMe = credentials => {
-    return {
-        type: REMEMBER_ME,
-        credentials
-    }
-};
-
-export const logout = (token, success) => {
+export const logout = (token, success,failure) => {
     return {
         type: LOGOUT_USER,
         token,
-        success
+        success,
+        failure
     }
 };

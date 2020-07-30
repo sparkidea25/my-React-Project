@@ -29,6 +29,12 @@ function* checkAdminLogin({ credentials, success, onError }) {
     try {
         yield put(startLoader())
         const response = yield postRequestNoAuth({ API: `${api.URL.LOGIN}`, DATA: credentials });
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            onError({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
         if (response.status === STATUS_CODE.unAuthorized) {
             yield put(setAuthorization(null));
             return;
@@ -44,6 +50,7 @@ function* checkAdminLogin({ credentials, success, onError }) {
             yield put(stopLoader());
         }
     }
+}
     catch (error) {
         return;
     }
@@ -70,27 +77,42 @@ function* sendRecoveryMail({ email, success, error }) {
         return;
     }
 }
-
-function* logoutUser({ token, success }) {
-
+function* logoutUser({ token, success, failure }) {
+    console.log(token, 'token')
     try {
-        const response = yield postRequest({ API: `${api.URL.LOGOUT}`, DATA: {} });
-        if (response.status === STATUS_CODE.unAuthorized) {
-            yield put(setAuthorization(null));
-            return;
-        }
-        if (response.status !== STATUS_CODE.successful) {
-            yield put(setAuthorization(null))
-        }
-        else {
-            success();
+        yield put(startLoader());
+        const response = yield postRequest({ API: `${api.URL.LOGOUT}`, DATA: { authorization: token } });
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+
+
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success()
+                yield put(setAuthorization(null))
+            }
         }
     }
     catch (error) {
-        return;
+        yield put(stopLoader());
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
     }
 }
-
 function* AuthSaga() {
     yield all([
         takeLatest(SET_AUTHORIZATION, setUserToken),

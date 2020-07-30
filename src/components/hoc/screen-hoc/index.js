@@ -9,6 +9,7 @@ import { AppHeader } from '../../atoms/app-header';
 
 const HOC = ({
     containerStyle,
+    logout = () =>{},
     containerId = 'screen-hoc-container',
     contentId = 'screen-content',
     childrenStyle,
@@ -37,6 +38,7 @@ const HOC = ({
             }
         });
     })
+    
 
     const [drawerVisible, setDrawerVisible] = useState(true);
     const responsiveScroll = () => { }
@@ -46,6 +48,7 @@ const HOC = ({
                 hamburgerIcon={hamburgerIcon}
                 headerLogo={headerLogo}
                 hamburgerVisible={drawerVisible ? window.innerWidth < 1025 ? true : false : true}
+                logout={logout}
                 menuItems={[
                     ...HEADER_MENU_ITEMS,
                     {
@@ -61,6 +64,7 @@ const HOC = ({
                     e.stopPropagation()
                 }}
             />
+            
             <AppDrawer
                 drawerId={drawerId}
                 drawerItems={drawerItems}
@@ -88,11 +92,12 @@ const HOC = ({
 
 const mapStateToProps = (state) => {
     return ({
+        
     });
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-
+       
     }
 }
 export const ScreenHOC = connect(mapStateToProps, mapDispatchToProps)(HOC);

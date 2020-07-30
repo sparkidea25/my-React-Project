@@ -6,7 +6,8 @@ export const AppHeader = ({
     hamburgerIcon,
     menuItems,
     hamburgerVisible = false,
-    onHamburgerClick = () => { }
+    onHamburgerClick = () => { },
+    logout = () => {}
 }) => (
         <header className="fixed-top">
             <nav className="d-flex justify-content-around align-items-center align-items-md-end">
@@ -31,7 +32,7 @@ export const AppHeader = ({
                             <a href="#">User</a>
                         </li>
                         <li>
-                            <a href="javascript:void(0)" /*onClick={() => onClickAction('/logout')}*/>Logout</a>
+                            <a href="javascript:void(0)" onClick={() => logout()}>Logout</a>
                         </li>
                     </ul>
                 </div>
