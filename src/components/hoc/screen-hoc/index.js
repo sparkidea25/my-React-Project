@@ -41,6 +41,7 @@ const HOC = ({
     
 
     const [drawerVisible, setDrawerVisible] = useState(true);
+    const [menuVisible, setMenuVisible] = useState(false);
     const responsiveScroll = () => { }
     return (
         <div id={containerId} className={containerStyle} onScroll={responsiveScroll}>
@@ -60,12 +61,13 @@ const HOC = ({
                     }
                 ]}
                 onHamburgerClick={(e) => {
-                    setDrawerVisible(!drawerVisible);
+                    setMenuVisible(!menuVisible);
                     e.stopPropagation()
                 }}
+                menuVisible={menuVisible}
             />
             
-            <AppDrawer
+            {/* <AppDrawer
                 drawerId={drawerId}
                 drawerItems={drawerItems}
                 companyLogo={companyLogo}
@@ -78,7 +80,7 @@ const HOC = ({
                 bottomShape={bottomShape}
                 toggleDrawer={() => { setDrawerVisible(!drawerVisible); }}
                 backArrow={backArrow}
-            />
+            /> */}
 
             <div id={contentId} className={childrenStyle} onClick={(e) => { window.innerWidth < 1024 && setDrawerVisible(false) }}>
                 {children}

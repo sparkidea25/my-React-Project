@@ -28,6 +28,7 @@ const {
   logout
 } = require(`../../../redux/actions`);
 const { SnackbarWrapper } = require(`../../../components/molecules/snackbar-wrapper`);
+
 const AuthenticatedRouter = (props) => {
   const { classes, setAuthorization, userToken, logout } = props;
   const [popupVisible, setPopVisible] = useState(false);

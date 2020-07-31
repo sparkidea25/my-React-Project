@@ -26,11 +26,11 @@ header {
     .nav-admin {
         transition: all .5s ease-in-out;
         @media (max-width:767px){
-            display: none;
+            display: block;
             padding: 10px 0;
             width:100%;
             position: absolute;
-            top:90px;
+            top:76px;
             left:0;
             background-color: #61d1fc;    
             box-shadow: 0 0 10px rgba(0,0,0,.2);        
