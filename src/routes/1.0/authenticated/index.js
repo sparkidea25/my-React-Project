@@ -101,7 +101,6 @@ const AuthenticatedRouter = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.CommonReducer)
   return ({
     userToken: state.CommonReducer.userToken,
   });
