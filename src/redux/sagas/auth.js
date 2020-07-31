@@ -44,7 +44,7 @@ function* checkAdminLogin({ credentials, success, onError }) {
             yield put(stopLoader());
         }
         else {
-            yield put(setAuthorization(response.data.data.token));
+            yield put(setAuthorization(response.data.token));
             yield put(setPlatformType(response.data.data.role));
             success();
             yield put(stopLoader());
@@ -78,7 +78,6 @@ function* sendRecoveryMail({ email, success, error }) {
     }
 }
 function* logoutUser({ token, success, failure }) {
-    console.log(token, 'token')
     try {
         yield put(startLoader());
         const response = yield postRequest({ API: `${api.URL.LOGOUT}`, DATA: { authorization: token } });
@@ -90,8 +89,6 @@ function* logoutUser({ token, success, failure }) {
         } else {
             if (response.status === STATUS_CODE.unAuthorized) {
                 yield put(setAuthorization(null));
-
-
                 yield put(stopLoader());
                 failure(response.data)
             }
@@ -103,6 +100,7 @@ function* logoutUser({ token, success, failure }) {
             else {
                 success()
                 yield put(setAuthorization(null))
+                yield put(stopLoader());
             }
         }
     }

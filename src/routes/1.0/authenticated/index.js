@@ -27,11 +27,16 @@ const {
   stopLoader,
   logout
 } = require(`../../../redux/actions`);
-
+const { SnackbarWrapper } = require(`../../../components/molecules/snackbar-wrapper`);
 const AuthenticatedRouter = (props) => {
   const { classes, setAuthorization, userToken, logout } = props;
   const [popupVisible, setPopVisible] = useState(false);
   let history = useHistory();
+  const [openSnackBar, setOpenSnackbar] = useState(false);
+  const [snackbarData, setSnackBarData] = useState({
+    variant: '',
+    message: ''
+  });
   return (
     <div>
       <ScreenHOC
@@ -55,8 +60,14 @@ const AuthenticatedRouter = (props) => {
         backArrow={CLOSE_ICON}
         logout={() => {
           setPopVisible(true)
-      }}
+        }}
       >
+        <SnackbarWrapper
+          visible={openSnackBar}
+          onClose={() => setOpenSnackbar(false)}
+          variant={snackbarData.variant}
+          message={snackbarData.message}
+        />
         <DecisionPopup
           modalVisibility={popupVisible}
           dialogContent={STRINGS.LOGOUT_CONTENT}
@@ -65,10 +76,17 @@ const AuthenticatedRouter = (props) => {
           rejectButtonTitle={STRINGS.CANCEL}
           toggleDialogModal={() => setPopVisible(!popupVisible)}
           onConfirmation={() => {
+            setPopVisible(false)
             logout(userToken, () => {
-              setPopVisible(false)
+
               setAuthorization(null);
               return <Redirect to={ROUTES.ROOT} />
+            }, (error) => {
+              setSnackBarData({
+                variant: error.status ? 'success' : 'error',
+                message: error.msg
+              });
+              setOpenSnackbar(true)
             });
           }}
           onRejection={() => setPopVisible(false)}
@@ -83,6 +101,7 @@ const AuthenticatedRouter = (props) => {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state.CommonReducer)
   return ({
     userToken: state.CommonReducer.userToken,
   });
@@ -91,7 +110,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setAuthorization: (userData) => dispatch(setAuthorization(userData)),
     stopLoader: () => dispatch(stopLoader()),
-    logout: (token, success,failure) => dispatch(logout(token, success,failure))
+    logout: (token, success, failure) => dispatch(logout(token, success, failure))
   }
 }
 
