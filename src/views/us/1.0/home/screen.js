@@ -16,8 +16,8 @@ export const Screen = ({
             <div className="container-fluid">
                 <div className="content-panel">
                     <ul className="content_section">
-                        <li><a href="#">Content Managment </a></li>
-                        <li><a href="#">User Managment</a></li>
+                        <li><a href="#">Content Management </a></li>
+                        <li><a href="#">User Management</a></li>
                     </ul>
                 </div>
             </div>

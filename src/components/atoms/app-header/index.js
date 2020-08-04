@@ -7,7 +7,7 @@ export const AppHeader = ({
     menuItems,
     hamburgerVisible = false,
     onHamburgerClick = () => { },
-    logout = () => {},
+    logout = () => { },
     menuVisible
 }) => (
         <header className="fixed-top">
@@ -19,7 +19,7 @@ export const AppHeader = ({
                 </div>
 
                 <div className="navbar-menu">
-                    {console.log(menuVisible,hamburgerVisible)}
+                    {console.log(menuVisible, hamburgerVisible)}
                     {hamburgerVisible && <span className="humburger_icon">
                         <i><img onClick={(e) => {
                             onHamburgerClick(e)
@@ -32,22 +32,22 @@ export const AppHeader = ({
                             <a href="#">Content</a>
                         </li>
                         <li>
-                            <a href="#">User</a>
+                            <a href="#">Users</a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" onClick={() => logout()}>Logout</a>
                         </li>
-                    </ul>: <ul className="nav-admin ml-auto">
-                        <li className="active">
-                            <a href="#">Content</a>
-                        </li>
-                        <li>
-                            <a href="#">User</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" onClick={() => logout()}>Logout</a>
-                        </li>
-                    </ul>}
+                    </ul> : <ul className="nav-admin ml-auto">
+                            <li className="active">
+                                <a href="#">Content</a>
+                            </li>
+                            <li>
+                                <a href="#">Users</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" onClick={() => logout()}>Logout</a>
+                            </li>
+                        </ul>}
                 </div>
             </nav>
         </header>
