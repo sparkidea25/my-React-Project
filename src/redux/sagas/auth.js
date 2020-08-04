@@ -8,8 +8,7 @@ import {
     startLoader,
     stopLoader,
     setPlatformType,
-    LOGOUT_USER,
-    saveChampionship
+    LOGOUT_USER
 } from '../actions';
 
 const api = require(`../../shared/api`);
@@ -35,22 +34,22 @@ function* checkAdminLogin({ credentials, success, onError }) {
                 msg: 'You appear to be offline. Please check your connection.'
             })
         } else {
-        if (response.status === STATUS_CODE.unAuthorized) {
-            yield put(setAuthorization(null));
-            return;
-        }
-        if (response.status !== STATUS_CODE.successful) {
-            onError(response.data);
-            yield put(stopLoader());
-        }
-        else {
-            yield put(setAuthorization(response.data.token));
-            yield put(setPlatformType(response.data.data.role));
-            success();
-            yield put(stopLoader());
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                return;
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                onError(response.data);
+                yield put(stopLoader());
+            }
+            else {
+                yield put(setAuthorization(response.data.token));
+                yield put(setPlatformType(response.data.data.role));
+                success();
+                yield put(stopLoader());
+            }
         }
     }
-}
     catch (error) {
         return;
     }
