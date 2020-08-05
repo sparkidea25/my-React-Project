@@ -5,5 +5,6 @@ export const ROUTES = {
     REDIRECT: '/redirect',
     LOGOUT: '/logout',
     FORGOT_PASSWORD: '/forgot-password',
-   
+    CONTENT: '/content',
+    WATCH_PARTY: '/watch-party'
 }

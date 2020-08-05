@@ -13,6 +13,9 @@ const { STRINGS } = require(`../../../shared/constants/${LOCATION}/strings`);
 const { DecisionPopup } = require(`../../../components/atoms/decision-popup`);
 const { ScreenHOC } = require(`../../../components/hoc/screen-hoc`);
 const { HomeScreen } = require(`../../../views/${LOCATION}/${VERSION}/home`);
+const { ContentManagementScreen } = require(`../../../views/${LOCATION}/${VERSION}/content-management`);
+const { WatchPartyScreen } = require(`../../../views/${LOCATION}/${VERSION}/watchPartyList`);
+
 const { styles } = require(`../../../theme`);
 const {
   DRAWER_ITEMS,
@@ -94,6 +97,8 @@ const AuthenticatedRouter = (props) => {
         />
         <Switch>
           <Route exact path={`${ROUTES.DASHBOARD}`} component={HomeScreen} />
+          <Route exact path={`${ROUTES.CONTENT}`} component={ContentManagementScreen} />
+          <Route exact path={`${ROUTES.WATCH_PARTY}`} component={WatchPartyScreen} />
           <Redirect to={ROUTES.DASHBOARD} />
         </Switch>
       </ScreenHOC>
