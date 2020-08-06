@@ -65,6 +65,7 @@ const AuthenticatedRouter = (props) => {
         logout={() => {
           setPopVisible(true)
         }}
+        history={history}
       >
         <SnackbarWrapper
           visible={openSnackBar}

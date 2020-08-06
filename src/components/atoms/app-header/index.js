@@ -1,6 +1,7 @@
 import React from 'react';
 import './style.scss';
 import { CustomMenu } from '../custom-menu';
+import { ROUTES } from '../../../shared/constants';
 
 export const AppHeader = ({
     hamburgerIcon,
@@ -8,11 +9,12 @@ export const AppHeader = ({
     hamburgerVisible = false,
     onHamburgerClick = () => { },
     logout = () => { },
-    menuVisible
+    menuVisible,
+    history
 }) => (
         <header className="fixed-top">
             <nav className="d-flex justify-content-around align-items-center align-items-md-end">
-                <div className="navbar-brand">
+                <div className="navbar-brand" onClick={() => history.push(ROUTES.CONTENT)}>
                     <a className="brand-logo" href="#">
                         <img src={require(`../../../assets/img/logo.png`)} width="250" alt="Collyde" className="img-fluid" />
                     </a>
@@ -29,7 +31,7 @@ export const AppHeader = ({
                     }
                     {hamburgerVisible ? menuVisible && <ul className="nav-admin ml-auto">
                         <li className="active">
-                            <a href="#">Content</a>
+                            <a href="#" onClick={() => history.push(ROUTES.CONTENT)}>Content</a>
                         </li>
                         <li>
                             <a href="#">Users</a>
@@ -39,7 +41,7 @@ export const AppHeader = ({
                         </li>
                     </ul> : <ul className="nav-admin ml-auto">
                             <li className="active">
-                                <a href="#">Content</a>
+                                <a href="#" onClick={() => history.push(ROUTES.CONTENT)}>Content</a>
                             </li>
                             <li>
                                 <a href="#">Users</a>
