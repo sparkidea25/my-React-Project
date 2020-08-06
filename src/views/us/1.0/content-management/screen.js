@@ -50,32 +50,37 @@ export const Screen = () => {
             onRemoveFile={handleOnRemoveFile}
         >
             {({ file }) => (
-                <aside
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginBottom: 10
-                    }}
-                >
-                    <button
-                        type='button'
-                        onClick={handleOpenDialog}
+                <>
+                    <div class="container-fluid">
+                        <div class="content-panel">
+                            <div class="page-title">
+                                <h1>Content Management</h1>
+                            </div>
+                            <div class="content_management">
+                                <div class="upload_csv">
+                                    <div class="upload_btn">
+                                        <i><img src={require(`../../../../assets/img/icons/cloud_icon.svg`)} alt="Collyde" width="70" className="img-fluid" /></i>
+                                        <button
+                                            type='button'
+                                            onClick={handleOpenDialog}
+                                        >
+                                            Upload
+                                        </button>
+                                    </div>
+                                    <div class="file_name">
+                                        {file && file.name}
+                                    </div>
+                                    <button onClick={handleRemoveFile}> Remove</button>
+                                </div>
 
-                    >
-                        Upload
-              </button>
-                    <div
+                                <div class="event_posts">
 
-                    >
-                        {file && file.name}
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                    <button
-
-                        onClick={handleRemoveFile}
-                    >
-                        Remove
-              </button>
-                </aside>
+                </>
             )}
         </CSVReader>
     </div>)
