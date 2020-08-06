@@ -1,10 +1,13 @@
-const SERVER_URL = 'http://15.207.65.54:3001'; //Live URL
+const SERVER_URL = 'http://51aed468919f.ngrok.io'; //Live URL
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {
   URL: {
     SERVER_URL: SERVER_URL,
     LOGOUT: SERVER_URL + API_VERSION + '/admin/logout',
-    LOGIN: SERVER_URL + API_VERSION + '/admin/login'
+    LOGIN: SERVER_URL + API_VERSION + '/admin/login',
+    EXPORT_CSV: SERVER_URL + API_VERSION + '/watchParty/importCsv',
+    WATCH_PARTY_LISTING: SERVER_URL + API_VERSION + '/watchParty/listing',
+    UPDATE_WATCH_PARTY: SERVER_URL + API_VERSION + '/watchParty/edit',
   }
 };
