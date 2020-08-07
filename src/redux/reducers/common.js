@@ -2,11 +2,9 @@ import { REHYDRATE } from "redux-persist";
 import {
     SET_AUTHORIZATION,
     CHECK_LOGIN,
-    REMEMBER_ME,
     SET_PLATFORM_TYPE,
     STOP_LOADER,
     START_LOADER,
-    SAVE_CHAMPIONSHIP
 } from '../actions';
 
 const { updateAuthToken } = require(`../../helpers/axios`);
@@ -14,9 +12,7 @@ const { updateAuthToken } = require(`../../helpers/axios`);
 const initialCommonState = {
     userToken: '',
     platformType: null,
-    rememberCredentials: null,
     loader: false,
-    championshipData: null
 };
 
 const CommonReducer = (state = { ...initialCommonState }, action) => {
@@ -46,16 +42,6 @@ const CommonReducer = (state = { ...initialCommonState }, action) => {
             return {
                 ...state,
             }
-        case REMEMBER_ME:
-            return {
-                ...state,
-                rememberCredentials: action.credentials
-            }
-        case SAVE_CHAMPIONSHIP:
-            return {
-                ...state,
-                championshipData: action.data
-            }
         case REHYDRATE:
             let common = ((action || {}).payload || {}).CommonReducer || initialCommonState
             updateAuthToken(common.userToken || '');
@@ -63,8 +49,6 @@ const CommonReducer = (state = { ...initialCommonState }, action) => {
                 ...state,
                 userToken: common.userToken,
                 platformType: common.platformType,
-                rememberCredentials: common.rememberCredentials,
-                championshipData: common.championshipData,
                 ...(action.payload || {}).common
             };
         default:

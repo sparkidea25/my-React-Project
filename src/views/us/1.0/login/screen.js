@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { LoginReduxForm } from './form';
 import { Helmet } from "react-helmet";
-import SimpleCrypto from "simple-crypto-js";
 import "./style.scss";
 
-const { FormWrapper } = require(`../../../../components/hoc/form-wrapper`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const {
-    LABELS,
     ROUTES,
     PAGE_TITLES
 } = require(`../../../../shared/constants`);

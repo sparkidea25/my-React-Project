@@ -1,9 +1,13 @@
 import React, { Component, useState, useEffect } from 'react'
 const { CustomPagination } = require('../../../../components/atoms/pagination')
 
-export const Screen = ({ listWatchParty }) => {
+export const Screen = ({ listWatchParty, getPlatforms, getLeagues, allPlatforms, allLeagues }) => {
+
     useEffect(() => {
         listWatchParty(() => { }, () => { })
+        getPlatforms(() => { }, () => { })
+        getLeagues(() => { }, () => { })
+
     }, [])
     return (
         <div class="container-fluid">

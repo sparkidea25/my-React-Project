@@ -1,47 +1,41 @@
-import React, { Component, useState } from 'react'
-import { CSVReader } from 'react-papaparse'
+import React, { useState } from 'react'
 const { CustomFileDrop } = require("../../../../components/cells/custom-filedrop")
-const buttonRef = React.createRef()
+const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 
 export const Screen = ({ exportWatchParty }) => {
     const [partyData, setPartyData] = useState([])
-    const handleOpenDialog = (e) => {
-        // Note that the ref is set async, so it might be null at some point
-        if (buttonRef.current) {
-            buttonRef.current.open(e)
-        }
-    }
+    const [openSnackBar, setOpenSnackbar] = useState(false);
+    const [snackbarData, setSnackBarData] = useState({
+        variant: '',
+        message: ''
+    });
+
     const handleOnFileLoad = (data) => {
         console.log(data)
         // csvToPartydata(data)
-        exportWatchParty(data, () => { }, () => { })
+        exportWatchParty(data, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        }, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        })
     }
 
-    const csvToPartydata = (data) => {
-        let watchPartyArr = []
-        let header = data[0].data
-        for (let i = 1; i < data.length; i++) {
-            let partyArr = [];
-            data[i].data.map((obj, index) => {
-                let objName = header[index]
-                partyArr.push({ [objName]: obj })
-            })
-            watchPartyArr.push(partyArr)
-        }
-        console.log('sddg', watchPartyArr)
-        setPartyData(watchPartyArr)
-
-    }
-
-
-    const handleRemoveFile = (e) => {
-        // Note that the ref is set async, so it might be null at some point
-        if (buttonRef.current) {
-            buttonRef.current.removeFile(e)
-        }
-    }
     return (
         <div class="container-fluid">
+            <SnackbarWrapper
+                visible={openSnackBar}
+                onClose={() => setOpenSnackbar(false)}
+                variant={snackbarData.variant}
+                message={snackbarData.message}
+            />
             <div class="content-panel">
                 <div class="page-title">
                     <h1>Content Management</h1>
@@ -51,12 +45,7 @@ export const Screen = ({ exportWatchParty }) => {
                     <div class="upload_csv">
                         <div class="upload_btn">
                             <CustomFileDrop
-                                // ref={buttonRef}
                                 handleSubmit={handleOnFileLoad}
-                            //   onError={this.handleOnError}
-                            // noClick
-                            // noDrag
-                            // onRemoveFile={handleOnRemoveFile}
                             />
                         </div>
 

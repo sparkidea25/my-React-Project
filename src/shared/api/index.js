@@ -9,5 +9,7 @@ module.exports = {
     EXPORT_CSV: SERVER_URL + API_VERSION + '/watchParty/importCsv',
     WATCH_PARTY_LISTING: SERVER_URL + API_VERSION + '/watchParty/listing',
     UPDATE_WATCH_PARTY: SERVER_URL + API_VERSION + '/watchParty/edit',
+    GET_LEAGUES: SERVER_URL + API_VERSION + '/league/getAllLeagues',
+    GET_PLATFORMS: SERVER_URL + API_VERSION + '/platform/getAllPlatforms',
   }
 };
