@@ -1,10 +1,12 @@
 export const EXPORT_CSV = "EXPORT_CSV"
 export const GET_WATCH_PARTY = "GET_WATCH_PARTY"
 export const UPDATE_WATCH_PARTY = "UPDATE_WATCH_PARTY"
-export const exportWatchParty = (data) => {
+export const exportWatchParty = (data, success, failure) => {
     return {
         type: EXPORT_CSV,
-        data
+        data,
+        success,
+        failure
     }
 }
 

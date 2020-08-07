@@ -1,9 +1,9 @@
 import React, { Component, useState } from 'react'
 import { CSVReader } from 'react-papaparse'
-
+const { CustomFileDrop } = require("../../../../components/cells/custom-filedrop")
 const buttonRef = React.createRef()
 
-export const Screen = () => {
+export const Screen = ({ exportWatchParty }) => {
     const [partyData, setPartyData] = useState([])
     const handleOpenDialog = (e) => {
         // Note that the ref is set async, so it might be null at some point
@@ -13,7 +13,8 @@ export const Screen = () => {
     }
     const handleOnFileLoad = (data) => {
         console.log(data)
-        csvToPartydata(data)
+        // csvToPartydata(data)
+        exportWatchParty(data, () => { }, () => { })
     }
 
     const csvToPartydata = (data) => {
@@ -29,10 +30,9 @@ export const Screen = () => {
         }
         console.log('sddg', watchPartyArr)
         setPartyData(watchPartyArr)
+
     }
-    const handleOnRemoveFile = (data) => {
-        console.log(data)
-    }
+
 
     const handleRemoveFile = (e) => {
         // Note that the ref is set async, so it might be null at some point
@@ -40,48 +40,34 @@ export const Screen = () => {
             buttonRef.current.removeFile(e)
         }
     }
-    return (<div>
-        <CSVReader
-            ref={buttonRef}
-            onFileLoad={handleOnFileLoad}
-            //   onError={this.handleOnError}
-            noClick
-            noDrag
-            onRemoveFile={handleOnRemoveFile}
-        >
-            {({ file }) => (
-                <>
-                    <div class="container-fluid">
-                        <div class="content-panel">
-                            <div class="page-title">
-                                <h1>Content Management</h1>
-                            </div>
-                            <div class="content_management">
-                                <div class="upload_csv">
-                                    <div class="upload_btn">
-                                        <i><img src={require(`../../../../assets/img/icons/cloud_icon.svg`)} alt="Collyde" width="70" className="img-fluid" /></i>
-                                        <button
-                                            type='button'
-                                            onClick={handleOpenDialog}
-                                        >
-                                            Upload
-                                        </button>
-                                    </div>
-                                    <div class="file_name">
-                                        {file && file.name}
-                                    </div>
-                                    <button onClick={handleRemoveFile}> Remove</button>
-                                </div>
+    return (
+        <div class="container-fluid">
+            <div class="content-panel">
+                <div class="page-title">
+                    <h1>Content Management</h1>
+                </div>
+                <div class="content_management">
 
-                                <div class="event_posts">
-
-                                </div>
-
-                            </div>
+                    <div class="upload_csv">
+                        <div class="upload_btn">
+                            <CustomFileDrop
+                                // ref={buttonRef}
+                                handleSubmit={handleOnFileLoad}
+                            //   onError={this.handleOnError}
+                            // noClick
+                            // noDrag
+                            // onRemoveFile={handleOnRemoveFile}
+                            />
                         </div>
+
+                        <div class="event_posts">
+
+                        </div>
+
                     </div>
-                </>
-            )}
-        </CSVReader>
-    </div>)
+                </div>
+            </div>
+
+
+        </div>)
 }

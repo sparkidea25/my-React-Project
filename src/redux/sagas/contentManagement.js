@@ -11,10 +11,18 @@ const api = require(`../../shared/api`);
 const { updateAuthToken, postRequestNoAuth, postRequest, getRequest } = require(`../../helpers`);
 const { STATUS_CODE } = require(`../../shared/constants`);
 
+const createFormData = (fileData) => {
+    console.log(fileData)
+    const data = new FormData();
+    data.append("file", fileData.file);
+    return data;
+};
+
 function* exportWatchparty({ data, success, failure }) {
+    const formData = createFormData(data);
     try {
         yield put(startLoader());
-        const response = yield postRequest({ API: `${api.URL.LOGOUT}`, DATA: data });
+        const response = yield postRequest({ API: `${api.URL.EXPORT_CSV}`, DATA: formData });
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({
