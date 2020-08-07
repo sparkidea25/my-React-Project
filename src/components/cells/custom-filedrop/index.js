@@ -7,7 +7,7 @@ export const CustomFileDrop = ({
     DragDropCSVFile = 'Drag & drop a CSV file',
     or = 'or',
     browse = 'Browse',
-    acceptFiles = ".zip,.csv",
+    acceptFiles = ".csv",
     toChooseaFile = "to choose a file",
     buttonText = 'SUBMIT',
     handleSubmit = () => { },
