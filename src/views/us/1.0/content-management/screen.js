@@ -76,17 +76,28 @@ export const Screen = () => {
                                 <div class="event_posts">
                                     <div class="date_time">
                                         <span class="time">2:30</span>
-                                        <span class="date"><strong>Fri</strong>
-                                        Jul 31</span>
+                                        <span class="date">
+                                            <strong>Fri</strong>
+                                            Jul 31
+                                        </span>
                                     </div>
-                                    <hgoup>
-                                        <h5>Magic at Nets</h5>
-                                        <h4>Nba on abc</h4>
-                                    </hgoup>
-                                    <span class="total_joined">1 Joined</span>
-                                    <ul class="list_group">
-                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" /></li>
-                                    </ul>
+                                    <div class="team_group">
+                                        <hgroup>
+                                            <h5>Magic at Nets</h5>
+                                            <h6>Nba on abc</h6>
+                                        </hgroup>
+                                        <span class="total_joined">1 Joined</span>
+                                        <ul class="list_group">
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                        </ul>
+                                        <div class="button_group">
+                                            <button class="btn btn-lg btn-primary btn-radius">Join</button>
+                                            <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
