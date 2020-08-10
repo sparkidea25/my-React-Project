@@ -23,11 +23,9 @@ export const CustomFileDrop = ({
                 inputContent={(props) => {
                     return (
                         <div className="d-flex align-items-center w-100 drag_drop_option">
-                            <i>
-                                <img src={require(`../../../assets/img/icons/cloud_icon.svg`)} alt={'non-upload-icon'} />
-                            </i>
-                            <div {...props} key={props} className="d-flex flex-column px-2 px-md-5 justify-content-center align-items-center">
-                                <h4>{'Upload'}</h4>
+                            <i><img src={require(`../../../assets/img/icons/cloud_icon.svg`)} alt={'non-upload-icon'} width="80" /></i>
+                            <div {...props} key={props} className="upload_btn">
+                                {'Upload'}
                                 {/* <p>{'File should be 16MB max.'}</p> */}
                             </div>
                         </div>)

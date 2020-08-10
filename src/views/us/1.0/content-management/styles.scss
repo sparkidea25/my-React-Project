@@ -1,27 +1,26 @@
 .content-panel {
     h1 {
         color:#61d1fc;
-        margin:0 0 30px;
+        margin:0 0 20px;
     }
 }
-.upload_btn {
-    i {
-        margin-right:15px;
-    }
-    button {
-        background-color: #414959;
-        border-radius: 4px;
-        color:#fff;
-        font-size: 18px;
-        min-height:40px;
-        min-width:230px;
-    }
+.sec_row {
+    display: flex;
+    justify-content: space-between;    
+    flex-wrap: wrap;
+}
+.c-col-lft {
+    max-width:45%;
+    margin-right: 20px;
 }
 
 .event_posts {
     position: relative;
     display: flex;
+    max-width:55%;
+    width:100%;
     .date_time {
+        min-width: 60px;
         color:#9da2b2;
         display: inline-block;
         .time {
@@ -39,14 +38,14 @@
                 color:inherit;
                 display: block;
                 font-size: 28px;
-                line-height: 14px;
+                line-height: 18px;
             }
         }
     }
     .team_group {
-        border-left: 1px solid #acb1be;
-        margin-left: 15px;
-        padding-left: 15px;
+        border-left: 1px solid #e2e5e8;
+        margin-left: 20px;
+        padding-left: 20px;
         display: inline-block;
         hgroup {
             h5 {
@@ -64,6 +63,7 @@
         .total_joined {
             color:#acb1be;
             font-size: 20px;
+            text-transform: uppercase;
         }
     }
     .list_group {
