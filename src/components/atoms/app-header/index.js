@@ -31,7 +31,7 @@ export const AppHeader = ({
                     }
                     {hamburgerVisible ? menuVisible && <ul className="nav-admin ml-auto">
                         <li className="active">
-                            <a href="#" onClick={() => history.push(ROUTES.CONTENT)}>Content</a>
+                            <a href="#" onClick={() => history.push(ROUTES.WATCH_PARTY)}>Content</a>
                         </li>
                         <li>
                             <a href="#">Users</a>
@@ -41,7 +41,7 @@ export const AppHeader = ({
                         </li>
                     </ul> : <ul className="nav-admin ml-auto">
                             <li className="active">
-                                <a href="#" onClick={() => history.push(ROUTES.CONTENT)}>Content</a>
+                                <a href="#" onClick={() => history.push(ROUTES.WATCH_PARTY)}>Content</a>
                             </li>
                             <li>
                                 <a href="#">Users</a>

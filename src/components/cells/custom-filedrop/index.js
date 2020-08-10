@@ -14,7 +14,7 @@ export const CustomFileDrop = ({
 }) => {
     // const [displayContents, setDisplayContents] = useState()
     const handleChangeStatus = ({ meta, file }, status) => {
-        // console.log(file)
+        console.log('gfg', file, meta, status)
 
         handleSubmit({ meta, file }, status)
     }
@@ -45,7 +45,7 @@ export const CustomFileDrop = ({
                 accept={acceptFiles}
                 canCancel={true}
                 canRemove={true}
-                chunksUploaded={(a) => { console.log(a) }}
+
             />
         </>
     )
