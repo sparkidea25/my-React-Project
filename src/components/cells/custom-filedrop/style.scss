@@ -1,4 +1,27 @@
-.overlay {background: rgba(0,0,0,.7); position: fixed; top:0; left:0; right:0; height: 100%; width:100%; z-index: 11;}
+.drag_drop_option {
+    i {
+        max-width:70px;
+        margin-right: 10px;
+        img {
+            max-width: 100%;
+        }
+    }
+}
+.upload_btn {    
+    background-color: #414959;
+    border-radius: 5px;
+    color:#fff;
+    text-align: center;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    min-height:40px;
+    min-width:230px;    
+}
+
+
 .dropzone-div{
     position: fixed;
     top: 0;
@@ -79,20 +102,11 @@
         }
     }    
     
-    .dzu-inputLabel {
-        display: flex;
-        background-color: transparent;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        font-size: 14px;
-        z-index: 1;
-        font-weight: 500;
-        color: #F42634;
+    .dzu-inputLabel {        
+        background-color: transparent;        
+        overflow: hidden;     
         width: 100%;
         position: static;
-        line-height: 18px;
         div{
             label{
             cursor: pointer;
@@ -144,12 +158,7 @@
             width: 100%;
             z-index: 9;
         }
-    }
-    .dzu-submitButton{
-        display: flex;
-        background-color: transparent;
-        border:0px solid transparent;
-    }
+    }    
     .dzu-inputLabelWithFiles{
         display: none;
     }
@@ -169,46 +178,59 @@
     width: 100%;
     z-index: 11;
 }
-
+//
 .dzu-dropzone {    
-    align-items: start;
-    .dzu-previewContainer {
-        display: flex;
-        background-color: red;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;
-        padding:0;
-        width: 100%; 
-        z-index: 1;
-        border-bottom: 1px solid transparent; 
-        box-sizing: border-box;        
-        max-width:100%;
-        width:100%;        
-        .dzu-previewButton{ 
-            margin:0;
-        }        
-    } 
-}
-
-.drag_drop_option {       
-    @media (max-width:820px){
-        flex-direction: column!important;
-    }        
-    p {
-        font-weight: 400;
+    min-width: 350px;
+    overflow: hidden;
+    align-items: flex-start;
+    border: 0;   
+    min-height: 90px;
+    .dzu-input {
+        display: none;
     }
 }
+.dzu-submitButton{
+    display: flex;
+    background: transparent;
+    padding:0;
+    border:0px;
+}
 
-.dropzone-div .dropzone-dialog .drag_drop_option  {
-    .d-flex {
-        flex-direction: column!important;
-        @media (max-width:820px){
-            margin-top:15px;
+.dzu-previewContainer {
+    padding:20px 40px 20px 20px;
+    min-height: initial;
+    max-width:100%;
+    position: relative;
+    border:1px solid #ccc;
+    border-radius: 10px;
+    @media (max-width:767px){
+        width:100%;
+    }
+    .dzu-previewImage {
+        width:100%;
+        max-height: initial;
+        max-width: initial;
+    }
+    .dzu-previewStatusContainer{    
+        position: absolute;
+        right:14px;
+        top:20px;
+        width: 30px;
+        height:30px;
+        border-radius: 30px;
+        background: #64d2ff;
+        justify-content: center;
+        box-shadow: 0 0 10px #d4d4d4;
+        .dzu-previewButton {
+            background-size: 11px;
+            width: 30px;
+            height:30px;
+            margin:0 -1px 0 0;
         }
+    } 
+    .dzu-previewFileName {
+        padding-right: 25px;
+        font-size:16px;
+        line-height: 18px;
     }
-}
-.dzu-submitButtonContainer{
-    display: none;
-}
+}   
