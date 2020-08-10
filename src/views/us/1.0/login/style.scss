@@ -21,6 +21,12 @@
 }
 .btn-full .btn {
   border-radius: 40px;
+  background-color: #677088;
+  padding:12px 10px;
+  min-height: 50px;
+  &:hover {
+    background: #27778d;
+  }
 }
 
 .error_msg {
