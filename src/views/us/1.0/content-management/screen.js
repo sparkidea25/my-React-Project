@@ -11,7 +11,7 @@ export const Screen = ({ exportWatchParty }) => {
     });
 
     const handleOnFileLoad = (data) => {
-        console.log(data)
+        // console.log(data)
         // csvToPartydata(data)
         exportWatchParty(data, (response) => {
             setSnackBarData({
