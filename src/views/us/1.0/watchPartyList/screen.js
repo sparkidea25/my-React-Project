@@ -192,7 +192,7 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues, allPlatforms,
                                     <td><div class="input_field"><input type="number" /></div></td>
                                     <td><div class="input_field"><input type="number" value="1" /></div></td>
                                     <td><div class="input_field"><input type="number" value="1" /></div></td>
-                                    <td style="min-width:86px"></td>
+                                    <td style="min-width:86px"> </td>
                                 </tr>
                             </tbody>
                         </table>
