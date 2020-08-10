@@ -5,6 +5,9 @@ export const GET_LEAGUES = "GET_LEAGUES"
 export const GET_PLATFORMS = "GET_PLATFORMS"
 export const SET_PLATFORMS = "SET_PLATFORMS"
 export const SET_LEAGUES = "SET_LEAGUES"
+export const SET_SPORTS = "SET_SPORTS"
+export const GET_SPORTS = "GET_SPORTS"
+export const SET_WATCH_PARTY_LISTING = "SET_WATCH_PARTY_LISTING"
 
 export const exportWatchParty = (data, success, failure) => {
     return {
@@ -30,10 +33,10 @@ export const updateWatchParty = (data, success, failure) => {
         failure
     }
 }
-export const getLeagues = (data, success, failure) => {
+export const getLeagues = (success, failure) => {
     return {
         type: GET_LEAGUES,
-        data,
+
         success,
         failure
     }
@@ -56,5 +59,23 @@ export const setLeagues = (data) => {
     return {
         type: SET_LEAGUES,
         data
+    }
+}
+export const setWatchListParty = (data) => {
+    return {
+        type: SET_WATCH_PARTY_LISTING,
+        data
+    }
+}
+export const getSports = (success, failure) => {
+    return {
+        type: GET_SPORTS,
+        success, failure
+    }
+}
+export const setSports = (success, failure) => {
+    return {
+        type: SET_SPORTS,
+        success, failure
     }
 }

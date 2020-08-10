@@ -21,9 +21,9 @@ export const KEY_CODES = {
 };
 
 export const VALIDATION_MESSAGES = {
-   EMAIL_REQUIRED: STRINGS.EMAIL_REQUIRED,
-   EMAIL_INVALID: STRINGS.EMAIL_INVALID,
-   PASSWORD_REQUIRED: STRINGS.PASSWORD_REQUIRED
+  EMAIL_REQUIRED: STRINGS.EMAIL_REQUIRED,
+  EMAIL_INVALID: STRINGS.EMAIL_INVALID,
+  PASSWORD_REQUIRED: STRINGS.PASSWORD_REQUIRED
 };
 
 export const MESSAGES = {
@@ -130,15 +130,62 @@ export const ACTIVE_PAGE_STYLE = {
   fontWeight: "500"
 };
 
-export const LIMITS = {
-  userTable: 5,
-  paginationPageCount: 1
-};
+export const SPORTS_OPTIONS = [
+  { value: 'Yes' },
+  { value: 'No' }
+]
 
+export const TIME_OPTIONS = [
+  { value: 'AM' },
+  { value: 'PM' }
+]
 
-export const TEST_PAGE_TAB_VALUES = {
-  questionsTab: 0,
-  createTestTab: 1
-};
+export const MONTH_OPTIONS = [
+  { value: 'JAN' },
+  { value: 'FEB' },
+  { value: 'MAR' },
+  { value: 'APR' },
+  { value: 'MAY' },
+  { value: 'JUN' },
+  { value: 'JUL' },
+  { value: 'AUG' },
+  { value: 'SEP' },
+  { value: 'OCT' },
+  { value: 'NOV' },
+  { value: 'DEC' },
+]
+
+export const DAY_OPTIONS = [
+  { value: 1 },
+  { value: 2 },
+  { value: 3 },
+  { value: 4 },
+  { value: 5 },
+  { value: 6 },
+  { value: 7 },
+  { value: 8 },
+  { value: 9 },
+  { value: 10 },
+  { value: 11 },
+  { value: 12 },
+  { value: 13 },
+  { value: 14 },
+  { value: 15 },
+  { value: 16 },
+  { value: 17 },
+  { value: 18 },
+  { value: 19 },
+  { value: 20 },
+  { value: 21 },
+  { value: 22 },
+  { value: 23 },
+  { value: 24 },
+  { value: 26 },
+  { value: 27 },
+  { value: 28 },
+  { value: 29 },
+  { value: 30 },
+  { value: 31 }
+]
 
 

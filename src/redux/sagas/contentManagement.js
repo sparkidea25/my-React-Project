@@ -7,10 +7,10 @@ import {
     EXPORT_CSV,
     GET_WATCH_PARTY,
     GET_LEAGUES,
-    GET_PLATFORMS, setLeagues, setPlatforms
+    GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, setSports, GET_SPORTS
 } from '../actions';
 const api = require(`../../shared/api`);
-const { updateAuthToken, postRequestNoAuth, postRequest, getRequest } = require(`../../helpers`);
+const { updateAuthToken, postRequestNoAuth, postRequest, getRequest, putRequest } = require(`../../helpers`);
 const { STATUS_CODE } = require(`../../shared/constants`);
 
 const createFormData = (fileData) => {
@@ -76,7 +76,7 @@ function* listWatchparty({ success, failure }) {
                 failure(response.data)
             }
             else {
-                success(response.data)
+                yield put(setWatchListParty(response.data.data))
                 yield put(stopLoader());
             }
         }
@@ -92,7 +92,7 @@ function* listWatchparty({ success, failure }) {
 function* updateWatchparty({ data, success, failure }) {
     try {
         yield put(startLoader());
-        const response = yield getRequest({ API: `${api.URL.UPDATE_WATCH_PARTY}`, DATA: data });
+        const response = yield putRequest({ API: `${api.URL.UPDATE_WATCH_PARTY}`, DATA: data });
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({
@@ -123,7 +123,7 @@ function* updateWatchparty({ data, success, failure }) {
     }
 }
 
-function* getLeagues({ data, success, failure }) {
+function* getLeagues({ success, failure }) {
     try {
         yield put(startLoader());
         const response = yield getRequest({ API: `${api.URL.GET_LEAGUES}` });
@@ -146,6 +146,41 @@ function* getLeagues({ data, success, failure }) {
             else {
                 success(response.data)
                 yield put(setLeagues(response.data.data))
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
+function* getSports({ success, failure }) {
+    try {
+        yield put(startLoader());
+        const response = yield getRequest({ API: `${api.URL.GET_SPORTS}` });
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success(response.data)
+                yield put(setSports(response.data.data))
                 yield put(stopLoader());
             }
         }
@@ -200,6 +235,7 @@ function* ContentSaga() {
         takeLatest(UPDATE_WATCH_PARTY, updateWatchparty),
         takeLatest(GET_LEAGUES, getLeagues),
         takeLatest(GET_PLATFORMS, getPlatforms),
+        takeLatest(GET_SPORTS, getSports)
     ]);
 }
 

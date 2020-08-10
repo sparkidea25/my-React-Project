@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://2b5048e43cd9.ngrok.io'; //Live URL
+const SERVER_URL = 'http://caf4908cb739.ngrok.io'; //Live URL
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {
@@ -11,5 +11,6 @@ module.exports = {
     UPDATE_WATCH_PARTY: SERVER_URL + API_VERSION + '/watchParty/edit',
     GET_LEAGUES: SERVER_URL + API_VERSION + '/league/getAllLeagues',
     GET_PLATFORMS: SERVER_URL + API_VERSION + '/platform/getAllPlatforms',
+    GET_SPORTS: SERVER_URL + API_VERSION + '/sports/getAllSports',
   }
 };

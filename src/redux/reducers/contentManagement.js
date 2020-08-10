@@ -1,18 +1,21 @@
 import { REHYDRATE } from "redux-persist";
 import {
     SET_LEAGUES,
-    SET_PLATFORMS
+    SET_PLATFORMS,
+    SET_WATCH_PARTY_LISTING,
+    SET_SPORTS
 } from '../actions';
 
 const { updateAuthToken } = require(`../../helpers/axios`);
 
 const initialCommonState = {
     plaformList: [],
-    leagueList: []
+    leagueList: [],
+    sportList: [],
+    watchPartyList: {}
 };
 
 const ContentReducer = (state = { ...initialCommonState }, action) => {
-
     switch (action.type) {
         case SET_PLATFORMS:
             return {
@@ -20,9 +23,20 @@ const ContentReducer = (state = { ...initialCommonState }, action) => {
                 plaformList: action.data
             };
         case SET_LEAGUES:
+            console.log(action)
             return {
                 ...state,
                 leagueList: action.data
+            };
+        case SET_SPORTS:
+            return {
+                ...state,
+                sportList: action.data
+            };
+        case SET_WATCH_PARTY_LISTING:
+            return {
+                ...state,
+                watchPartyList: action.data
             };
         case REHYDRATE:
             let common = ((action || {}).payload || {}).CommonReducer || initialCommonState
