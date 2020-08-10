@@ -9,7 +9,9 @@ export const Screen = () => {
                 </div>
                 <div class="table-responsive">
                     <table class="table">
-
+                        <thead>
+                            <th></th>
+                        </thead>
                     </table>
                 </div>
             </div>

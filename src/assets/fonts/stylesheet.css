@@ -1,0 +1,144 @@
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-Light.eot');
+    src: url('SFUIText-Light.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-Light.woff2') format('woff2'),
+        url('SFUIText-Light.woff') format('woff'),
+        url('SFUIText-Light.svg#SFUIText-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-MediumItalic.eot');
+    src: url('SFUIText-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-MediumItalic.woff2') format('woff2'),
+        url('SFUIText-MediumItalic.woff') format('woff'),
+        url('SFUIText-MediumItalic.svg#SFUIText-MediumItalic') format('svg');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-SemiboldItalic.eot');
+    src: url('SFUIText-SemiboldItalic.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-SemiboldItalic.woff2') format('woff2'),
+        url('SFUIText-SemiboldItalic.woff') format('woff'),
+        url('SFUIText-SemiboldItalic.svg#SFUIText-SemiboldItalic') format('svg');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-Semibold.eot');
+    src: url('SFUIText-Semibold.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-Semibold.woff2') format('woff2'),
+        url('SFUIText-Semibold.woff') format('woff'),
+        url('SFUIText-Semibold.svg#SFUIText-Semibold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-Regular.eot');
+    src: url('SFUIText-Regular.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-Regular.woff2') format('woff2'),
+        url('SFUIText-Regular.woff') format('woff'),
+        url('SFUIText-Regular.svg#SFUIText-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-Heavy.eot');
+    src: url('SFUIText-Heavy.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-Heavy.woff2') format('woff2'),
+        url('SFUIText-Heavy.woff') format('woff'),
+        url('SFUIText-Heavy.svg#SFUIText-Heavy') format('svg');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-HeavyItalic.eot');
+    src: url('SFUIText-HeavyItalic.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-HeavyItalic.woff2') format('woff2'),
+        url('SFUIText-HeavyItalic.woff') format('woff'),
+        url('SFUIText-HeavyItalic.svg#SFUIText-HeavyItalic') format('svg');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-RegularItalic.eot');
+    src: url('SFUIText-RegularItalic.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-RegularItalic.woff2') format('woff2'),
+        url('SFUIText-RegularItalic.woff') format('woff'),
+        url('SFUIText-RegularItalic.svg#SFUIText-RegularItalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-BoldItalic.eot');
+    src: url('SFUIText-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-BoldItalic.woff2') format('woff2'),
+        url('SFUIText-BoldItalic.woff') format('woff'),
+        url('SFUIText-BoldItalic.svg#SFUIText-BoldItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-Bold.eot');
+    src: url('SFUIText-Bold.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-Bold.woff2') format('woff2'),
+        url('SFUIText-Bold.woff') format('woff'),
+        url('SFUIText-Bold.svg#SFUIText-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-LightItalic.eot');
+    src: url('SFUIText-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-LightItalic.woff2') format('woff2'),
+        url('SFUIText-LightItalic.woff') format('woff'),
+        url('SFUIText-LightItalic.svg#SFUIText-LightItalic') format('svg');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: url('SFUIText-Medium.eot');
+    src: url('SFUIText-Medium.eot?#iefix') format('embedded-opentype'),
+        url('SFUIText-Medium.woff2') format('woff2'),
+        url('SFUIText-Medium.woff') format('woff'),
+        url('SFUIText-Medium.svg#SFUIText-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
