@@ -1,17 +1,12 @@
 import React, { Component, useState, useEffect } from 'react'
 import moment from 'moment';
 const { CustomPagination } = require('../../../../components/atoms/pagination')
-const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { TimePickerInput } = require('../../../../components/atoms/time-picker')
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 
 export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
     allPlatforms, allLeagues, watchPartyListing, getSports, updateParty }) => {
-    const [openSnackBar, setOpenSnackbar] = useState(false);
-    const [snackbarData, setSnackBarData] = useState({
-        variant: '',
-        message: ''
-    });
+
     useEffect(() => {
         listWatchParty(() => { }, () => { })
         getPlatforms(() => { }, () => { })
