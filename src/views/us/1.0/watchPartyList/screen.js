@@ -140,19 +140,19 @@ export const Screen = ({ listWatchParty, history,
                 message={snackbarData.message}
             />
             <div className="content-panel">
-                <div className="page-title">
-                    <h1>Content Management</h1>
-                    <div class="up_btn">
-                        <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.CONTENT))}>Upload New</button>
-                    </div>
-                    <div class="up_btn">
-                        <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.ADD_WATCH_PARTY))}>Add New</button>
+                <div className="row align-items-center page-title">
+                    <h1 class="col-md-6">Content Management</h1>
+                    <div class="col-md-6">
+                        <div class="form-row group-btn justify-content-end">
+                            <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.CONTENT))}>Upload New</button>
+                            <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.ADD_WATCH_PARTY))}>Add New</button>
+                        </div>
                     </div>
                 </div>
+
                 <div className="managment_list">
                     <div class="d-flex table_title">
                         <h3>Live & Upcoming</h3>
-
                     </div>
                     <div className="table-responsive">
                         <table className="table">

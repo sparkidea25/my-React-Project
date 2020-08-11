@@ -73,9 +73,9 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                 <div class="page-title">
                     <h1>Content Management</h1>
                 </div>
-                <div class="sec_row">
+                <div class="row sec_row">
 
-                    <div class="c-col-lft">
+                    <div class="col-md-5">
                         <div class="upload_csv">
                             {/* <CustomFileDrop
                                 handleSubmit={handleOnFileLoad}
@@ -107,40 +107,43 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                             </div>
                         </div>
                     </div>
-                    <Carousel>
-                        {partyData.length > 0 && partyData.map(party => {
 
-                            let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
-                            let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
-                            console.log(platform, league)
-                            return <div class="event_posts">
-                                <div class="date_time">
-                                    <span class="time">{moment(party && party.startTime).format('LT')}</span>
-                                    <span class="date">
-                                        <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
-                                        {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
-                                    </span>
-                                </div>
-                                <div class="team_group">
-                                    <hgroup>
-                                        <h5>{party && party.contentName}</h5>
-                                        <h6>{`${platform && platform[0].name} on ${league && league[0].name}`}</h6>
-                                    </hgroup>
-                                    <span class="total_joined"></span>
-                                    <ul class="list_group">
-                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                    </ul>
-                                    <div class="button_group">
-                                        <button class="btn btn-lg btn-primary btn-radius">Join</button>
-                                        <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                    <div class="col-md-7 carasoul-slide">
+                        <Carousel>
+                            {partyData.length > 0 && partyData.map(party => {
+
+                                let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
+                                let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
+                                console.log(platform, league)
+                                return <div class="event_posts">
+                                    <div class="date_time">
+                                        <span class="time">{moment(party && party.startTime).format('LT')}</span>
+                                        <span class="date">
+                                            <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
+                                            {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div class="team_group">
+                                        <hgroup>
+                                            <h5>{party && party.contentName}</h5>
+                                            <h6>{`${platform && platform[0].name} on ${league && league[0].name}`}</h6>
+                                        </hgroup>
+                                        <span class="total_joined"></span>
+                                        <ul class="list_group">
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                        </ul>
+                                        <div class="button_group">
+                                            <button class="btn btn-lg btn-primary btn-radius">Join</button>
+                                            <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        })}
-                    </Carousel>
+                            })}
+                        </Carousel>
+                    </div>
                 </div>
             </div>
         </div >
