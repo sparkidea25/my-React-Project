@@ -24,52 +24,50 @@ export const DatePickerInput = ({
     dateValue
 }) => {
     const [openCalendar, setOpenCalendar] = useState(false);
-    widthStyle = widthStyle ? widthStyle : "col-md-6";
+    widthStyle = widthStyle ? widthStyle : "col-md-12";
     const validationSpan =
         touched && error ? (
             <span className="error_msg text-danger">{error}</span>
         ) : null;
     return (
         <div className={widthStyle}>
-            <div className="form-group">
-                {label && <label>{label}</label>}
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Grid>
-                        <KeyboardDatePicker
-                            className='form-control'
-                            {...input}
-                            helperText={''}
-                            error={false}
-                            margin="normal"
-                            autoComplete='off'
-                            mask={'__/__/____'}
-                            id="date-picker-dialog"
-                            format='dd/MM/yyyy'
-                            minDate={minDate ? minDate : new Date()}
-                            disabled={disabled}
-                            value={input.value}
-                            allowKeyboardControl={false}
-                            placeholder={'dd/mm/yyyy'}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                            InputProps={{
-                                disabled: true,
-                                style: { color: 'black' },
-                                onClick: () => {
-                                    !disabled && setOpenCalendar(true)
-                                },
+            {label && <label>{label}</label>}
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid>
+                    <KeyboardDatePicker
+                        className='form-control'
+                        {...input}
+                        helperText={''}
+                        error={false}
+                        margin="normal"
+                        autoComplete='off'
+                        mask={'__/__/____'}
+                        id="date-picker-dialog"
+                        format='dd/MM/yyyy'
+                        minDate={minDate ? minDate : new Date()}
+                        disabled={disabled}
+                        value={input.value}
+                        allowKeyboardControl={false}
+                        placeholder={'dd/mm/yyyy'}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                        InputProps={{
+                            disabled: true,
+                            style: { color: 'black' },
+                            onClick: () => {
+                                !disabled && setOpenCalendar(true)
+                            },
 
-                            }}
-                            onChange={(value) => { if (onChangeDate) { onChangeDate(value) } }}
-                            onOpen={() => { setOpenCalendar(true) }}
-                            onClose={() => { setOpenCalendar(false) }}
-                            open={openCalendar}
-                        />
-                    </Grid>
-                    {validationSpan}
-                </MuiPickersUtilsProvider>
-            </div>
+                        }}
+                        onChange={(value) => { if (onChangeDate) { onChangeDate(value) } }}
+                        onOpen={() => { setOpenCalendar(true) }}
+                        onClose={() => { setOpenCalendar(false) }}
+                        open={openCalendar}
+                    />
+                </Grid>
+                {validationSpan}
+            </MuiPickersUtilsProvider>
         </div>
 
     );

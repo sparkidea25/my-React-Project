@@ -224,8 +224,8 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                                         </div>
                                         </td>
                                         <td> {index === rowToEdit && editMode === true ?
-                                            <button className="btn btn-sm btn-primary" onClick={() => updateWatchParty(index)}>Done</button>
-                                            : <button className="btn btn-sm btn-primary" onClick={() => editRow(index, party)}>Edit</button>
+                                            <button className="btn btn-sm btn-secondary" onClick={() => updateWatchParty(index)}>Done</button>
+                                            : <button className="btn btn-sm btn-secondary" onClick={() => editRow(index, party)}>Edit</button>
                                         }
                                         </td>
                                     </tr>
