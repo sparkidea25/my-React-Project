@@ -270,9 +270,9 @@ export const Screen = ({ listWatchParty,
                                     <th>Month</th>
                                     <th>Date</th>
                                     <th>Time (EST).</th>
-                                    <th>Content lenght</th>
+                                    <th>Content length</th>
                                     <th>Joined</th>
-                                    <th>Intrested </th>
+                                    <th>Interested </th>
                                     <th></th>
                                 </tr>
                             </thead>

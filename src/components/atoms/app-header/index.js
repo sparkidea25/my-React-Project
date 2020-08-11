@@ -15,7 +15,7 @@ export const AppHeader = ({
     const activeColor = history.location.pathname === ROUTES.CONTENT ? '#61d1fc' : 'white'
     return (<header className="fixed-top">
         <nav className="d-flex justify-content-around align-items-center align-items-md-end">
-            <div className="navbar-brand" onClick={() => history.push(ROUTES.CONTENT)}>
+            <div className="navbar-brand" onClick={() => history.push(ROUTES.DASHBOARD)}>
                 <a className="brand-logo" href="#">
                     <img src={require(`../../../assets/img/logo.png`)} width="250" alt="Collyde" className="img-fluid" />
                 </a>
