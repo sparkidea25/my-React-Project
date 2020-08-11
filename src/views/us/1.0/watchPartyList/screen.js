@@ -114,7 +114,12 @@ export const Screen = ({ listWatchParty,
                     <h1>Content Management</h1>
                 </div>
                 <div className="managment_list">
-                    <h3>Live & Upcoming</h3>
+                    <div class="d-flex table_title">
+                        <h3>Live & Upcoming</h3>
+                        <div class="up_btn">
+                            <button class="btn btn-md btn-primary">Upload</button>
+                        </div>
+                    </div>
                     <div className="table-responsive">
                         <table className="table">
                             <thead>
