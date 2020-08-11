@@ -1,31 +1,64 @@
-import React, { useState } from 'react'
-const { CustomFileDrop } = require("../../../../components/cells/custom-filedrop")
+import React, { useState, useEffect } from 'react'
+import { CSVReader } from 'react-papaparse'
+import moment from 'moment';
+
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 
-export const Screen = ({ exportWatchParty }) => {
+export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeagues, getSports, allLeagues }) => {
+    const buttonRef = React.createRef()
     const [partyData, setPartyData] = useState([])
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
         message: ''
     });
-
+    useEffect(() => {
+        getPlatforms(() => { }, () => { })
+        getLeagues(() => { }, () => { })
+        getSports(() => { }, () => { })
+    }, [])
     const handleOnFileLoad = (data) => {
-        // console.log(data)
+        console.log(data)
         // csvToPartydata(data)
-        exportWatchParty(data, (response) => {
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
-        }, (response) => {
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
-        })
+
+        let arr = []
+        for (let i = 1; i < data.length; i++) {
+            let obj
+            data[0].data.map((head, index) => {
+                obj = { ...obj, [head]: data[i].data[index] }
+            })
+
+            arr.push(obj)
+        }
+
+        setPartyData(arr)
+        // exportWatchParty(data, (response) => {
+        //     setSnackBarData({
+        //         variant: response.status ? 'success' : 'error',
+        //         message: response.msg
+        //     });
+        //     setOpenSnackbar(true)
+        // }, (response) => {
+        //     setSnackBarData({
+        //         variant: response.status ? 'success' : 'error',
+        //         message: response.msg
+        //     });
+        //     setOpenSnackbar(true)
+        // })
+    }
+    const handleOnError = () => {
+
+    }
+    const handleOnRemoveFile = () => {
+
+    }
+    const handleOpenDialog = (e) => {
+        // Note that the ref is set async, so it might be null at some point
+        if (buttonRef.current) {
+            buttonRef.current.open(e)
+        }
     }
 
     return (
@@ -44,40 +77,72 @@ export const Screen = ({ exportWatchParty }) => {
 
                     <div class="c-col-lft">
                         <div class="upload_csv">
-                            <CustomFileDrop
+                            {/* <CustomFileDrop
                                 handleSubmit={handleOnFileLoad}
-                            />
-                        </div>
-                    </div>
+                            /> */}
+                            <div className="d-flex align-items-center w-100 drag_drop_option">
+                                <i><img src={require(`../../../../assets/img/icons/cloud_icon.svg`)} alt={'non-upload-icon'} width="80" /></i>
+                                <CSVReader
+                                    ref={buttonRef}
+                                    onFileLoad={handleOnFileLoad}
+                                    onError={handleOnError}
+                                    noClick
+                                    noDrag
+                                    onRemoveFile={handleOnRemoveFile}
+                                >
+                                    {({ file }) => (
 
-                    <div class="event_posts">
-                        <div class="date_time">
-                            <span class="time">2:30</span>
-                            <span class="date">
-                                <strong>Fri</strong>Jul 31
-                                </span>
-                        </div>
-                        <div class="team_group">
-                            <hgroup>
-                                <h5>Magic at Nets</h5>
-                                <h6>Nba on abc</h6>
-                            </hgroup>
-                            <span class="total_joined">1 Joined</span>
-                            <ul class="list_group">
-                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                            </ul>
-                            <div class="button_group">
-                                <button class="btn btn-lg btn-primary btn-radius">Join</button>
-                                <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                        <button
+                                            type='button'
+                                            onClick={handleOpenDialog}
+                                            id='upload_btn'
+                                        >
+                                            Browse
+                                        </button>
+
+
+
+                                    )}
+                                </CSVReader>
                             </div>
                         </div>
                     </div>
+                    <Carousel>
+                        {partyData.length > 0 && partyData.map(party => {
 
+                            let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
+                            let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
+                            console.log(platform, league)
+                            return <div class="event_posts">
+                                <div class="date_time">
+                                    <span class="time">{moment(party && party.startTime).format('LT')}</span>
+                                    <span class="date">
+                                        <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
+                                        {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
+                                    </span>
+                                </div>
+                                <div class="team_group">
+                                    <hgroup>
+                                        <h5>{party && party.contentName}</h5>
+                                        <h6>{`${platform && platform[0].name} on ${league && league[0].name}`}</h6>
+                                    </hgroup>
+                                    <span class="total_joined"></span>
+                                    <ul class="list_group">
+                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                        <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                    </ul>
+                                    <div class="button_group">
+                                        <button class="btn btn-lg btn-primary btn-radius">Join</button>
+                                        <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                    </div>
+                                </div>
+                            </div>
+                        })}
+                    </Carousel>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
