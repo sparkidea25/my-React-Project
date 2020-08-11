@@ -1,11 +1,12 @@
 import React, { Component, useState, useEffect } from 'react'
 import moment from 'moment';
+import { ROUTES } from '../../../../shared/constants';
 const { CustomPagination } = require('../../../../components/atoms/pagination')
 const { TimePickerInput } = require('../../../../components/atoms/time-picker')
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
-export const Screen = ({ listWatchParty,
+export const Screen = ({ listWatchParty, history,
     allPlatforms, allLeagues, updateParty, getPlatforms, getLeagues, listPastWatchParty, getSports }) => {
 
     const [upcomingAndLiveListing, setUpcomingAndLiveListing] = useState([])
@@ -142,7 +143,10 @@ export const Screen = ({ listWatchParty,
                 <div className="page-title">
                     <h1>Content Management</h1>
                     <div class="up_btn">
-                        <button class="btn btn-md btn-primary">Upload New</button>
+                        <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.CONTENT))}>Upload New</button>
+                    </div>
+                    <div class="up_btn">
+                        <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.ADD_WATCH_PARTY))}>Add New</button>
                     </div>
                 </div>
                 <div className="managment_list">

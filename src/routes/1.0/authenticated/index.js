@@ -15,6 +15,7 @@ const { ScreenHOC } = require(`../../../components/hoc/screen-hoc`);
 const { HomeScreen } = require(`../../../views/${LOCATION}/${VERSION}/home`);
 const { ContentManagementScreen } = require(`../../../views/${LOCATION}/${VERSION}/content-management`);
 const { WatchPartyScreen } = require(`../../../views/${LOCATION}/${VERSION}/watchPartyList`);
+const { AddWatchPartyScreen } = require(`../../../views/${LOCATION}/${VERSION}/add-watch-party`);
 
 const { styles } = require(`../../../theme`);
 const {
@@ -100,6 +101,7 @@ const AuthenticatedRouter = (props) => {
           <Route exact path={`${ROUTES.DASHBOARD}`} component={HomeScreen} />
           <Route exact path={`${ROUTES.CONTENT}`} component={ContentManagementScreen} />
           <Route exact path={`${ROUTES.WATCH_PARTY}`} component={WatchPartyScreen} />
+          <Route exact path={`${ROUTES.ADD_WATCH_PARTY}`} component={AddWatchPartyScreen} />
           <Redirect to={ROUTES.DASHBOARD} />
         </Switch>
       </ScreenHOC>

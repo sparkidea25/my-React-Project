@@ -6,5 +6,6 @@ export const ROUTES = {
     LOGOUT: '/logout',
     FORGOT_PASSWORD: '/forgot-password',
     CONTENT: '/content',
-    WATCH_PARTY: '/watch-party'
+    WATCH_PARTY: '/watch-party',
+    ADD_WATCH_PARTY: '/add-watch-party'
 }
