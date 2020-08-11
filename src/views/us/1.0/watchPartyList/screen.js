@@ -129,8 +129,22 @@ export const Screen = ({ listWatchParty, history,
 
     }, [editMode])
     useEffect(() => {
-
+        // console.log(fields.time)
     }, [fields])
+    const diff_minutes = (dt2, dt1) => {
+        dt2 = new Date(dt2)
+        dt1 = new Date(dt1)
+        console.log(dt2, dt1)
+        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= 60;
+        return Math.abs(Math.round(diff));
+    }
+    const changeStartTime = (type, time) => {
+        console.log(type, time)
+        updateFields(type, time)
+        let min = diff_minutes(fields.time, fields.endTime)
+        updateFields('contentLength', min)
+    }
     return (
         <div className="container-fluid">
             <SnackbarWrapper
@@ -243,7 +257,9 @@ export const Screen = ({ listWatchParty, history,
 
                                                 <TimePickerInput
                                                     value={fields.time}
-                                                    onChangeTime={(time) => { updateFields('time', time) }}
+                                                    onChangeTime={(time) => {
+                                                        changeStartTime('time', time)
+                                                    }}
                                                 />
                                                 : moment(party && party.startTime).format('LT')}
                                         </div></td>
@@ -252,7 +268,9 @@ export const Screen = ({ listWatchParty, history,
 
                                                 <TimePickerInput
                                                     value={fields.endTime}
-                                                    onChangeTime={(time) => { updateFields('endTime', time) }}
+                                                    onChangeTime={(time) => {
+                                                        changeStartTime('endTime', time)
+                                                    }}
                                                 />
                                                 : moment(party && party.endTime).format('LT')}
                                         </div></td>

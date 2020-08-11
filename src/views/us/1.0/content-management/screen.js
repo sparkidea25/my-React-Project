@@ -31,7 +31,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
             arr.push(obj)
         }
-
+        console.log(arr, 'check')
         setPartyData(arr)
     }
     const handleOnError = () => {
@@ -140,7 +140,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                             </div>
                         })}
                     </Carousel>
-                    <button onClick={uploadWatchParty}>Upload</button>
+                    {partyData.length > 0 ? <button onClick={uploadWatchParty}>Upload</button> : ''}
                 </div>
             </div>
         </div >
