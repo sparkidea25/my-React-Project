@@ -22,6 +22,7 @@ const createFormData = (fileData) => {
 
 function* exportWatchparty({ data, success, failure }) {
     const formData = createFormData(data);
+    formData.append("file", formData);
     try {
         yield put(startLoader());
         const response = yield postRequest({ API: `${api.URL.EXPORT_CSV}`, DATA: formData });
@@ -197,7 +198,7 @@ function* getSports({ success, failure }) {
     }
 }
 
-function* getPlatforms({ data, success, failure }) {
+function* getPlatforms({ success, failure }) {
     try {
         yield put(startLoader());
         const response = yield getRequest({ API: `${api.URL.GET_PLATFORMS}` });

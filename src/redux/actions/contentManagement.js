@@ -51,10 +51,9 @@ export const getLeagues = (success, failure) => {
         failure
     }
 }
-export const getPlatforms = (data, success, failure) => {
+export const getPlatforms = (success, failure) => {
     return {
         type: GET_PLATFORMS,
-        data,
         success,
         failure
     }

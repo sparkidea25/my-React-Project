@@ -20,7 +20,6 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         getSports(() => { }, () => { })
     }, [])
     const handleOnFileLoad = (data) => {
-        console.log(data)
         // csvToPartydata(data)
 
         let arr = []
@@ -34,19 +33,6 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         }
 
         setPartyData(arr)
-        // exportWatchParty(data, (response) => {
-        //     setSnackBarData({
-        //         variant: response.status ? 'success' : 'error',
-        //         message: response.msg
-        //     });
-        //     setOpenSnackbar(true)
-        // }, (response) => {
-        //     setSnackBarData({
-        //         variant: response.status ? 'success' : 'error',
-        //         message: response.msg
-        //     });
-        //     setOpenSnackbar(true)
-        // })
     }
     const handleOnError = () => {
 
@@ -59,6 +45,23 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         if (buttonRef.current) {
             buttonRef.current.open(e)
         }
+    }
+
+    const uploadWatchParty = () => {
+        let file = { file: buttonRef.current.state.file }
+        exportWatchParty(file, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        }, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        })
     }
 
     return (
@@ -91,17 +94,13 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                     onRemoveFile={handleOnRemoveFile}
                                 >
                                     {({ file }) => (
-
-                                        <button
+                                        < button
                                             type='button'
-                                            onClick={handleOpenDialog}
+                                            onClick={(e) => { handleOpenDialog(e, file) }}
                                             id='upload_btn'
                                         >
                                             Browse
                                         </button>
-
-
-
                                     )}
                                 </CSVReader>
                             </div>
@@ -141,6 +140,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                             </div>
                         })}
                     </Carousel>
+                    <button onClick={uploadWatchParty}>Upload</button>
                 </div>
             </div>
         </div >
