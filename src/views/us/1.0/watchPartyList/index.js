@@ -3,7 +3,10 @@ import { Screen } from "./screen";
 import './styles.scss';
 const {
     listWatchParty,
-    updateWatchParty
+    updateWatchParty,
+    getPlatforms,
+    getLeagues,
+    getSports, listPastWatchParty
 } = require(`../../../../redux/actions`);
 
 const mapStateToProps = (state) => {
@@ -18,7 +21,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         listWatchParty: (data, success, failure) => dispatch(listWatchParty(data, success, failure)),
-        updateParty: (data, success, failure) => dispatch(updateWatchParty(data, success, failure))
+        updateParty: (data, success, failure) => dispatch(updateWatchParty(data, success, failure)),
+        getPlatforms: (success, failure) => dispatch(getPlatforms(success, failure)),
+        getLeagues: (success, failure) => dispatch(getLeagues(success, failure)),
+        getSports: (success, failure) => dispatch(getSports(success, failure)),
+        listPastWatchParty: (data, success, failure) => dispatch(listPastWatchParty(data, success, failure))
     }
 }
 export const WatchPartyScreen = connect(mapStateToProps, mapDispatchToProps)(Screen);

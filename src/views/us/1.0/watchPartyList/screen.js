@@ -6,19 +6,45 @@ const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-w
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 export const Screen = ({ listWatchParty,
-    allPlatforms, allLeagues, watchPartyListing, updateParty, LiveTotalCount }) => {
+    allPlatforms, allLeagues, updateParty, getPlatforms, getLeagues, listPastWatchParty, getSports }) => {
 
-    useEffect(() => {
-        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT })
-
-    }, [])
-
-    const postWatchPartyApi = (data) => {
+    const [upcomingAndLiveListing, setUpcomingAndLiveListing] = useState([])
+    const [pastListing, setPastListing] = useState([])
+    const [LiveTotalCount, setLiveTotalCount] = useState(0)
+    const [PastTotalCount, setPastTotalCount] = useState(0)
+    const postWatchPartyApi = (data, response) => {
         let postData = Object.keys(data)
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
             ).join('&');
-        listWatchParty(postData, () => { }, () => { })
+        listWatchParty(postData, (resp) => { response(resp) }, () => { })
     }
+    const pastWatchPartyApi = (data, response) => {
+        let postData = Object.keys(data)
+            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+            ).join('&');
+        listPastWatchParty(postData, (resp) => { response(resp) }, () => { })
+    }
+    useEffect(() => {
+
+        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+            console.log(response, 'upcoming')
+            setUpcomingAndLiveListing(response && response.watchPartyListing)
+            setLiveTotalCount(response && response.totalCount)
+        })
+        pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
+            console.log(response, 'past')
+            setPastListing(response && response.watchPartyListing)
+            setPastTotalCount(response && response.totalCount)
+        })
+        getPlatforms(() => { }, () => { })
+        getLeagues(() => { }, () => { })
+        getSports(() => { }, () => { })
+
+    }, [])
+
+    useEffect(() => {
+
+    }, [upcomingAndLiveListing])
 
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
@@ -28,6 +54,7 @@ export const Screen = ({ listWatchParty,
     const [editMode, setEditMode] = useState(false)
     const [rowToEdit, setRowToEdit] = useState(null)
     const [liveTableIndex, setLiveTableIndex] = useState(0)
+    const [PastTableIndex, setPastTableIndex] = useState(0)
     const [fields, setFields] = useState({
         show: null,
         host: null,
@@ -79,7 +106,9 @@ export const Screen = ({ listWatchParty,
                 message: response.msg
             });
             setOpenSnackbar(true)
-            postWatchPartyApi({ skip: liveTableIndex, limit: STRINGS.SHOW_LIMIT })
+            postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+                setUpcomingAndLiveListing(response && response.watchPartyListing)
+            })
         }, (error) => {
             setSnackBarData({
                 variant: error.status ? 'success' : 'error',
@@ -112,13 +141,14 @@ export const Screen = ({ listWatchParty,
             <div className="content-panel">
                 <div className="page-title">
                     <h1>Content Management</h1>
+                    <div class="up_btn">
+                        <button class="btn btn-md btn-primary">Upload New</button>
+                    </div>
                 </div>
                 <div className="managment_list">
                     <div class="d-flex table_title">
                         <h3>Live & Upcoming</h3>
-                        <div class="up_btn">
-                            <button class="btn btn-md btn-primary">Upload</button>
-                        </div>
+
                     </div>
                     <div className="table-responsive">
                         <table className="table">
@@ -138,8 +168,8 @@ export const Screen = ({ listWatchParty,
                                 <th></th>
                             </thead>
                             <tbody>
-                                {watchPartyListing && watchPartyListing.map((party, index) => {
-                                    return <tr>
+                                {upcomingAndLiveListing && upcomingAndLiveListing.map((party, index) => {
+                                    return <tr key={index}>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
                                                 <input type="text" placefolder="Content Name" value={fields.show} onChange={(e) => updateFields('show', e.target.value)} />
@@ -250,11 +280,13 @@ export const Screen = ({ listWatchParty,
                         <CustomPagination
                             limit={STRINGS.SHOW_LIMIT}
                             totalPages={LiveTotalCount}
-                            itemsCount={watchPartyListing && watchPartyListing.length}
+                            itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
                             currentPage={liveTableIndex + 1}
                             onPageChange={(value) => {
                                 console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
-                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT })
+                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
+                                    setUpcomingAndLiveListing(response && response.watchPartyListing)
+                                })
                                 setLiveTableIndex(value && value.selected)
 
                             }}
@@ -275,6 +307,7 @@ export const Screen = ({ listWatchParty,
                                     <th>Month</th>
                                     <th>Date</th>
                                     <th>Time (EST).</th>
+                                    <th>End Time</th>
                                     <th>Content length</th>
                                     <th>Joined</th>
                                     <th>Interested </th>
@@ -282,52 +315,57 @@ export const Screen = ({ listWatchParty,
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className="preview_mode">
-                                    <td><div className="input_field"><input type="text" placeholder="Content Name" /></div></td>
-                                    <td><div className="input_field"><input type="text" placeholder="Host Name" /></div></td>
-                                    <td>
-                                        <div className="input_field">
-                                            <select>
-                                                <option>Select</option>
-                                                <option>Yes</option>
-                                                <option>No</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="input_field">
-                                            <select>
-                                                <option>Select</option>
-                                                <option>NBA</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="input_field">
-                                            <select>
-                                                <option>Select</option>
-                                                <option>TNT</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="input_field">
-                                            <select>
-                                                <option>Select</option>
-                                                <option>Jan</option>
-                                                <option>Feb</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td><div className="input_field"><input type="date" /></div></td>
-                                    <td><div className="input_field"><input type="time" /></div></td>
-                                    <td><div className="input_field"><input type="number" /></div></td>
-                                    <td><div className="input_field"><input type="number" value="1" /></div></td>
-                                    <td><div className="input_field"><input type="number" value="1" /></div></td>
-                                    <td style={{ minWidth: '86px' }}> </td>
-                                </tr>
+                                {pastListing && pastListing.map((pastParty, index) => {
+                                    return <tr className="preview_mode" key={index}>
+                                        <td><div className="input_field">{pastParty.contentName}</div></td>
+                                        <td><div className="input_field">{pastParty.host}</div></td>
+                                        <td>
+                                            <div className="input_field">
+                                                {pastParty && pastParty.sports === true ? 'Yes' : 'No'}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="input_field">
+                                                {pastParty && pastParty.leagueInfo && pastParty.leagueInfo.name}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="input_field">
+                                                {pastParty && pastParty.platformInfo && pastParty.platformInfo.name}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="input_field">
+
+                                                {moment(pastParty && pastParty.startTime).format('MMM').toUpperCase()}
+
+                                            </div>
+                                        </td>
+                                        <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('Do').split('th')[0]}</div></td>
+                                        <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('LT')}</div></td>
+                                        <td><div className="input_field">{moment(pastParty && pastParty.endTime).format('LT')}</div></td>
+                                        <td><div className="input_field">{pastParty.contentLength}</div></td>
+                                        <td><div className="input_field">{pastParty.joined}</div></td>
+                                        <td><div className="input_field">{pastParty.interested}</div></td>
+                                        <td style={{ minWidth: '86px' }}> </td>
+                                    </tr>
+                                })}
                             </tbody>
                         </table>
+                        <CustomPagination
+                            limit={STRINGS.SHOW_LIMIT}
+                            totalPages={PastTotalCount}
+                            itemsCount={pastListing && pastListing.length}
+                            currentPage={PastTableIndex + 1}
+                            onPageChange={(value) => {
+                                console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
+                                pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
+                                    setPastListing(response && response.watchPartyListing)
+                                })
+                                setPastTableIndex(value && value.selected)
+
+                            }}
+                        />
                     </div>
                 </div>
             </div>

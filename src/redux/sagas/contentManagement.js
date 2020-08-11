@@ -7,7 +7,7 @@ import {
     EXPORT_CSV,
     GET_WATCH_PARTY,
     GET_LEAGUES,
-    GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, setSports, GET_SPORTS
+    GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, setSports, GET_SPORTS, GET_LIST_WATCH_PARTY
 } from '../actions';
 const api = require(`../../shared/api`);
 const { updateAuthToken, postRequestNoAuth, postRequest, getRequest, putRequest } = require(`../../helpers`);
@@ -57,8 +57,10 @@ function* exportWatchparty({ data, success, failure }) {
 
 function* listWatchparty({ data, success, failure }) {
     try {
+        console.log('called', data)
         yield put(startLoader());
         const response = yield getRequest({ API: `${api.URL.WATCH_PARTY_LISTING}?${data}` });
+        console.log(response, 'respo')
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({
@@ -76,13 +78,15 @@ function* listWatchparty({ data, success, failure }) {
                 failure(response.data)
             }
             else {
-                yield put(setWatchListParty(response.data.data))
+                success(response.data.data)
+                // yield put(setWatchListParty(response.data.data))
                 yield put(stopLoader());
             }
         }
     }
     catch (error) {
         yield put(stopLoader());
+        console.log(error, 'error')
         failure({
             msg: 'Sorry, something went wrong.'
         })
@@ -235,7 +239,8 @@ function* ContentSaga() {
         takeLatest(UPDATE_WATCH_PARTY, updateWatchparty),
         takeLatest(GET_LEAGUES, getLeagues),
         takeLatest(GET_PLATFORMS, getPlatforms),
-        takeLatest(GET_SPORTS, getSports)
+        takeLatest(GET_SPORTS, getSports),
+        takeLatest(GET_LIST_WATCH_PARTY, listWatchparty)
     ]);
 }
 

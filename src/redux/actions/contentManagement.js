@@ -8,6 +8,7 @@ export const SET_LEAGUES = "SET_LEAGUES"
 export const SET_SPORTS = "SET_SPORTS"
 export const GET_SPORTS = "GET_SPORTS"
 export const SET_WATCH_PARTY_LISTING = "SET_WATCH_PARTY_LISTING"
+export const GET_LIST_WATCH_PARTY = "GET_LIST_WATCH_PARTY"
 
 export const exportWatchParty = (data, success, failure) => {
     return {
@@ -21,6 +22,14 @@ export const exportWatchParty = (data, success, failure) => {
 export const listWatchParty = (data, success, failure) => {
     return {
         type: GET_WATCH_PARTY,
+        data,
+        success,
+        failure
+    }
+}
+export const listPastWatchParty = (data, success, failure) => {
+    return {
+        type: GET_LIST_WATCH_PARTY,
         data,
         success,
         failure
