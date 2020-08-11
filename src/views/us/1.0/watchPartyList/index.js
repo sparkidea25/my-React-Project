@@ -14,12 +14,13 @@ const mapStateToProps = (state) => {
     return ({
         allPlatforms: state.ContentReducer.plaformList,
         allLeagues: state.ContentReducer.leagueList,
-        watchPartyListing: state.ContentReducer.watchPartyList && state.ContentReducer.watchPartyList.watchPartyListing
+        watchPartyListing: state.ContentReducer.watchPartyList && state.ContentReducer.watchPartyList.watchPartyListing,
+        LiveTotalCount: state && state.ContentReducer && state.ContentReducer.watchPartyList && state.ContentReducer.watchPartyList.totalCount
     });
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        listWatchParty: (success, failure) => dispatch(listWatchParty(success, failure)),
+        listWatchParty: (data, success, failure) => dispatch(listWatchParty(data, success, failure)),
         getPlatforms: (success, failure) => dispatch(getPlatforms(success, failure)),
         getLeagues: (success, failure) => dispatch(getLeagues(success, failure)),
         getSports: (success, failure) => dispatch(getSports(success, failure)),

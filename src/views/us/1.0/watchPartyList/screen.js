@@ -2,20 +2,35 @@ import React, { Component, useState, useEffect } from 'react'
 import moment from 'moment';
 const { CustomPagination } = require('../../../../components/atoms/pagination')
 const { TimePickerInput } = require('../../../../components/atoms/time-picker')
+const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
-
+const { STRINGS } = require('../../../../shared/constants/us/strings')
 export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
-    allPlatforms, allLeagues, watchPartyListing, getSports, updateParty }) => {
+    allPlatforms, allLeagues, watchPartyListing, getSports, updateParty, LiveTotalCount }) => {
 
     useEffect(() => {
-        listWatchParty(() => { }, () => { })
+        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT })
         getPlatforms(() => { }, () => { })
         getLeagues(() => { }, () => { })
         getSports(() => { }, () => { })
 
     }, [])
+
+    const postWatchPartyApi = (data) => {
+        let postData = Object.keys(data)
+            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+            ).join('&');
+        listWatchParty(postData, () => { }, () => { })
+    }
+
+    const [openSnackBar, setOpenSnackbar] = useState(false);
+    const [snackbarData, setSnackBarData] = useState({
+        variant: '',
+        message: ''
+    });
     const [editMode, setEditMode] = useState(false)
     const [rowToEdit, setRowToEdit] = useState(null)
+    const [liveTableIndex, setLiveTableIndex] = useState(0)
     const [fields, setFields] = useState({
         show: null,
         host: null,
@@ -87,134 +102,217 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
 
     }, [fields])
     return (
-        <div class="container-fluid">
+        <div className="container-fluid">
             <SnackbarWrapper
                 visible={openSnackBar}
                 onClose={() => setOpenSnackbar(false)}
                 variant={snackbarData.variant}
                 message={snackbarData.message}
             />
-            <div class="content-panel">
-                <div class="page-title">
+            <div className="content-panel">
+                <div className="page-title">
                     <h1>Content Management</h1>
                 </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <th>Show</th>
-                            <th>Host</th>
-                            <th>Sports</th>
-                            <th>League</th>
-                            <th>Platform</th>
-                            <th>Month</th>
-                            <th>Date</th>
-                            <th>Time (EST).</th>
-                            <th>Content length</th>
-                            <th>Joined</th>
-                            <th>Interested </th>
-                            <th></th>
-                        </thead>
-                        <tbody>
-                            {watchPartyListing && watchPartyListing.map((party, index) => {
-                                return <tr>
-                                    <td><div class="input_field">
-                                        {index === rowToEdit && editMode === true ?
-                                            <input type="text" placefolder="Content Name" value={fields.show} onChange={(e) => updateFields('show', e.target.value)} />
-                                            : party.contentName}
-                                    </div></td>
-                                    <td><div class="input_field">{index === rowToEdit && editMode === true ?
-                                        <input type="text" placefolder="Host Name" value={fields.host} onChange={(e) => updateFields('host', e.target.value)} />
-                                        : party.host} </div></td>
-                                    <td>
-                                        <div class="input_field">
+                <div className="managment_list">
+                    <h3>Live & Upcomming</h3>
+                    <div className="table-responsive">
+                        <table className="table">
+                            <thead>
+                                <th>Show</th>
+                                <th>Host</th>
+                                <th>Sports</th>
+                                <th>League</th>
+                                <th>Platform</th>
+                                <th>Month</th>
+                                <th>Date</th>
+                                <th>Time (EST).</th>
+                                <th>Content length</th>
+                                <th>Joined</th>
+                                <th>Interested </th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                {watchPartyListing && watchPartyListing.map((party, index) => {
+                                    return <tr>
+                                        <td><div className="input_field">
+                                            {index === rowToEdit && editMode === true ?
+                                                <input type="text" placefolder="Content Name" value={fields.show} onChange={(e) => updateFields('show', e.target.value)} />
+                                                : party.contentName}
+                                        </div></td>
+                                        <td><div className="input_field">{index === rowToEdit && editMode === true ?
+                                            <input type="text" placefolder="Host Name" value={fields.host} onChange={(e) => updateFields('host', e.target.value)} />
+                                            : party.host} </div></td>
+                                        <td>
+                                            <div className="input_field">
 
+                                                {index === rowToEdit && editMode === true ?
+                                                    <select value={fields.sports === true ? 'Yes' : 'No'} onChange={(e) => updateFields('sports', e.target.value)}>
+                                                        {SPORTS_OPTIONS.map(sport => {
+                                                            return <option>{sport && sport.value}</option>
+                                                        })}
+                                                    </select>
+                                                    : party && party.sports}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="input_field">
+                                                {index === rowToEdit && editMode === true ?
+                                                    <select value={fields.league} onChange={(e) => updateFields('league', e.target.value)}>
+                                                        {allLeagues && allLeagues.map(league => {
+                                                            return <option value={league._id}>{league && league.name}</option>
+                                                        })}
+                                                    </select> : party && party.leagueInfo && party.leagueInfo.name}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="input_field">
+                                                {index === rowToEdit && editMode === true ?
+                                                    <select value={fields.platform} onChange={(e) => updateFields('platform', e.target.value)}>
+                                                        {allPlatforms && allPlatforms.map(platform => {
+                                                            return <option value={platform._id}>{platform && platform.name}</option>
+                                                        })}
+                                                    </select>
+                                                    : party && party.platformInfo && party.platformInfo.name}
+                                            </div>
+                                        </td>
+                                        <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <select value={fields.sports === true ? 'Yes' : 'No'} onChange={(e) => updateFields('sports', e.target.value)}>
-                                                    {SPORTS_OPTIONS.map(sport => {
-                                                        return <option>{sport && sport.value}</option>
-                                                    })}
-                                                </select>
-                                                : party && party.sports}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <select value={fields.league} onChange={(e) => updateFields('league', e.target.value)}>
-                                                    {allLeagues && allLeagues.map(league => {
-                                                        return <option value={league._id}>{league && league.name}</option>
-                                                    })}
-                                                </select> : party && party.leagueInfo && party.leagueInfo.name}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <select value={fields.platform} onChange={(e) => updateFields('platform', e.target.value)}>
-                                                    {allPlatforms && allPlatforms.map(platform => {
-                                                        return <option value={platform._id}>{platform && platform.name}</option>
-                                                    })}
-                                                </select>
-                                                : party && party.platformInfo && party.platformInfo.name}
-                                        </div>
-                                    </td>
-                                    <td><div class="input_field">
-                                        {index === rowToEdit && editMode === true ?
-                                            <select value={fields.month} onChange={(e) => updateFields('month', e.target.value)}>
+                                                <select value={fields.month} onChange={(e) => updateFields('month', e.target.value)}>
 
+                                                    {
+                                                        MONTH_OPTIONS && MONTH_OPTIONS.map(month => {
+                                                            return <option>{month && month.value}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                                : moment(party && party.startTime).format('MMM')}
+                                        </div></td>
+                                        <td><div className="input_field">
+                                            {index === rowToEdit && editMode === true ? <select value={fields.date}
+                                                onChange={(e) => updateFields('date', e.target.value)}
+                                            >
                                                 {
-                                                    MONTH_OPTIONS && MONTH_OPTIONS.map(month => {
-                                                        return <option>{month && month.value}</option>
+                                                    DAY_OPTIONS && DAY_OPTIONS.map(day => {
+                                                        return <option>{fields.date !== '' ? fields.date : day && day.value}</option>
                                                     })
                                                 }
-                                            </select>
-                                            : moment(party && party.startTime).format('MMM')}
-                                    </div></td>
-                                    <td><div class="input_field">
-                                        {index === rowToEdit && editMode === true ? <select value={fields.date}
-                                            onChange={(e) => updateFields('date', e.target.value)}
-                                        >
-                                            {
-                                                DAY_OPTIONS && DAY_OPTIONS.map(day => {
-                                                    return <option>{fields.date !== '' ? fields.date : day && day.value}</option>
-                                                })
-                                            }
-                                        </select> : moment(party && party.startTime).format('Do')}
-                                    </div></td>
-                                    <td><div class="input_field">
-                                        {index === rowToEdit && editMode === true ?
+                                            </select> : moment(party && party.startTime).format('Do')}
+                                        </div></td>
+                                        <td><div className="input_field">
+                                            {index === rowToEdit && editMode === true ?
 
-                                            <TimePickerInput
-                                                value={fields.time}
-                                                onChangeTime={(time) => { updateFields('time', time) }}
-                                            />
-                                            : moment(party && party.startTime).format('LT')}
-                                    </div></td>
-                                    <td><div class="input_field">
-                                        {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}
-                                            onChange={(e) => updateFields('contentLength', e.target.value)}
-                                        /> : party.contentLength}
-                                    </div>
-                                    </td>
-                                    <td><div class="input_field">
-                                        {index === rowToEdit && editMode === true ?
-                                            <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} /> : party.joined}
-                                    </div>
-                                    </td>
-                                    <td><div class="input_field">
-                                        {index === rowToEdit && editMode === true ?
-                                            <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} /> : party.interested}
-                                    </div>
-                                    </td>
-                                    <td> {index === rowToEdit && editMode === true ?
-                                        <button class="btn btn-sm btn-primary" onClick={() => updateWatchParty(index)}>Done</button>
-                                        : <button class="btn btn-sm btn-primary" onClick={() => editRow(index, party)}>Edit</button>
-                                    }
-                                    </td>
+                                                <TimePickerInput
+                                                    value={fields.time}
+                                                    onChangeTime={(time) => { updateFields('time', time) }}
+                                                />
+                                                : moment(party && party.startTime).format('LT')}
+                                        </div></td>
+                                        <td><div className="input_field">
+                                            {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}
+                                                onChange={(e) => updateFields('contentLength', e.target.value)}
+                                            /> : party.contentLength}
+                                        </div>
+                                        </td>
+                                        <td><div className="input_field">
+                                            {index === rowToEdit && editMode === true ?
+                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} /> : party.joined}
+                                        </div>
+                                        </td>
+                                        <td><div className="input_field">
+                                            {index === rowToEdit && editMode === true ?
+                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} /> : party.interested}
+                                        </div>
+                                        </td>
+                                        <td> {index === rowToEdit && editMode === true ?
+                                            <button className="btn btn-sm btn-primary" onClick={() => updateWatchParty(index)}>Done</button>
+                                            : <button className="btn btn-sm btn-primary" onClick={() => editRow(index, party)}>Edit</button>
+                                        }
+                                        </td>
+                                    </tr>
+                                })}
+                            </tbody>
+                        </table>
+                        <CustomPagination
+                            limit={STRINGS.SHOW_LIMIT}
+                            totalPages={LiveTotalCount}
+                            itemsCount={watchPartyListing && watchPartyListing.length}
+                            currentPage={liveTableIndex + 1}
+                            onPageChange={(value) => {
+                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: value && value.selected })
+                                setLiveTableIndex(value && value.selected)
+
+                            }}
+                        />
+                    </div>
+                </div>
+                <div className="managment_list">
+                    <h3>Past</h3>
+                    <div className="table-responsive">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Show</th>
+                                    <th>Host</th>
+                                    <th>Sports</th>
+                                    <th>League</th>
+                                    <th>Platform</th>
+                                    <th>Month</th>
+                                    <th>Date</th>
+                                    <th>Time (EST).</th>
+                                    <th>Content lenght</th>
+                                    <th>Joined</th>
+                                    <th>Intrested </th>
+                                    <th></th>
                                 </tr>
-                            })}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <tr className="preview_mode">
+                                    <td><div className="input_field"><input type="text" placeholder="Content Name" /></div></td>
+                                    <td><div className="input_field"><input type="text" placeholder="Host Name" /></div></td>
+                                    <td>
+                                        <div className="input_field">
+                                            <select>
+                                                <option>Select</option>
+                                                <option>Yes</option>
+                                                <option>No</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="input_field">
+                                            <select>
+                                                <option>Select</option>
+                                                <option>NBA</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="input_field">
+                                            <select>
+                                                <option>Select</option>
+                                                <option>TNT</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="input_field">
+                                            <select>
+                                                <option>Select</option>
+                                                <option>Jan</option>
+                                                <option>Feb</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><div className="input_field"><input type="date" /></div></td>
+                                    <td><div className="input_field"><input type="time" /></div></td>
+                                    <td><div className="input_field"><input type="number" /></div></td>
+                                    <td><div className="input_field"><input type="number" value="1" /></div></td>
+                                    <td><div className="input_field"><input type="number" value="1" /></div></td>
+                                    <td style={{ minWidth: '86px' }}> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

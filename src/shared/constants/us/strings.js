@@ -26,5 +26,6 @@ export const STRINGS = {
   NO_RECORDS_FOUND: 'No matched records found',
   LOG_OUT: 'Log Out',
   SUCCESS: 'success',
-  ERROR: 'error'
+  ERROR: 'error',
+  SHOW_LIMIT: 5
 }

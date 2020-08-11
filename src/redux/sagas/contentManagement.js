@@ -55,10 +55,10 @@ function* exportWatchparty({ data, success, failure }) {
     }
 }
 
-function* listWatchparty({ success, failure }) {
+function* listWatchparty({ data, success, failure }) {
     try {
         yield put(startLoader());
-        const response = yield getRequest({ API: `${api.URL.WATCH_PARTY_LISTING}` });
+        const response = yield getRequest({ API: `${api.URL.WATCH_PARTY_LISTING}?${data}` });
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({

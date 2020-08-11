@@ -18,9 +18,10 @@ export const exportWatchParty = (data, success, failure) => {
     }
 }
 
-export const listWatchParty = (success, failure) => {
+export const listWatchParty = (data, success, failure) => {
     return {
         type: GET_WATCH_PARTY,
+        data,
         success,
         failure
     }
