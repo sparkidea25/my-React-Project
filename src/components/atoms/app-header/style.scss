@@ -46,9 +46,11 @@ header {
                 display: block;
                 text-align: left;                
             }
-            
+            &.active a {
+                color:#64d2ff;
+            }            
             a {
-                   color:#fff;
+                color:#fff;
                 font-size: 18px;
                 font-weight: 700;
                 padding: 5px;

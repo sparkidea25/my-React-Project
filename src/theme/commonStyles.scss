@@ -164,16 +164,22 @@ h1,h2,h3,h4,h5,h6 {
 }
 h1 {
     font-size: 2rem;
+    @media (max-width:767px){
+      font-size: 1.75rem;
+    }
 }
 h2{
   font-size: 1.8rem;
+  @media (max-width:767px){
+    font-size: 1.5rem;
+  }
 }
 h3{
   font-size: 1.6rem;
   @media (max-width:767px){
-    font-size:1.4rem;
+    font-size:1.35rem;
   }
-}
+}min-width
 h4{
   font-size: 1.4rem;
   @media (max-width:767px){
@@ -268,8 +274,9 @@ label {
 .btn-primary.focus, .btn-primary:focus, .btn-primary:not(:disabled):not(.disabled).active, 
 .btn-primary:not(:disabled):not(.disabled):active, 
 .show>.btn-primary.dropdown-toggle{
-  background: #424959!important;
-  border-color: #424959!important;
+  background: #27778d;
+  border-color: #27778d;
+  border: 1px solid #27778d;
 }
 .btn-primary.disabled, .btn-primary:disabled {
   background: #e3e5e8;
