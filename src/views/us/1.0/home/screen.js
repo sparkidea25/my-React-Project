@@ -6,8 +6,13 @@ const {
 } = require(`../../../../shared/constants`);
 
 export const Screen = ({
-    history
+    history, getPlatforms, getLeagues, getSports
 }) => {
+    useEffect(() => {
+        getPlatforms(() => { }, () => { })
+        getLeagues(() => { }, () => { })
+        getSports(() => { }, () => { })
+    }, [])
     return (
         <>
             {console.log(history)}

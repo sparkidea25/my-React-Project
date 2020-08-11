@@ -5,14 +5,11 @@ const { TimePickerInput } = require('../../../../components/atoms/time-picker')
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
-export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
-    allPlatforms, allLeagues, watchPartyListing, getSports, updateParty, LiveTotalCount }) => {
+export const Screen = ({ listWatchParty,
+    allPlatforms, allLeagues, watchPartyListing, updateParty, LiveTotalCount }) => {
 
     useEffect(() => {
         postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT })
-        getPlatforms(() => { }, () => { })
-        getLeagues(() => { }, () => { })
-        getSports(() => { }, () => { })
 
     }, [])
 
@@ -40,6 +37,7 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
         month: '',
         date: '',
         time: null,
+        endTime: null,
         contentLength: '',
         joined: '',
         interested: '',
@@ -49,11 +47,12 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
     const editRow = (index, party) => {
         setFields({
             ...fields, watchPartyId: party._id, show: party.contentName, host: party.host,
-            sports: party.sports, league: party && party.leagueInfo && party.leagueInfo._id,
+            sports: party.sports === true ? 'Yes' : 'No', league: party && party.leagueInfo && party.leagueInfo._id,
             platform: party && party.platformInfo && party.platformInfo._id,
             month: moment(party && party.startTime).format('MMM').toUpperCase(),
             date: moment(party && party.startTime).format('Do').split('th')[0],
             time: party && party.startTime,
+            endTime: party && party.endTime,
             joined: party && party.joined,
             interested: party && party.interested,
             contentLength: party && party.contentLength,
@@ -68,6 +67,7 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
             "contentName": fields.show,
             "host": fields.host,
             "startTime": fields.time,
+            "endTime": fields.endTime,
             "sports": fields.sports === 'No' ? 'false' : 'true',
             "league": fields.league,
             "platform": fields.platform,
@@ -79,7 +79,7 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                 message: response.msg
             });
             setOpenSnackbar(true)
-            listWatchParty(() => { }, () => { })
+            postWatchPartyApi({ skip: liveTableIndex, limit: STRINGS.SHOW_LIMIT })
         }, (error) => {
             setSnackBarData({
                 variant: error.status ? 'success' : 'error',
@@ -114,7 +114,7 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                     <h1>Content Management</h1>
                 </div>
                 <div className="managment_list">
-                    <h3>Live & Upcomming</h3>
+                    <h3>Live & Upcoming</h3>
                     <div className="table-responsive">
                         <table className="table">
                             <thead>
@@ -126,6 +126,7 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                                 <th>Month</th>
                                 <th>Date</th>
                                 <th>Time (EST).</th>
+                                <th>End Time</th>
                                 <th>Content length</th>
                                 <th>Joined</th>
                                 <th>Interested </th>
@@ -146,12 +147,12 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                                             <div className="input_field">
 
                                                 {index === rowToEdit && editMode === true ?
-                                                    <select value={fields.sports === true ? 'Yes' : 'No'} onChange={(e) => updateFields('sports', e.target.value)}>
+                                                    <select value={fields.sports} onChange={(e) => updateFields('sports', e.target.value)}>
                                                         {SPORTS_OPTIONS.map(sport => {
                                                             return <option>{sport && sport.value}</option>
                                                         })}
                                                     </select>
-                                                    : party && party.sports}
+                                                    : party && party.sports === true ? 'Yes' : 'No'}
                                             </div>
                                         </td>
                                         <td>
@@ -193,7 +194,7 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                                             >
                                                 {
                                                     DAY_OPTIONS && DAY_OPTIONS.map(day => {
-                                                        return <option>{fields.date !== '' ? fields.date : day && day.value}</option>
+                                                        return <option>{day && day.value}</option>
                                                     })
                                                 }
                                             </select> : moment(party && party.startTime).format('Do')}
@@ -206,6 +207,15 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                                                     onChangeTime={(time) => { updateFields('time', time) }}
                                                 />
                                                 : moment(party && party.startTime).format('LT')}
+                                        </div></td>
+                                        <td><div className="input_field">
+                                            {index === rowToEdit && editMode === true ?
+
+                                                <TimePickerInput
+                                                    value={fields.endTime}
+                                                    onChangeTime={(time) => { updateFields('endTime', time) }}
+                                                />
+                                                : moment(party && party.endTime).format('LT')}
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}
@@ -238,7 +248,8 @@ export const Screen = ({ listWatchParty, getPlatforms, getLeagues,
                             itemsCount={watchPartyListing && watchPartyListing.length}
                             currentPage={liveTableIndex + 1}
                             onPageChange={(value) => {
-                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: value && value.selected })
+                                console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
+                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT })
                                 setLiveTableIndex(value && value.selected)
 
                             }}
