@@ -20,7 +20,6 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         getSports(() => { }, () => { })
     }, [])
     const handleOnFileLoad = (data) => {
-        console.log(data)
         // csvToPartydata(data)
 
         let arr = []
@@ -34,19 +33,6 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         }
 
         setPartyData(arr)
-        // exportWatchParty(data, (response) => {
-        //     setSnackBarData({
-        //         variant: response.status ? 'success' : 'error',
-        //         message: response.msg
-        //     });
-        //     setOpenSnackbar(true)
-        // }, (response) => {
-        //     setSnackBarData({
-        //         variant: response.status ? 'success' : 'error',
-        //         message: response.msg
-        //     });
-        //     setOpenSnackbar(true)
-        // })
     }
     const handleOnError = () => {
 
@@ -61,91 +47,107 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         }
     }
 
-    return (
-        <div class="container-fluid">
-            <SnackbarWrapper
-                visible={openSnackBar}
-                onClose={() => setOpenSnackbar(false)}
-                variant={snackbarData.variant}
-                message={snackbarData.message}
-            />
-            <div class="content-panel">
-                <div class="page-title">
-                    <h1>Content Management</h1>
-                </div>
-                <div class="row sec_row">
+    const uploadWatchParty = () => {
+        let file = { file: buttonRef.current.state.file }
+        exportWatchParty(file, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        }, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        })
+    }
 
-                    <div class="col-md-5">
-                        <div class="upload_csv">
-                            {/* <CustomFileDrop
+    return (
+        <>
+            <div class="container-fluid">
+                <SnackbarWrapper
+                    visible={openSnackBar}
+                    onClose={() => setOpenSnackbar(false)}
+                    variant={snackbarData.variant}
+                    message={snackbarData.message}
+                />
+                <div class="content-panel">
+                    <div class="page-title">
+                        <h1>Content Management</h1>
+                    </div>
+                    <div class="row sec_row">
+
+                        <div class="col-md-5">
+                            <div class="upload_csv">
+                                {/* <CustomFileDrop
                                 handleSubmit={handleOnFileLoad}
                             /> */}
-                            <div className="d-flex align-items-center w-100 drag_drop_option">
-                                <i><img src={require(`../../../../assets/img/icons/cloud_icon.svg`)} alt={'non-upload-icon'} width="80" /></i>
-                                <CSVReader
-                                    ref={buttonRef}
-                                    onFileLoad={handleOnFileLoad}
-                                    onError={handleOnError}
-                                    noClick
-                                    noDrag
-                                    onRemoveFile={handleOnRemoveFile}
-                                >
-                                    {({ file }) => (
-
-                                        <button
-                                            type='button'
-                                            onClick={handleOpenDialog}
-                                            id='upload_btn'
-                                        >
-                                            Browse
-                                        </button>
-
-
-
-                                    )}
-                                </CSVReader>
+                                <div className="d-flex align-items-center w-100 drag_drop_option">
+                                    <i><img src={require(`../../../../assets/img/icons/cloud_icon.svg`)} alt={'non-upload-icon'} width="80" /></i>
+                                    <CSVReader
+                                        ref={buttonRef}
+                                        onFileLoad={handleOnFileLoad}
+                                        onError={handleOnError}
+                                        noClick
+                                        noDrag
+                                        onRemoveFile={handleOnRemoveFile}
+                                    >
+                                        {({ file }) => (
+                                            < button
+                                                type='button'
+                                                onClick={(e) => { handleOpenDialog(e, file) }}
+                                                id='upload_btn'
+                                            >
+                                                Browse
+                                            </button>
+                                        )}
+                                    </CSVReader>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-7 carasoul-slide">
-                        <Carousel>
-                            {partyData.length > 0 && partyData.map(party => {
+                        <div class="col-md-7 carasoul-slide">
+                            <Carousel>
+                                {partyData.length > 0 && partyData.map(party => {
 
-                                let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
-                                let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
-                                console.log(platform, league)
-                                return <div class="event_posts">
-                                    <div class="date_time">
-                                        <span class="time">{moment(party && party.startTime).format('LT')}</span>
-                                        <span class="date">
-                                            <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
-                                            {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
-                                        </span>
-                                    </div>
-                                    <div class="team_group">
-                                        <hgroup>
-                                            <h5>{party && party.contentName}</h5>
-                                            <h6>{`${platform && platform[0].name} on ${league && league[0].name}`}</h6>
-                                        </hgroup>
-                                        <span class="total_joined"></span>
-                                        <ul class="list_group">
-                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                        </ul>
-                                        <div class="button_group">
-                                            <button class="btn btn-lg btn-primary btn-radius">Join</button>
-                                            <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                    let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
+                                    let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
+                                    console.log(platform, league)
+                                    return <div class="event_posts">
+                                        <div class="date_time">
+                                            <span class="time">{moment(party && party.startTime).format('LT')}</span>
+                                            <span class="date">
+                                                <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
+                                                {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <div class="team_group">
+                                            <hgroup>
+                                                <h5>{party && party.contentName}</h5>
+                                                <h6>{`${platform && platform[0].name} on ${league && league[0].name}`}</h6>
+                                            </hgroup>
+                                            <span class="total_joined"></span>
+                                            <ul class="list_group">
+                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                            </ul>
+                                            <div class="button_group">
+                                                <button class="btn btn-lg btn-primary btn-radius">Join</button>
+                                                <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            })}
-                        </Carousel>
+                                })}
+                            </Carousel>
+                            <button onClick={uploadWatchParty}>Upload</button>
+                        </div>
                     </div>
-                </div>
+                </div >
             </div>
-        </div >
+        </>
     )
 }
