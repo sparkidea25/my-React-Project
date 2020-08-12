@@ -147,6 +147,7 @@ const WatchPartyForm = ({
                     handleSubmit(onSubmit)} class="add_watch_form">
                     <div className="row">
                         <div className="col-md-6">
+                            <label>Name</label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.SHOW_NAME}
@@ -154,23 +155,20 @@ const WatchPartyForm = ({
                                     placeholder={STRINGS.SHOW_NAME}
                                     value={fields.show}
                                     type={'text'}
-
                                     onChange={event => onChangeField('show', event.target.value)}
-
                                 />
                             </div>
                         </div>
                         <div className="col-md-6">
+                            <label>Host</label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.HOST_NAME}
                                     component={Input}
                                     value={fields.host}
                                     placeholder={STRINGS.HOST_NAME}
-
                                     type={"text"}
                                     onChange={event => onChangeField('host', event.target.value)}
-
                                 />
                             </div>
                         </div>
@@ -178,6 +176,7 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
+                            <label>Sports Name</label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.SPORTS_NAME}
@@ -189,13 +188,12 @@ const WatchPartyForm = ({
                                         onChangeField('sports', value.value)
                                         setSelectedSport(value.label)
                                     }}
-
                                 />
                             </div>
                         </div>
 
-
                         <div class="col-md-6">
+                            <label>League Name</label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.LEAGUE_NAME}
@@ -214,6 +212,7 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
+                            <label>Plateform Name</label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.PLATFORM_NAME}
@@ -229,6 +228,7 @@ const WatchPartyForm = ({
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <label>Start Time</label>
                             <div className="form-group">
                                 <Field
                                     name={STRINGS.START_TIME}
@@ -240,7 +240,6 @@ const WatchPartyForm = ({
                                     onChangeDate={(value) => {
                                         onChangeField('startTime', value)
                                     }}
-
                                 />
                             </div>
                         </div>
@@ -249,6 +248,7 @@ const WatchPartyForm = ({
                     <div className="row">
                         <div class="col-md-6">
                             {/* <div className="row"> */}
+                            <label>End Time</label>
                             <Field
                                 name={STRINGS.END_TIME}
                                 component={TimePickerInputField}
@@ -264,6 +264,7 @@ const WatchPartyForm = ({
                             {/* </div> */}
                         </div>
                         <div class="col-md-6">
+                            <label>Length</label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.CONTENT_LENGTH}
@@ -282,7 +283,7 @@ const WatchPartyForm = ({
                         </div>
                     </div>
                     <div className="btn_group text-center">
-                        <InputSubmit buttonLabel={'Add'} />
+                        <InputSubmit buttonLabel={'Add Watch Party'} />
                     </div>
                 </Form>
             </div>
