@@ -13,19 +13,18 @@ export const InputSubmit = ({
 }) => {
   return (
 
-    <div className={classNames(["btn-full mt-4", containerStyle])}>
-      <button
-        disabled={disabled}
-        type={buttonType}
-        onClick={(e) => { buttonAction() }}
-        className={classNames([
-          "btn btn-lg btn-primary w-100",
-        ])}>
-        {buttonLabel}{" "}
-        {buttonLabel === loginText && <i>
-          {/* <img src={next} alt="" /> */}
-        </i>}
-      </button>
-    </div>
+    <button
+      disabled={disabled}
+      type={buttonType}
+      onClick={(e) => { buttonAction() }}
+      className={classNames([
+        "btn btn-lg btn-primary btn-radius",
+      ])}>
+      {buttonLabel}{" "}
+      {buttonLabel === loginText && <i>
+        {/* <img src={next} alt="" /> */}
+      </i>}
+    </button>
+
   );
 };

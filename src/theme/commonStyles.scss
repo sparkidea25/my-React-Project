@@ -360,66 +360,23 @@ textarea:-ms-input-placeholder {
   position:relative;
   @media(max-width:767px){
     margin-bottom: 1.3rem;
-  }
-  input{
-    color:#000;
-  }
+  } 
 }
 
-.input-div {
-    margin:0 0 15px!important;
-    /** Iphone4/4s Landscape**/
-    /* iPhone 4/4S */
-    @media only screen 
-    and (min-device-width : 320px) 
-    and (max-device-width : 480px) 
-    and (orientation : landscape) { 
-            margin-bottom: 5px!important;
-        }
-    /** Iphone4/4s Landscape**/
-    /* iPhone 4/4S */
-    @media only screen 
-    and (min-device-width : 320px) 
-    and (max-device-width : 568px) 
-    and (orientation : landscape) { 
-            margin-bottom: 5px!important;
-        }
-    @media (max-width:330px){
-        margin: 0 0 10px !important;
-    }
-    input {
-        border: 1px solid #522da8;
-        font-size: 16px;
-        padding: 10px!important;
-        line-height: 1;
-        display: block;
-        box-sizing: border-box;
-        @media (max-width:767px) {
-            height:40px;
-            padding: 8px 12px!important;
-            font-size: 14px;
-        }
-    }    
-    .input-field {
-        width: 100%;
-        label {
-            position: static;
-            font-size:15px;
-            margin:0 0 5px;
-            color:#522da8!important;
-            -webkit-text-fill-color:#522da8!important;
-        }
-        label + .MuiInput-formControl {
-            margin:0;
-        }
-    }
-    .hasError{    
-        label {
-            color:#ff0000!important;
-            -webkit-text-fill-color:#ff0000!important
-        }
-        input {
-            border: 1px solid #FF0000;
-        }    
-    }    
+.MuiTextField-root.form-control {
+  border-color: #e5e5e5;
+  border-width:1px;
+  border-style: solid;
+  border-radius: 4px;
+  padding: 10px;
+  color:#000;
 }
+
+.MuiInput-underline {
+      &:before {
+          display: none;
+      }
+      &:after {
+          display:none!important;
+      }
+  }
