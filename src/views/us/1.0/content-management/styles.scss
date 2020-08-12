@@ -130,21 +130,12 @@
 }
 
 .carasoul-slide {
+    @media(min-width: 1200px){
+        max-width: 520px;
+    }
     @media(max-width: 767px){
         margin:30px 0 0;
-    }
-    .carousel-root {
-        @media(min-width: 1200px){
-            max-width: 520px;
-        }
-    }
-    .pagination-div {
-        margin:0;
-        .pagination-text {
-            font-size: 24px;
-            text-align: center;
-        }
-    }
+    }    
 }
 .carousel {
     .slide {

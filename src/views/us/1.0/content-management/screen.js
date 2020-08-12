@@ -143,31 +143,31 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                })}
-                            </Carousel>
-                            <PreviewSlider
-                                limit={1}
-                                totalPages={2}
-                                itemsCount={1}
-                                currentPage={1}
-                                onPageChange={(value) => {
-                                    // console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
-                                    // postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
-                                    //     setUpcomingAndLiveListing(response && response.watchPartyListing)
-                                    // })
-                                    // setLiveTableIndex(value && value.selected)
+                                    })}
+                                </Carousel>
 
-                                }}
-                            />
-                            <div className="text-center">
+                                <PreviewSlider
+                                    limit={1}
+                                    totalPages={2}
+                                    itemsCount={1}
+                                    currentPage={1}
+                                    onPageChange={(value) => {
+                                        // console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
+                                        // postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
+                                        //     setUpcomingAndLiveListing(response && response.watchPartyListing)
+                                        // })
+                                        // setLiveTableIndex(value && value.selected)
+
+                                    }}
+                                />
+                            </div>
+                            <div className="text-right">
                                 {partyData.length > 0 ? <button className="btn btn-lg btn-secondary" onClick={uploadWatchParty}>Upload</button> : ''}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div >
-        </div>
+            </div>
         </>
     )
 }
