@@ -27,6 +27,7 @@ export const TimePickerInputField = ({
     timeValue,
     maxTime,
     minTime,
+    defaultValue,
     placeholder = 'Choose Time',
     VALIDATION_MESSAGES
 }) => {
@@ -72,17 +73,18 @@ export const TimePickerInputField = ({
                         helperText={''}
                         error={false}
                         id="time-picker"
-                        value={input.value}
-                        defaultValue={new Date().getTime()}
+                        value={defaultValue}
+                        defaultValue={defaultValue}
                         keyboardIcon={<></>}
                         placeholder={placeholder}
                         onChange={(value) => {
                             value.getTime()
+                            console.log(value, minTime)
                             if (maxTime <= value.getTime()) {
                                 setErr('')
                             }
                             else if (minTime >= value.getTime()) {
-                                setErr('Past Time cannot be selected')
+                                setErr('End Time should be greater than Start Time')
                             }
                             else {
                                 input && input.onChange(value)

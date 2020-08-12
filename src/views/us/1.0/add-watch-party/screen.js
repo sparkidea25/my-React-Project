@@ -7,16 +7,18 @@ import { connect } from 'react-redux';
 import "./style.scss";
 
 import validator from "./validator";
+import moment from "moment"
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { Form } = require(`../../../../components/atoms/form`);
 const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
 const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
-const { DatePickerInput } = require(`../../../../components/atoms/date-picker`)
+const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
 const { onSubmitFail } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES } = require(`../../../../shared/constants`);
+const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 
 const WatchPartyForm = ({
     handleSubmit = () => { },
@@ -36,8 +38,12 @@ const WatchPartyForm = ({
         "contentLength": 0,
         "endTime": null,
         'show': "",
-        "date": null
     })
+    const [openSnackBar, setOpenSnackbar] = useState(false);
+    const [snackbarData, setSnackBarData] = useState({
+        variant: '',
+        message: ''
+    });
     const onChangeField = (type, value) => {
         setFields({ ...fields, [type]: value })
     }
@@ -73,14 +79,26 @@ const WatchPartyForm = ({
         let postData = {
             "contentName": fields.contentName,
             "host": fields.host,
-            "startTime": fields.startTime,
+            "startTime": moment.utc(fields.startTime),
             "sports": fields.sports,
             "league": fields.league,
             "platform": fields.platform,
             "contentLength": fields.contentLength,
-            "endTime": fields.endTime
+            "endTime": moment.utc(fields.endTime)
         }
-        addWatchParty(postData, () => { }, () => { })
+        addWatchParty(postData, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        }, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        })
     }
     const diff_minutes = (dt2, dt1) => {
         dt2 = new Date(dt2)
@@ -91,15 +109,18 @@ const WatchPartyForm = ({
         return Math.abs(Math.round(diff));
     }
     useEffect(() => {
-        let min = diff_minutes(fields.startTime, fields.endTime)
-        onChangeField('contentLength', min)
-        console.log(fields.date, 'date')
-        if (fields.date === null) {
-            onChangeField('date', new Date(fields.startTime))
-        }
+        uponChangeStartTime()
     }, [fields.startTime])
 
+    const uponChangeStartTime = () => {
+        onChangeField('endTime', fields.startTime)
+        // let min = diff_minutes(fields.startTime, fields.endTime)
+        // onChangeField('contentLength', min)
+
+    }
+
     useEffect(() => {
+
         let min = diff_minutes(fields.startTime, fields.endTime)
         onChangeField('contentLength', min)
     }, [fields.endTime])
@@ -110,6 +131,12 @@ const WatchPartyForm = ({
     }, [])
     return (
         <div class="container">
+            <SnackbarWrapper
+                visible={openSnackBar}
+                onClose={() => setOpenSnackbar(false)}
+                variant={snackbarData.variant}
+                message={snackbarData.message}
+            />
             <div class="content-panel">
                 <div class="page-title">
                     <h1>Add New Watch Party</h1>
@@ -199,22 +226,19 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div className="form-group">
                                 <Field
-                                    name={STRINGS.PICK_DATE}
-                                    component={DatePickerInput}
-                                    placeholder={STRINGS.PICK_DATE}
-
+                                    name={STRINGS.START_TIME}
+                                    component={KeyboardDateTimePickerr}
+                                    placeholder={STRINGS.START_TIME}
                                     minDate={new Date()}
-                                    config={{
-                                        value: fields.date
-                                    }}
+                                    minTime={new Date()}
+                                    value={fields.startTime}
                                     onChangeDate={(value) => {
-                                        onChangeField('date', value)
-
+                                        onChangeField('startTime', value)
                                     }}
+
                                 />
                             </div>
                         </div>
@@ -222,42 +246,23 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
-                            <Field
-                                name={STRINGS.START_TIME}
-                                component={TimePickerInputField}
-                                placeholder={STRINGS.START_TIME}
-                                value={fields.startTime}
-                                minTime={new Date(fields.date)}
-
-                                onChange={time => {
-                                    onChangeField('startTime', time)
-
-                                }}
-
-                            />
-                        </div>
-
-                        <div class="col-md-6">
-                            <Field
-                                name={STRINGS.END_TIME}
-                                component={TimePickerInputField}
-                                placeholder={STRINGS.END_TIME}
-                                value={fields.endTime}
-                                minTime={fields.startTime}
-
-                                onChange={time => {
-                                    onChangeField('endTime', time)
-
-                                }}
-
-                            />
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div class="col-md-12">
                             <div className="row">
+                                <Field
+                                    name={STRINGS.END_TIME}
+                                    component={TimePickerInputField}
+                                    placeholder={STRINGS.END_TIME}
+                                    defaultValue={fields.endTime}
+                                    minTime={fields.startTime}
+                                    onChange={time => {
+                                        onChangeField('endTime', time)
 
+                                    }}
+
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div className="form-group">
                                 <Field
                                     name={STRINGS.CONTENT_LENGTH}
                                     component={Input}
@@ -274,7 +279,6 @@ const WatchPartyForm = ({
                             </div>
                         </div>
                     </div>
-
                     <div className="btn_group text-center">
                         <InputSubmit buttonLabel={'Add'} />
                     </div>
@@ -293,7 +297,7 @@ const mapStateToProps = (state, props) => {
 }
 
 const reduxFormFunction = reduxForm({
-    form: "login",
+    form: "watchparty",
     fields: ['email', 'password'],
     onSubmitFail,
     validate: validator,

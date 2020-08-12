@@ -3,6 +3,7 @@ const { VALIDATION_MESSAGES, EMAIL_REGX } = require(`../../../../shared/constant
 
 const validator = values => {
     const errors = {};
+    console.log(values, 'gjgjgjgjjgjerrors')
     if (!values[STRINGS.SHOW_NAME]) {
         errors[STRINGS.SHOW_NAME] =
             VALIDATION_MESSAGES.SHOW_NAME_REQUIRED;
@@ -15,10 +16,10 @@ const validator = values => {
         errors[STRINGS.PLATFORM_NAME] =
             VALIDATION_MESSAGES.PLATFORM_REQUIRED;
     }
-    if (!values[STRINGS.CONTENT_LENGTH]) {
-        errors[STRINGS.CONTENT_LENGTH] =
-            VALIDATION_MESSAGES.CONTENT_REQUIRED;
-    }
+    // if (!values[STRINGS.CONTENT_LENGTH]) {
+    //     errors[STRINGS.CONTENT_LENGTH] =
+    //         VALIDATION_MESSAGES.CONTENT_REQUIRED;
+    // }
     if (!values[STRINGS.LEAGUE_NAME]) {
         errors[STRINGS.LEAGUE_NAME] =
             VALIDATION_MESSAGES.LEAGUE_REQUIRED;
@@ -27,18 +28,16 @@ const validator = values => {
         errors[STRINGS.SPORTS_NAME] =
             VALIDATION_MESSAGES.SPORTS_REQUIRED;
     }
-    if (!values[STRINGS.PICK_DATE]) {
-        errors[STRINGS.PICK_DATE] =
-            VALIDATION_MESSAGES.DATE_REQUIRED;
-    }
+
     if (!values[STRINGS.END_TIME]) {
         errors[STRINGS.END_TIME] =
             VALIDATION_MESSAGES.END_TIME_REQUIRED;
     }
-    if (!values[STRINGS.START_TIME]) {
-        errors[STRINGS.START_TIME] =
-            VALIDATION_MESSAGES.START_TIME_REQUIRED;
-    }
+    // if (!values[STRINGS.START_TIME]) {
+    //     errors[STRINGS.START_TIME] =
+    //         VALIDATION_MESSAGES.START_TIME_REQUIRED;
+    // }
+
     return errors;
 };
 

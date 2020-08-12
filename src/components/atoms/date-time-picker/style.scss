@@ -1,0 +1,51 @@
+button.MuiPickersDay-day {
+    padding:0!important;
+}
+.MuiPickersDay-dayDisabled{
+    .MuiIconButton-label{
+        color:#e3e5e8;
+    }
+}
+.MuiFormControl-marginNormal {
+    margin:0!important; 
+    min-height: initial;
+}
+.MuiPickersToolbar-toolbar{
+    background-color: #64d2ff!important;
+}
+.MuiPickersDay-daySelected{
+    background-color: #64d2ff!important;
+    .MuiIconButton-label{
+        color: #fff;
+    }
+}
+.MuiPickersCalendar-transitionContainer {
+    .MuiIconButton-root {
+        &:hover, &:focus {
+            background:#64d2ff!important;
+            color: #fff!important;
+            span {
+                color:inherit;
+            }
+        }
+    }
+}
+.MuiDialogActions-spacing {
+    justify-content: center!important;
+    button {
+        &:first-child {
+            background: #64d2ff;
+            border-color:#000;
+            span{
+                color:#fff!important;
+            }     
+            &:hover {
+                background:#64d2ff;
+                border-color:#64d2ff;
+                span {
+                    color:#fff!important;
+                }
+            }      
+        }
+    }
+}
