@@ -29,6 +29,7 @@ export const TimePickerInput = ({
     const [openCalendar, setOpenCalendar] = useState(false);
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [inputValue, setTimeInputValue] = useState(value || '');
+    console.log({ value })
     const [errorMsg, setErrorMsg] = useState('')
     widthStyle = widthStyle ? widthStyle : "";
     const validationSpan =

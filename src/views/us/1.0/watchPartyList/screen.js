@@ -11,7 +11,7 @@ const {
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
-
+moment.tz.setDefault("America/New_York");
 const copyDate = (date, time) => {
     time = time ? new Date(time) : new Date()
     date = date ? new Date(date) : new Date()
@@ -21,6 +21,13 @@ const copyDate = (date, time) => {
     console.log({ time })
     return time;
 }
+
+const convertToClientTimeZone = (date) => {
+    console.log(date, 'datee');
+    // var st = moment(new Date(date)).format('YYYY-MM-DD') + 'T' + moment(date).format('HH:mm:ss') + 'Z'
+    return moment(date).tz('America/New_York');//subtract(300, 'minutes')
+}
+
 export const Screen = ({ listWatchParty, history,
     allPlatforms, allLeagues, updateParty, getPlatforms, getLeagues, listPastWatchParty, getSports }) => {
 
@@ -94,10 +101,10 @@ export const Screen = ({ listWatchParty, history,
             sports: party.sports === true ? 'Yes' : 'No', league: party && party.leagueInfo && party.leagueInfo._id,
             platform: party && party.platformInfo && party.platformInfo._id,
             month: moment(party && party.startTime).format('MMM').toUpperCase(),
-            date: new Date(party && party.startTime),//moment(party && party.startTime).format('Do').split('th')[0],
+            date: convertToClientTimeZone(party && party.startTime),//moment(party && party.startTime).format('Do').split('th')[0],
             year: moment(party && party.startTime).format('YYYY'),
-            time: copyDate(party.startDate, party.startTime),
-            endTime: copyDate(party.startDate, party.endTime),
+            time: convertToClientTimeZone(copyDate(party.startTime, party.startTime)),
+            endTime: convertToClientTimeZone(copyDate(party.startTime, party.endTime)),
             joined: party && party.joined,
             interested: party && party.interested,
             contentLength: party && party.contentLength,
@@ -106,16 +113,25 @@ export const Screen = ({ listWatchParty, history,
         setRowToEdit(index)
         setEditMode(true)
     }
-    const updateWatchParty = () => {
 
+    const convertToServerTimeZone = (date) => {
+        console.log(date, 'datee');
+        var st = moment(new Date(date)).format('YYYY-MM-DD') + 'T' + moment(date).format('HH:mm:ss') + 'Z'
+        return moment(st).add(630, 'minutes')
+
+    }
+
+    const updateWatchParty = () => {
+        let st = convertToServerTimeZone(copyDate(fields.date, fields.time))
+        let et = convertToServerTimeZone(copyDate(fields.date, fields.endTime))
         // const stime = moment.utc(date)
         console.log({ fields });
         const postData = {
             "watchPartyId": fields.watchPartyId,
             "contentName": fields.show,
             "host": fields.host,
-            "startTime": moment.utc(copyDate(fields.date, fields.time)),
-            "endTime": moment.utc(copyDate(fields.date, fields.endTime)),
+            "startTime": st,
+            "endTime": et,
             "sports": fields.sports === 'No' ? 'false' : 'true',
             "league": fields.league,
             "platform": fields.platform,
@@ -309,7 +325,10 @@ export const Screen = ({ listWatchParty, history,
                                                         value={(fields.date)}
                                                         onChangeDate={(value) => { updateFields('date', value) }}
 
-                                                    /></> : moment(party && party.startTime).format('Do MMM')
+                                                    /></> :
+                                                convertToClientTimeZone(party && party.startTime).format('Do MMM')
+
+
 
                                             }
                                         </div></td>
@@ -317,28 +336,28 @@ export const Screen = ({ listWatchParty, history,
                                             {index === rowToEdit && editMode === true ?
 
                                                 <TimePickerInput
-                                                    value={moment(fields.time)}
-                                                    minTime={new Date().getTime()}
+                                                    value={fields.time}
+                                                    minTime={new Date()}
 
                                                     onChangeTime={(time) => {
 
                                                         updateFields('time', copyDate(fields.date, time))
                                                     }}
                                                 />
-                                                : moment(party && party.startTime).format('LT')}
+                                                : convertToClientTimeZone(party && party.startTime).format('LT')}
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
 
                                                 <TimePickerInput
-                                                    value={moment(fields.endTime)}
-                                                    minTime={new Date(fields.time).getTime()}
+                                                    value={fields.endTime}
+                                                    minTime={new Date()}
                                                     onChangeTime={(time) => {
                                                         updateFields('endTime', copyDate(fields.date, time))
                                                         // changeStartTime('endTime', time)
                                                     }}
                                                 />
-                                                : moment(party && party.endTime).format('LT')}
+                                                : convertToClientTimeZone(party && party.endTime).format('LT')}
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}

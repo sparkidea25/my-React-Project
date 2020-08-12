@@ -76,17 +76,30 @@ const WatchPartyForm = ({
         console.log(fields, 'fieldss')
     }, [fields])
 
+    const convertToServerTimeZone = (date) => {
+        console.log(date, 'datee');
+        var st = moment(new Date(date)).format('YYYY-MM-DD') + 'T' + moment(date).format('HH:mm:ss') + 'Z'
+        return moment(st).add(300, 'minutes')
+
+    }
+
     const onSubmit = () => {
+        let st = convertToServerTimeZone(fields.startTime)
+        let et = convertToServerTimeZone(fields.endTime)
+
+        console.log(JSON.stringify(st), JSON.stringify(et), 'check utc')
+
         let postData = {
             "contentName": fields.show,
             "host": fields.host,
-            "startTime": moment.utc(fields.startTime),
+            "startTime": st,
             "sports": fields.sports,
             "league": fields.league,
             "platform": fields.platform,
             "contentLength": fields.contentLength,
-            "endTime": moment.utc(fields.endTime)
+            "endTime": et
         }
+        console.log(postData, 'postdata')
         addWatchParty(postData, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -112,6 +125,7 @@ const WatchPartyForm = ({
     }
     useEffect(() => {
         uponChangeStartTime()
+
     }, [fields.startTime])
 
     const uponChangeStartTime = () => {
