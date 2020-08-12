@@ -117,46 +117,46 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                         <div class="col-md-7">
 
                             <div className="carasoul-slide">
-                                {partyData && partyData.length > 0 && partyData[0].sports && partyData[0].league ?
+                                {partyData && partyData.length > 0 ?
+                                    partyData[0].sports && partyData[0].league ?
+                                        <Carousel onChange={(index) => { setPreviewIndex(index + 1) }}>
 
-                                    <Carousel onChange={(index) => { setPreviewIndex(index + 1) }}>
+                                            {partyData.length > 0 && partyData.map((party, index) => {
 
-                                        {partyData.length > 0 && partyData.map((party, index) => {
-
-                                            platform = allPlatforms && allPlatforms.filter(obj => { return party && party.platform && party.platform.trim() === obj._id.trim() })
-                                            league = allLeagues && allLeagues.filter(obj => { return party && party.league && party.league.trim() === obj._id.trim() })
-                                            console.log(platform, league)
-                                            return <>
-                                                <div class="event_posts" key={index}>
-                                                    <div class="date_time">
-                                                        <span class="time">{moment(party && party.startTime).format('LT')}</span>
-                                                        <span class="date">
-                                                            <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
-                                                            {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
-                                                        </span>
-                                                    </div>
-                                                    <div class="team_group">
-                                                        <hgroup>
-                                                            <h5>{party && party.contentName}</h5>
-                                                            <h6>{`${platform && platform[0] && platform[0].name} on ${league && league[0] && league[0].name}`}</h6>
-                                                        </hgroup>
-                                                        <span class="total_joined"></span>
-                                                        <ul class="list_group">
-                                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                                            <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                                        </ul>
-                                                        <div class="button_group">
-                                                            <button class="btn btn-lg btn-primary btn-radius">Join</button>
-                                                            <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                                platform = allPlatforms && allPlatforms.filter(obj => { return party && party.platform && party.platform.trim() === obj._id.trim() })
+                                                league = allLeagues && allLeagues.filter(obj => { return party && party.league && party.league.trim() === obj._id.trim() })
+                                                console.log(platform, league)
+                                                return <>
+                                                    <div class="event_posts" key={index}>
+                                                        <div class="date_time">
+                                                            <span class="time">{moment(party && party.startTime).format('LT')}</span>
+                                                            <span class="date">
+                                                                <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
+                                                                {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
+                                                            </span>
                                                         </div>
-                                                    </div>
-                                                </div> </>
+                                                        <div class="team_group">
+                                                            <hgroup>
+                                                                <h5>{party && party.contentName}</h5>
+                                                                <h6>{`${platform && platform[0] && platform[0].name} on ${league && league[0] && league[0].name}`}</h6>
+                                                            </hgroup>
+                                                            <span class="total_joined"></span>
+                                                            <ul class="list_group">
+                                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                            </ul>
+                                                            <div class="button_group">
+                                                                <button class="btn btn-lg btn-primary btn-radius">Join</button>
+                                                                <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                                            </div>
+                                                        </div>
+                                                    </div> </>
 
-                                        })}
-                                    </Carousel> :
-                                    'Csv cannot be uploaded'
+                                            })}
+                                        </Carousel> :
+                                        'Csv cannot be uploaded' : ''
                                 }
                                 {partyData && partyData.length > 0 && partyData[0].sports && partyData[0].league ? <PreviewSlider
                                     currentPage={previewIndex}
