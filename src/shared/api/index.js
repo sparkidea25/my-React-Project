@@ -12,5 +12,6 @@ module.exports = {
     GET_LEAGUES: SERVER_URL + API_VERSION + '/league/getAllLeagues',
     GET_PLATFORMS: SERVER_URL + API_VERSION + '/platform/getAllPlatforms',
     GET_SPORTS: SERVER_URL + API_VERSION + '/sports/getAllSports',
+    ADD_WATCH_PARTY: SERVER_URL + API_VERSION + '/watchParty/add',
   }
 };

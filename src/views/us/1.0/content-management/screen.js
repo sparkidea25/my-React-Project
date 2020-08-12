@@ -5,7 +5,7 @@ import moment from 'moment';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
-const { CustomPagination } = require('../../../../components/atoms/pagination')
+const { PreviewSlider } = require('../../../../components/atoms/preview-slider')
 
 export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeagues, getSports, allLeagues }) => {
     const buttonRef = React.createRef()
@@ -143,30 +143,31 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                                 </div>
                                             </div>
                                         </div>
-                                    })}
-                                </Carousel>
-                                <CustomPagination
-                                    limit={1}
-                                    totalPages={2}
-                                    itemsCount={1}
-                                    currentPage={1}
-                                    onPageChange={(value) => {
-                                        // console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
-                                        // postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
-                                        //     setUpcomingAndLiveListing(response && response.watchPartyListing)
-                                        // })
-                                        // setLiveTableIndex(value && value.selected)
+                                    </div>
+                                })}
+                            </Carousel>
+                            <PreviewSlider
+                                limit={1}
+                                totalPages={2}
+                                itemsCount={1}
+                                currentPage={1}
+                                onPageChange={(value) => {
+                                    // console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
+                                    // postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
+                                    //     setUpcomingAndLiveListing(response && response.watchPartyListing)
+                                    // })
+                                    // setLiveTableIndex(value && value.selected)
 
-                                    }}
-                                />
-                                <div className="text-center">
-                                    {partyData.length > 0 ? <button className="btn btn-lg btn-secondary" onClick={uploadWatchParty}>Upload</button> : ''}
-                                </div>
+                                }}
+                            />
+                            <div className="text-center">
+                                {partyData.length > 0 ? <button className="btn btn-lg btn-secondary" onClick={uploadWatchParty}>Upload</button> : ''}
                             </div>
                         </div>
                     </div>
-                </div >
-            </div>
+                </div>
+            </div >
+        </div>
         </>
     )
 }

@@ -9,6 +9,7 @@ export const SET_SPORTS = "SET_SPORTS"
 export const GET_SPORTS = "GET_SPORTS"
 export const SET_WATCH_PARTY_LISTING = "SET_WATCH_PARTY_LISTING"
 export const GET_LIST_WATCH_PARTY = "GET_LIST_WATCH_PARTY"
+export const ADD_WATCH_PARTY = "ADD_WATCH_PARTY"
 
 export const exportWatchParty = (data, success, failure) => {
     return {
@@ -85,6 +86,13 @@ export const getSports = (success, failure) => {
 export const setSports = (success, failure) => {
     return {
         type: SET_SPORTS,
+        success, failure
+    }
+}
+export const addWatchParty = (data, success, failure) => {
+    return {
+        type: ADD_WATCH_PARTY,
+        data,
         success, failure
     }
 }
