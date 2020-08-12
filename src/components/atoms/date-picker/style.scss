@@ -3,7 +3,7 @@ button.MuiPickersDay-day {
 }
 .MuiPickersDay-dayDisabled{
     .MuiIconButton-label{
-        color:lightgrey;
+        color:#e3e5e8;
     }
 }
 .MuiFormControl-marginNormal {
@@ -31,14 +31,17 @@ button.MuiPickersDay-day {
     }
 }
 .MuiDialogActions-spacing {
+    justify-content: center!important;
     button {
         &:first-child {
-            background: transparent;
+            background: #64d2ff;
+            border-color:#000;
             span{
-                 color:#f22637!important;
+                color:#fff!important;
             }     
             &:hover {
-                background:#f22637;
+                background:#64d2ff;
+                border-color:#64d2ff;
                 span {
                     color:#fff!important;
                 }
