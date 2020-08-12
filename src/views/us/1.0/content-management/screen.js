@@ -11,6 +11,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
     const buttonRef = React.createRef()
     const [partyData, setPartyData] = useState([])
     const [openSnackBar, setOpenSnackbar] = useState(false);
+    const [previewIndex, setPreviewIndex] = useState(1);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
         message: ''
@@ -111,13 +112,13 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
                         <div class="col-md-7">
                             <div className="carasoul-slide">
-                                <Carousel>
-                                    {partyData.length > 0 && partyData.map(party => {
+                                <Carousel onChange={(index) => { setPreviewIndex(index + 1) }}>
+                                    {partyData.length > 0 && partyData.map((party, index) => {
 
-                                        let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
-                                        let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
-                                        console.log(platform, league)
-                                        return <div class="event_posts">
+                                        let platform = allPlatforms && allPlatforms.filter(obj => { return party && party.platform && party.platform.trim() === obj._id.trim() })
+                                        let league = allLeagues && allLeagues.filter(obj => { return party && party.league && party.league.trim() === obj._id.trim() })
+
+                                        return <div class="event_posts" key={index}>
                                             <div class="date_time">
                                                 <span class="time">{moment(party && party.startTime).format('LT')}</span>
                                                 <span class="date">
@@ -143,23 +144,15 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                                 </div>
                                             </div>
                                         </div>
+
                                     })}
                                 </Carousel>
+                                {partyData && partyData.length > 0 ? <PreviewSlider
+                                    currentPage={previewIndex}
+                                    totalPages={partyData && partyData.length}
+                                /> : ''
+                                }
 
-                                <PreviewSlider
-                                    limit={1}
-                                    totalPages={2}
-                                    itemsCount={1}
-                                    currentPage={1}
-                                    onPageChange={(value) => {
-                                        // console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
-                                        // postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
-                                        //     setUpcomingAndLiveListing(response && response.watchPartyListing)
-                                        // })
-                                        // setLiveTableIndex(value && value.selected)
-
-                                    }}
-                                />
                             </div>
                             <div className="text-right">
                                 {partyData.length > 0 ? <button className="btn btn-lg btn-secondary" onClick={uploadWatchParty}>Upload</button> : ''}

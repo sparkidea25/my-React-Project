@@ -10,14 +10,14 @@ export const PreviewSlider = ({
     nextLabel = '>',
     breakLabel = '...',
     previousLabel = '<',
-    outOfString = 'Out of',
-    displayingString = 'Displaying',
+    outOfString = ' of',
+    displayingString = 'Preview',
     onPageChange,
 }) => {
     return (
         <div className='preview_pagination'>
             <h5 className={'pagination-text'}>{displayingString} <span>
-                {(1 + (limit * (currentPage - 1))) + '-' + ((limit * (currentPage - 1)) + itemsCount) + ' '}
+                {currentPage}
             </span>{outOfString + ' '}<span>{totalPages}</span></h5>
             {/* <ReactPaginate
                 forcePage={currentPage - 1}
