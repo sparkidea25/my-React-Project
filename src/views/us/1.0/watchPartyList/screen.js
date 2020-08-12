@@ -424,9 +424,7 @@ export const Screen = ({ listWatchParty, history,
                                         </td>
                                         <td>
                                             <div className="input_field">
-
                                                 {moment(pastParty && pastParty.startTime).format('MMM').toUpperCase()}
-
                                             </div>
                                         </td>
                                         <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('Do').split('th')[0]}</div></td>

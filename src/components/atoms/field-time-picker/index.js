@@ -62,70 +62,67 @@ export const TimePickerInputField = ({
             variant={'error'}
             message={VALIDATION_MESSAGES && VALIDATION_MESSAGES.INVALID_TIME}
         />
-
-        <div className="form-group">
-            {((!!config && !!config.value) || (!!input && !!input.value)) && <label className="float_label">{placeholder}</label>}
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Grid>
-                    <KeyboardTimePicker
-                        className='form-control'
-                        margin="normal"
-                        helperText={''}
-                        error={false}
-                        id="time-picker"
-                        value={defaultValue}
-                        defaultValue={defaultValue}
-                        keyboardIcon={<></>}
-                        placeholder={placeholder}
-                        onChange={(value) => {
-                            value.getTime()
-                            console.log(value, minTime)
-                            if (maxTime <= value.getTime()) {
-                                setErr('')
-                            }
-                            else if (minTime >= value.getTime()) {
-                                setErr('End Time should be greater than Start Time')
-                            }
-                            else {
-                                input && input.onChange(value)
-                                setErr('')
-                                setOpenCalendar(false)
-                            }
-                        }}
-                        InputProps={{
-                            readOnly: true,
-                            style: { color: 'black' },
-                            onClick: () => {
-                                !disabled && setOpenCalendar(true)
-                            },
-                            value: config && config.value ? moment(config.value).format("h:mm A") : input.value ? moment(input.value).format("h:mm A") : ''
-                        }}
-                        onClick={() => {
-                            setOpenCalendar(true)
-                        }}
-                        KeyboardButtonProps={{ disabled: true, style: {} }}
-                        onOpen={() => { setOpenCalendar(true) }}
-                        onClose={(value) => {
+        {((!!config && !!config.value) || (!!input && !!input.value)) && <label className="float_label">{placeholder}</label>}
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid>
+                <KeyboardTimePicker
+                    className='form-control'
+                    margin="normal"
+                    helperText={''}
+                    error={false}
+                    id="time-picker"
+                    value={defaultValue}
+                    defaultValue={defaultValue}
+                    keyboardIcon={<></>}
+                    placeholder={placeholder}
+                    onChange={(value) => {
+                        value.getTime()
+                        console.log(value, minTime)
+                        if (maxTime <= value.getTime()) {
+                            setErr('')
+                        }
+                        else if (minTime >= value.getTime()) {
+                            setErr('End Time should be greater than Start Time')
+                        }
+                        else {
+                            input && input.onChange(value)
+                            setErr('')
                             setOpenCalendar(false)
-                        }}
-                        open={openCalendar}
-                        {...config}
-                    />
-                    {/* <TextField id="standard-basic" value={dateSelected} label="Standard"
+                        }
+                    }}
+                    InputProps={{
+                        readOnly: true,
+                        style: { color: 'black' },
+                        onClick: () => {
+                            !disabled && setOpenCalendar(true)
+                        },
+                        value: config && config.value ? moment(config.value).format("h:mm A") : input.value ? moment(input.value).format("h:mm A") : ''
+                    }}
+                    onClick={() => {
+                        setOpenCalendar(true)
+                    }}
+                    KeyboardButtonProps={{ disabled: true, style: {} }}
+                    onOpen={() => { setOpenCalendar(true) }}
+                    onClose={(value) => {
+                        setOpenCalendar(false)
+                    }}
+                    open={openCalendar}
+                    {...config}
+                />
+                {/* <TextField id="standard-basic" value={dateSelected} label="Standard"
                             disabled={true}
                         /> */}
 
-                    {/* <FloatingLabelInput
+                {/* <FloatingLabelInput
                             id="example-3"
                             label={placeholder}
                             // onFocus={}
                             editable={false}
                             onClick={() => { }}
                         /> */}
-                </Grid>
-                {validationSpan}
-            </MuiPickersUtilsProvider>
-        </div>
+            </Grid>
+            {validationSpan}
+        </MuiPickersUtilsProvider>
     </>
     );
 };
