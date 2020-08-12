@@ -7,7 +7,8 @@ import {
     EXPORT_CSV,
     GET_WATCH_PARTY,
     GET_LEAGUES,
-    GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, setSports, GET_SPORTS, GET_LIST_WATCH_PARTY
+    GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty,
+    setSports, GET_SPORTS, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY
 } from '../actions';
 const api = require(`../../shared/api`);
 const { updateAuthToken, postRequestNoAuth, postRequest, getRequest, putRequest } = require(`../../helpers`);
@@ -233,6 +234,40 @@ function* getPlatforms({ success, failure }) {
     }
 }
 
+function* addWatchParty({ data, success, failure }) {
+    try {
+        yield put(startLoader());
+        const response = yield postRequest({ API: `${api.URL.ADD_WATCH_PARTY}`, DATA: data });
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success(response.data)
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
 function* ContentSaga() {
     yield all([
         takeLatest(EXPORT_CSV, exportWatchparty),
@@ -241,7 +276,8 @@ function* ContentSaga() {
         takeLatest(GET_LEAGUES, getLeagues),
         takeLatest(GET_PLATFORMS, getPlatforms),
         takeLatest(GET_SPORTS, getSports),
-        takeLatest(GET_LIST_WATCH_PARTY, listWatchparty)
+        takeLatest(GET_LIST_WATCH_PARTY, listWatchparty),
+        takeLatest(ADD_WATCH_PARTY, addWatchParty)
     ]);
 }
 

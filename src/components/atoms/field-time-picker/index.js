@@ -40,11 +40,18 @@ export const TimePickerInputField = ({
         variant: '',
         message: ''
     });
+    const [err, setErr] = useState('')
     widthStyle = widthStyle ? widthStyle : "col-md-6";
     const validationSpan =
-        touched && error ? (
+        (touched && error) ? (
             <span className="error_msg text-danger">{error}</span>
-        ) : null;
+        ) :
+            (err !== '') ? (
+                <span className="error_msg text-danger">{err}</span>
+            )
+                : null
+
+
 
     return (<>
         <SnackbarWrapper
@@ -73,13 +80,14 @@ export const TimePickerInputField = ({
                             onChange={(value) => {
                                 value.getTime()
                                 if (maxTime <= value.getTime()) {
-                                    setOpenSnackbar(true)
+                                    setErr('')
                                 }
                                 else if (minTime >= value.getTime()) {
-                                    setOpenSnackbar(true)
+                                    setErr('Past Time cannot be selected')
                                 }
                                 else {
                                     input && input.onChange(value)
+                                    setErr('')
                                     setOpenCalendar(false)
                                 }
                             }}

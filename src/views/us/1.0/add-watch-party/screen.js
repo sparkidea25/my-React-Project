@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Link } from "react-router-dom";
 import { reduxForm, Field } from "redux-form";
@@ -21,23 +21,93 @@ const { ROUTES } = require(`../../../../shared/constants`);
 const WatchPartyForm = ({
     handleSubmit = () => { },
     initialize,
-
-    onSubmit = () => { }
+    allPlatforms,
+    allLeagues,
+    addWatchParty,
+    getPlatforms,
+    getLeagues
 }) => {
     const [fields, setFields] = useState({
-        "contentName": "",
         "host": "",
-        "startTime": "",
+        "startTime": null,
         "sports": "",
         "league": "",
         "platform": "",
         "contentLength": 0,
-        "endTime": "",
-        show: ""
+        "endTime": null,
+        'show': "",
+        "date": null
     })
     const onChangeField = (type, value) => {
         setFields({ ...fields, [type]: value })
     }
+    const [selectedLeague, setSelectedLeague] = useState('')
+    const [selectedPlatform, setSelectedPlatform] = useState('')
+    const [selectedSport, setSelectedSport] = useState('')
+
+    const [platforms, setPlatforms] = useState([])
+    const [leagues, setLeagues] = useState([])
+    useEffect(() => {
+        let arr = []
+
+        allPlatforms && allPlatforms.map(platform => {
+            let obj = { value: platform._id, label: platform.name }
+            arr.push(obj)
+        })
+        setPlatforms(arr)
+    }, [allPlatforms])
+
+    useEffect(() => {
+        let arr = []
+        allLeagues && allLeagues.map(platform => {
+            let obj = { value: platform._id, label: platform.name }
+            arr.push(obj)
+        })
+        setLeagues(arr)
+    }, [allLeagues])
+    useEffect(() => {
+        console.log(fields, 'fieldss')
+    }, [fields])
+
+    const onSubmit = () => {
+        let postData = {
+            "contentName": fields.contentName,
+            "host": fields.host,
+            "startTime": fields.startTime,
+            "sports": fields.sports,
+            "league": fields.league,
+            "platform": fields.platform,
+            "contentLength": fields.contentLength,
+            "endTime": fields.endTime
+        }
+        addWatchParty(postData, () => { }, () => { })
+    }
+    const diff_minutes = (dt2, dt1) => {
+        dt2 = new Date(dt2)
+        dt1 = new Date(dt1)
+        console.log(dt2, dt1)
+        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= 60;
+        return Math.abs(Math.round(diff));
+    }
+    useEffect(() => {
+        let min = diff_minutes(fields.startTime, fields.endTime)
+        onChangeField('contentLength', min)
+        console.log(fields.date, 'date')
+        if (fields.date === null) {
+            onChangeField('date', new Date(fields.startTime))
+        }
+    }, [fields.startTime])
+
+    useEffect(() => {
+        let min = diff_minutes(fields.startTime, fields.endTime)
+        onChangeField('contentLength', min)
+    }, [fields.endTime])
+
+    useEffect(() => {
+        getLeagues(() => { }, () => { })
+        getPlatforms(() => { }, () => { })
+    }, [])
     return (
         <div class="container">
             <div class="content-panel">
@@ -53,10 +123,11 @@ const WatchPartyForm = ({
                                     name={STRINGS.SHOW_NAME}
                                     component={Input}
                                     placeholder={STRINGS.SHOW_NAME}
+                                    value={fields.show}
                                     type={'text'}
-                                    config={{
-                                        onChange: event => onChangeField('show', event.target.value)
-                                    }}
+
+                                    onChange={event => onChangeField('show', event.target.value)}
+
                                 />
                             </div>
                         </div>
@@ -65,11 +136,12 @@ const WatchPartyForm = ({
                                 <Field
                                     name={STRINGS.HOST_NAME}
                                     component={Input}
+                                    value={fields.host}
                                     placeholder={STRINGS.HOST_NAME}
-                                    config={{
-                                        type: "text",
-                                        onChange: event => onChangeField('host', event.target.value),
-                                    }}
+
+                                    type={"text"}
+                                    onChange={event => onChangeField('host', event.target.value)}
+
                                 />
                             </div>
                         </div>
@@ -81,10 +153,14 @@ const WatchPartyForm = ({
                                 <Field
                                     name={STRINGS.SPORTS_NAME}
                                     component={Select}
+                                    options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
+                                    value={selectedSport}
                                     placeholder={STRINGS.SPORTS_NAME}
-                                    config={{
-                                        // onChange: event => onChangeField(event.target.value),
+                                    onChange={value => {
+                                        onChangeField('sports', value.value)
+                                        setSelectedSport(value.label)
                                     }}
+
                                 />
                             </div>
                         </div>
@@ -95,9 +171,12 @@ const WatchPartyForm = ({
                                 <Field
                                     name={STRINGS.LEAGUE_NAME}
                                     component={Select}
+                                    options={leagues}
+                                    value={selectedLeague}
                                     placeholder={STRINGS.LEAGUE_NAME}
-                                    config={{
-                                        // onChange: event => onPasswordChange(event.target.value),
+                                    onChange={value => {
+                                        onChangeField('league', value.value)
+                                        setSelectedLeague(value.label)
                                     }}
                                 />
                             </div>
@@ -110,9 +189,12 @@ const WatchPartyForm = ({
                                 <Field
                                     name={STRINGS.PLATFORM_NAME}
                                     component={Select}
+                                    options={platforms}
+                                    value={selectedPlatform}
                                     placeholder={STRINGS.PLATFORM_NAME}
-                                    config={{
-                                        // onChange: event => onPasswordChange(event.target.value),
+                                    onChange={value => {
+                                        onChangeField('platform', value.value)
+                                        setSelectedPlatform(value.label)
                                     }}
                                 />
                             </div>
@@ -124,8 +206,14 @@ const WatchPartyForm = ({
                                     name={STRINGS.PICK_DATE}
                                     component={DatePickerInput}
                                     placeholder={STRINGS.PICK_DATE}
+
+                                    minDate={new Date()}
                                     config={{
-                                        // onChange: event => onPasswordChange(event.target.value),
+                                        value: fields.date
+                                    }}
+                                    onChangeDate={(value) => {
+                                        onChangeField('date', value)
+
                                     }}
                                 />
                             </div>
@@ -138,9 +226,14 @@ const WatchPartyForm = ({
                                 name={STRINGS.START_TIME}
                                 component={TimePickerInputField}
                                 placeholder={STRINGS.START_TIME}
-                                config={{
-                                    // onChange: event => onPasswordChange(event.target.value),
+                                value={fields.startTime}
+                                minTime={new Date(fields.date)}
+
+                                onChange={time => {
+                                    onChangeField('startTime', time)
+
                                 }}
+
                             />
                         </div>
 
@@ -149,9 +242,14 @@ const WatchPartyForm = ({
                                 name={STRINGS.END_TIME}
                                 component={TimePickerInputField}
                                 placeholder={STRINGS.END_TIME}
-                                config={{
-                                    // onChange: event => onPasswordChange(event.target.value),
+                                value={fields.endTime}
+                                minTime={fields.startTime}
+
+                                onChange={time => {
+                                    onChangeField('endTime', time)
+
                                 }}
+
                             />
                         </div>
                     </div>
@@ -159,20 +257,26 @@ const WatchPartyForm = ({
                     <div className="row">
                         <div class="col-md-12">
                             <div className="row">
+
                                 <Field
                                     name={STRINGS.CONTENT_LENGTH}
                                     component={Input}
+
                                     placeholder={STRINGS.CONTENT_LENGTH}
                                     config={{
-                                        // onChange: event => onPasswordChange(event.target.value),
+                                        type: 'number',
+                                        value: fields.contentLength,
+                                        readOnly: true
                                     }}
+
+
                                 />
                             </div>
                         </div>
                     </div>
 
                     <div className="btn_group text-center">
-                        <InputSubmit buttonLabel={STRINGS.BUTTON_LABEL_LOGIN} />
+                        <InputSubmit buttonLabel={'Add'} />
                     </div>
                 </Form>
             </div>

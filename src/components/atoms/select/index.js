@@ -10,10 +10,9 @@ export const Select = ({
   widthStyle,
   input,
   data,
-  onChange,
   onValueChange = () => { },
   isSearchable = false,
-  placeholde
+  placeholder
 }) => {
   widthStyle = widthStyle ? widthStyle : "col-md-12";
   const validationSpan =
@@ -28,13 +27,15 @@ export const Select = ({
         <ReactSelect
           {...input}
           options={options}
+          // onChange={onValueChange}
           isSearchable={isSearchable}
-          placeholder={placeholde}
-          // value={input.value}
-          // onChange={value => {
-          //   input.onChange(value);
-          //   onValueChange(value)
-          // }}
+          placeholder={placeholder}
+          value={value}
+          onChange={(value) => {
+            input.onChange(value);
+            console.log('value', value)
+            onValueChange(value)
+          }}
           onBlur={event => event.preventDefault()}
         // onBlur={value => input.onBlur(value)}
         // onInputChange={() => {
