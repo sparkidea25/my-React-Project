@@ -8,9 +8,14 @@ header {
      }
 } 
 .brand-logo {
-    max-width:270px;
-    @media (max-width:767px){
-        max-width:250px;
+    img {
+        @media (min-width:768px){
+            max-width:270px;
+        }
+        @media (max-width:767px){
+            min-width:180px;
+            //max-width:270px;
+        }
     }
 }
 .humburger_icon {
@@ -30,9 +35,9 @@ header {
             padding: 10px 0;
             width:100%;
             position: absolute;
-            top:76px;
+            top:79px;
             left:0;
-            background-color: #61d1fc;    
+            background-color: #424959;    
             box-shadow: 0 0 10px rgba(0,0,0,.2);        
         }
         &.show {

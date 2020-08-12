@@ -2,10 +2,11 @@
   background: #414959;
   min-height:100vh;
 }
-.logo-header { 
-  max-width: 100%;  
+.logo-header {   
   img {
-    max-width:325px;
+    @media (min-width:480px) {
+      max-width:325px;
+    }
   }
 }
 
@@ -22,7 +23,7 @@
 .btn-full .btn { 
   background-color: #677088;
   padding:12px 10px;
-  min-height: 50px;
+  min-height: 50px; 
   width:100%;
   &:hover, &:focus {
     background: #27778d;

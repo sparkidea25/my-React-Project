@@ -158,7 +158,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
                                 }}
                             />
-                            {partyData.length > 0 ? <button onClick={uploadWatchParty}>Upload</button> : ''}
+                            {partyData.length > 0 ? <button className="btn btn-lg btn-secondary" onClick={uploadWatchParty}>Upload</button> : ''}
                         </div>
                     </div>
                 </div >

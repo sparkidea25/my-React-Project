@@ -138,6 +138,13 @@
             max-width: 520px;
         }
     }
+    .pagination-div {
+        margin:0;
+        .pagination-text {
+            font-size: 24px;
+            text-align: center;
+        }
+    }
 }
 .carousel {
     .slide {

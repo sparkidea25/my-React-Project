@@ -134,25 +134,29 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
-                            <Field
-                                name={STRINGS.START_TIME}
-                                component={TimePickerInputField}
-                                placeholder={STRINGS.START_TIME}
-                                config={{
-                                    // onChange: event => onPasswordChange(event.target.value),
-                                }}
-                            />
+                            <div className="form-group">
+                                <Field
+                                    name={STRINGS.START_TIME}
+                                    component={TimePickerInputField}
+                                    placeholder={STRINGS.START_TIME}
+                                    config={{
+                                        // onChange: event => onPasswordChange(event.target.value),
+                                    }}
+                                />
+                            </div>
                         </div>
 
                         <div class="col-md-6">
-                            <Field
-                                name={STRINGS.END_TIME}
-                                component={TimePickerInputField}
-                                placeholder={STRINGS.END_TIME}
-                                config={{
-                                    // onChange: event => onPasswordChange(event.target.value),
-                                }}
-                            />
+                            <div className="form-group">
+                                <Field
+                                    name={STRINGS.END_TIME}
+                                    component={TimePickerInputField}
+                                    placeholder={STRINGS.END_TIME}
+                                    config={{
+                                        // onChange: event => onPasswordChange(event.target.value),
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
 
