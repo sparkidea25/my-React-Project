@@ -28,7 +28,7 @@ export const TimePickerInput = ({
 }) => {
     const [openCalendar, setOpenCalendar] = useState(false);
     const [openSnackBar, setOpenSnackbar] = useState(false);
-    const [inputValue, setTimeInputValue] = useState('');
+    const [inputValue, setTimeInputValue] = useState(value || '');
     const [errorMsg, setErrorMsg] = useState('')
     widthStyle = widthStyle ? widthStyle : "";
     const validationSpan =
@@ -81,7 +81,7 @@ export const TimePickerInput = ({
                             onClick: () => {
                                 !disabled && setOpenCalendar(true)
                             },
-                            value: value ? moment(value).format("h:mm A") : ''
+                            //value: value ? moment(value) : ''
                         }}
                         onOpen={() => { setOpenCalendar(true) }}
                         onClose={() => { setOpenCalendar(false) }}

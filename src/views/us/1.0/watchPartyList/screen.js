@@ -10,8 +10,17 @@ const {
 } = require(`../../../../components/atoms/input`);
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
+const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
 
-
+const copyDate = (date, time) => {
+    time = time ? new Date(time) : new Date()
+    date = date ? new Date(date) : new Date()
+    time.setDate(date.getDate());
+    time.setMonth(date.getMonth());
+    time.setYear(date.getFullYear());
+    console.log({ time })
+    return time;
+}
 export const Screen = ({ listWatchParty, history,
     allPlatforms, allLeagues, updateParty, getPlatforms, getLeagues, listPastWatchParty, getSports }) => {
 
@@ -73,6 +82,7 @@ export const Screen = ({ listWatchParty, history,
         time: null,
         endTime: null,
         contentLength: '',
+        year: null,
         joined: '',
         interested: '',
         watchPartyId: ''
@@ -84,9 +94,10 @@ export const Screen = ({ listWatchParty, history,
             sports: party.sports === true ? 'Yes' : 'No', league: party && party.leagueInfo && party.leagueInfo._id,
             platform: party && party.platformInfo && party.platformInfo._id,
             month: moment(party && party.startTime).format('MMM').toUpperCase(),
-            date: moment(party && party.startTime).format('Do').split('th')[0],
-            time: party && party.startTime,
-            endTime: party && party.endTime,
+            date: new Date(party && party.startTime),//moment(party && party.startTime).format('Do').split('th')[0],
+            year: moment(party && party.startTime).format('YYYY'),
+            time: copyDate(party.startDate, party.startTime),
+            endTime: copyDate(party.startDate, party.endTime),
             joined: party && party.joined,
             interested: party && party.interested,
             contentLength: party && party.contentLength,
@@ -96,17 +107,23 @@ export const Screen = ({ listWatchParty, history,
         setEditMode(true)
     }
     const updateWatchParty = () => {
+
+        // const stime = moment.utc(date)
+        console.log({ fields });
         const postData = {
             "watchPartyId": fields.watchPartyId,
             "contentName": fields.show,
             "host": fields.host,
-            "startTime": fields.time,
-            "endTime": fields.endTime,
+            "startTime": moment.utc(copyDate(fields.date, fields.time)),
+            "endTime": moment.utc(copyDate(fields.date, fields.endTime)),
             "sports": fields.sports === 'No' ? 'false' : 'true',
             "league": fields.league,
             "platform": fields.platform,
             "contentLength": fields.contentLength
         }
+
+        console.log('chcek uo', postData)
+
         updateParty(postData, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -130,6 +147,7 @@ export const Screen = ({ listWatchParty, history,
     }
 
     const validateFields = (type) => {
+        console.log(type)
         if (fields[type] === '') {
             return `${type} is required.`
         } else {
@@ -165,6 +183,12 @@ export const Screen = ({ listWatchParty, history,
         updateFields('contentLength', min)
     }
 
+
+    useEffect(() => {
+        console.log('check watch fields', fields)
+    }, [fields])
+
+    console.log({ fields })
     return (
         <div className="container-fluid">
             <SnackbarWrapper
@@ -196,7 +220,7 @@ export const Screen = ({ listWatchParty, history,
                                 <th>Sports</th>
                                 <th>League</th>
                                 <th>Platform</th>
-                                <th>Month</th>
+                                {/* <th>Month</th> */}
                                 <th>Date</th>
                                 <th>Time (EST).</th>
                                 <th>End Time</th>
@@ -210,26 +234,28 @@ export const Screen = ({ listWatchParty, history,
                                     return <tr key={index}>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <input name="Content Name" type="text" placefolder="Content Name"
+                                                <> <input name="Content Name" type="text" placefolder="Content Name"
 
                                                     value={fields.show}
                                                     onChange={(e) => updateFields('show', e.target.value)}
 
 
                                                 />
+                                                    {fields.show === '' ? (
+                                                        <>
+                                                            <span className="error_msg text-danger">{validateFields('show')}</span></>
+                                                    ) : null}</>
                                                 : party.contentName}
-                                            {fields.show === '' ? (
-                                                <>
-                                                    <span className="error_msg text-danger">{validateFields('show')}</span></>
-                                            ) : null}
+
                                         </div></td>
-                                        <td><div className="input_field">{index === rowToEdit && editMode === true ?
+                                        <td><div className="input_field">{index === rowToEdit && editMode === true ? <>
                                             <input type="text" placefolder="Host Name" value={fields.host} onChange={(e) => updateFields('host', e.target.value)} />
-                                            : party.host}
                                             {fields.host === '' ? (
                                                 <>
                                                     <span className="error_msg text-danger">{validateFields('host')}</span></>
-                                            ) : null}
+                                            ) : null}</>
+                                            : party.host}
+
                                         </div></td>
                                         <td>
                                             <div className="input_field">
@@ -264,7 +290,7 @@ export const Screen = ({ listWatchParty, history,
                                                     : party && party.platformInfo && party.platformInfo.name}
                                             </div>
                                         </td>
-                                        <td><div className="input_field">
+                                        {/* <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
                                                 <select value={fields.month} onChange={(e) => updateFields('month', e.target.value)}>
 
@@ -275,26 +301,28 @@ export const Screen = ({ listWatchParty, history,
                                                     }
                                                 </select>
                                                 : moment(party && party.startTime).format('MMM')}
-                                        </div></td>
+                                        </div></td> */}
                                         <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ? <select value={fields.date}
-                                                onChange={(e) => updateFields('date', e.target.value)}
-                                            >
-                                                {
-                                                    DAY_OPTIONS && DAY_OPTIONS.map(day => {
-                                                        return <option>{day && day.value}</option>
-                                                    })
-                                                }
-                                            </select> : moment(party && party.startTime).format('Do')}
+                                            {index === rowToEdit && editMode === true ?
+                                                <>
+                                                    <FieldDatePickerr
+                                                        value={(fields.date)}
+                                                        onChangeDate={(value) => { updateFields('date', value) }}
+
+                                                    /></> : moment(party && party.startTime).format('Do MMM')
+
+                                            }
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
 
                                                 <TimePickerInput
-                                                    value={fields.time}
-                                                    minTime={new Date()}
+                                                    value={moment(fields.time)}
+                                                    minTime={new Date().getTime()}
+
                                                     onChangeTime={(time) => {
-                                                        updateFields('time', time)
+
+                                                        updateFields('time', copyDate(fields.date, time))
                                                     }}
                                                 />
                                                 : moment(party && party.startTime).format('LT')}
@@ -303,10 +331,10 @@ export const Screen = ({ listWatchParty, history,
                                             {index === rowToEdit && editMode === true ?
 
                                                 <TimePickerInput
-                                                    value={fields.endTime}
-                                                    minTime={new Date(fields.time)}
+                                                    value={moment(fields.endTime)}
+                                                    minTime={new Date(fields.time).getTime()}
                                                     onChangeTime={(time) => {
-                                                        updateFields('endTime', time)
+                                                        updateFields('endTime', copyDate(fields.date, time))
                                                         // changeStartTime('endTime', time)
                                                     }}
                                                 />
@@ -344,7 +372,7 @@ export const Screen = ({ listWatchParty, history,
                             currentPage={liveTableIndex + 1}
                             onPageChange={(value) => {
                                 console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
-                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
+                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
                                     setUpcomingAndLiveListing(response && response.watchPartyListing)
                                 })
                                 setLiveTableIndex(value && value.selected)
@@ -419,7 +447,7 @@ export const Screen = ({ listWatchParty, history,
                             currentPage={PastTableIndex + 1}
                             onPageChange={(value) => {
                                 console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
-                                pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
+                                pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
                                     setPastListing(response && response.watchPartyListing)
                                 })
                                 setPastTableIndex(value && value.selected)

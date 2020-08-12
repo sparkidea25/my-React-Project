@@ -27,7 +27,8 @@ const WatchPartyForm = ({
     allLeagues,
     addWatchParty,
     getPlatforms,
-    getLeagues
+    getLeagues,
+    history
 }) => {
     const [fields, setFields] = useState({
         "host": "",
@@ -77,7 +78,7 @@ const WatchPartyForm = ({
 
     const onSubmit = () => {
         let postData = {
-            "contentName": fields.contentName,
+            "contentName": fields.show,
             "host": fields.host,
             "startTime": moment.utc(fields.startTime),
             "sports": fields.sports,
@@ -92,6 +93,7 @@ const WatchPartyForm = ({
                 message: response.msg
             });
             setOpenSnackbar(true)
+            history.push(ROUTES.WATCH_PARTY)
         }, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -246,23 +248,23 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.END_TIME}
-                                    component={TimePickerInputField}
-                                    placeholder={STRINGS.END_TIME}
-                                    defaultValue={fields.endTime}
-                                    minTime={fields.startTime}
-                                    onChange={time => {
-                                        onChangeField('endTime', time)
+                            {/* <div className="row"> */}
+                            <Field
+                                name={STRINGS.END_TIME}
+                                component={TimePickerInputField}
+                                placeholder={STRINGS.END_TIME}
+                                defaultValue={fields.endTime}
+                                minTime={fields.startTime}
+                                onChange={time => {
+                                    onChangeField('endTime', time)
 
-                                    }}
+                                }}
 
-                                />
-                            </div>
+                            />
+                            {/* </div> */}
                         </div>
                         <div class="col-md-6">
-                            <div className="form-group">
+                            <div className="row">
                                 <Field
                                     name={STRINGS.CONTENT_LENGTH}
                                     component={Input}
