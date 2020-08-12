@@ -15,7 +15,7 @@ export const PreviewSlider = ({
     onPageChange,
 }) => {
     return (
-        <div className='pagination-div'>
+        <div className='preview_pagination'>
             <h5 className={'pagination-text'}>{displayingString} <span>
                 {(1 + (limit * (currentPage - 1))) + '-' + ((limit * (currentPage - 1)) + itemsCount) + ' '}
             </span>{outOfString + ' '}<span>{totalPages}</span></h5>

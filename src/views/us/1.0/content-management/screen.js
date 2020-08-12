@@ -109,59 +109,64 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                             </div>
                         </div>
 
-                        <div class="col-md-7 carasoul-slide">
-                            <Carousel>
-                                {partyData.length > 0 && partyData.map(party => {
+                        <div class="col-md-7">
+                            <div className="carasoul-slide">
+                                <Carousel>
+                                    {partyData.length > 0 && partyData.map(party => {
 
-                                    let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
-                                    let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
-                                    console.log(platform, league)
-                                    return <div class="event_posts">
-                                        <div class="date_time">
-                                            <span class="time">{moment(party && party.startTime).format('LT')}</span>
-                                            <span class="date">
-                                                <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
-                                                {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
-                                            </span>
-                                        </div>
-                                        <div class="team_group">
-                                            <hgroup>
-                                                <h5>{party && party.contentName}</h5>
-                                                <h6>{`${platform && platform[0].name} on ${league && league[0].name}`}</h6>
-                                            </hgroup>
-                                            <span class="total_joined"></span>
-                                            <ul class="list_group">
-                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                                <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
-                                            </ul>
-                                            <div class="button_group">
-                                                <button class="btn btn-lg btn-primary btn-radius">Join</button>
-                                                <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                        let platform = allPlatforms && allPlatforms.filter(obj => { return party.platform.trim() === obj._id.trim() })
+                                        let league = allLeagues && allLeagues.filter(obj => { return party && party.league.trim() === obj._id.trim() })
+                                        console.log(platform, league)
+                                        return <div class="event_posts">
+                                            <div class="date_time">
+                                                <span class="time">{moment(party && party.startTime).format('LT')}</span>
+                                                <span class="date">
+                                                    <strong>{moment(party && party.startTime).format('llll').split(',')[0].toUpperCase()}</strong>
+                                                    {moment(party && party.startTime).format('MMM Do').split('th')[0].toUpperCase()}
+                                                </span>
+                                            </div>
+                                            <div class="team_group">
+                                                <hgroup>
+                                                    <h5>{party && party.contentName}</h5>
+                                                    <h6>{`${platform && platform[0].name} on ${league && league[0].name}`}</h6>
+                                                </hgroup>
+                                                <span class="total_joined"></span>
+                                                <ul class="list_group">
+                                                    <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                    <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                    <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                    <li><img src={require('../../../../assets/img/nba_logo.jpg')} alt="NBA" class="img-fluid" /></li>
+                                                </ul>
+                                                <div class="button_group">
+                                                    <button class="btn btn-lg btn-primary btn-radius">Join</button>
+                                                    <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                })}
-                            </Carousel>
-                            <PreviewSlider
-                                limit={1}
-                                totalPages={2}
-                                itemsCount={1}
-                                currentPage={1}
-                                onPageChange={(value) => {
-                                    // console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
-                                    // postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
-                                    //     setUpcomingAndLiveListing(response && response.watchPartyListing)
-                                    // })
-                                    // setLiveTableIndex(value && value.selected)
+                                    })}
+                                </Carousel>
 
-                                }}
-                            />
-                            {partyData.length > 0 ? <button className="btn btn-lg btn-secondary" onClick={uploadWatchParty}>Upload</button> : ''}
+                                <PreviewSlider
+                                    limit={1}
+                                    totalPages={2}
+                                    itemsCount={1}
+                                    currentPage={1}
+                                    onPageChange={(value) => {
+                                        // console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
+                                        // postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT }, (response) => {
+                                        //     setUpcomingAndLiveListing(response && response.watchPartyListing)
+                                        // })
+                                        // setLiveTableIndex(value && value.selected)
+
+                                    }}
+                                />
+                            </div>
+                            <div className="text-right">
+                                {partyData.length > 0 ? <button className="btn btn-lg btn-secondary" onClick={uploadWatchParty}>Upload</button> : ''}
+                            </div>
                         </div>
                     </div>
-                </div >
+                </div>
             </div>
         </>
     )

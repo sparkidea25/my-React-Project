@@ -1,0 +1,44 @@
+.preview_pagination {
+    font-size: 24px;
+    color:#000;
+    text-align: center;
+    padding:25px 0;
+}
+.carasoul-slide {
+    position: relative;
+    .carousel {
+        .thumbs-wrapper {
+            display: none;
+        }
+        &.carousel-slider {
+            position: static;
+            background: transparent;                        
+        }
+        .control-arrow {
+            top:auto;
+            bottom:0;
+            &:hover {
+                background: transparent;
+            }
+            &:before {
+                content: '';
+                width: 38px;
+                height: 40px;
+                border:0;
+            }
+        }
+        .control-prev.control-arrow {
+            &:before {                
+                background: url(../../../assets/img/icons/arw_left.png)no-repeat;
+                background-size: 100%;               
+            }
+        }
+        .control-next.control-arrow{
+            &:before {
+                background: url(../../../assets/img/icons/arw_right.png)no-repeat;
+                background-size: 100%;
+            }
+        }
+      
+    }
+}
