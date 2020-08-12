@@ -19,11 +19,11 @@
     margin-bottom: 4px;
   }
 }
-.btn-full .btn {
-  border-radius: 40px;
+.btn-full .btn { 
   background-color: #677088;
   padding:12px 10px;
   min-height: 50px;
+  width:100%;
   &:hover, &:focus {
     background: #27778d;
   }

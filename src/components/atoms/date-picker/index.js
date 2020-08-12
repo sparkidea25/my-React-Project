@@ -24,13 +24,13 @@ export const DatePickerInput = ({
     dateValue
 }) => {
     const [openCalendar, setOpenCalendar] = useState(false);
-    widthStyle = widthStyle ? widthStyle : "col-md-12";
+    widthStyle = widthStyle ? widthStyle : "";
     const validationSpan =
         touched && error ? (
             <span className="error_msg text-danger">{error}</span>
         ) : null;
     return (
-        <div className={widthStyle}>
+        <>
             {label && <label>{label}</label>}
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid>
@@ -68,7 +68,7 @@ export const DatePickerInput = ({
                 </Grid>
                 {validationSpan}
             </MuiPickersUtilsProvider>
-        </div>
+        </>
 
     );
 };

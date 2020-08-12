@@ -51,7 +51,9 @@ const LoginForm = ({
                     }}
                 />
             </div>
-            <InputSubmit buttonLabel={STRINGS.BUTTON_LABEL_LOGIN} buttonStyle={"float-sm-right mt-3"} />
+            <div className="btn-full mt-4">
+                <InputSubmit buttonLabel={STRINGS.BUTTON_LABEL_LOGIN} />
+            </div>
         </Form>
     );
 };

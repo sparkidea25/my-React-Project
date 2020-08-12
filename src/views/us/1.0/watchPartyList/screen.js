@@ -372,6 +372,7 @@ export const Screen = ({ listWatchParty, history,
                         />
                     </div>
                 </div>
+
             </div>
         </div>
     )

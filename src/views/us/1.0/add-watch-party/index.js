@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { Screen } from "./screen";
-import './styles.scss';
 
 const { } = require(`../../../../redux/actions`);
 
