@@ -382,7 +382,9 @@ export const Screen = ({ listWatchParty, history,
                     </div>
                 </div>
                 <div className="managment_list">
-                    <h3>Past</h3>
+                    <div class="d-flex table_title">
+                        <h3>Past</h3>
+                    </div>
                     <div className="table-responsive">
                         <table className="table">
                             <thead>
