@@ -22,7 +22,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         getSports(() => { }, () => { })
     }, [])
     useEffect(() => {
-        console.log(allPlatforms, 'appl')
+        // console.log(allPlatforms, 'appl')
     }, [allPlatforms])
     const handleOnFileLoad = (data) => {
         // csvToPartydata(data)
@@ -36,7 +36,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
             arr.push(obj)
         }
-        console.log(arr, 'check')
+        // console.log(arr, 'check')
         setPartyData(arr)
     }
     const handleOnError = () => {
@@ -125,7 +125,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
                                                 platform = allPlatforms && allPlatforms.filter(obj => { return party && party.platform && party.platform.trim() === obj._id.trim() })
                                                 league = allLeagues && allLeagues.filter(obj => { return party && party.league && party.league.trim() === obj._id.trim() })
-                                                console.log(platform, league)
+                                                // console.log(platform, league)
                                                 return <>
                                                     <div class="event_posts" key={index}>
                                                         <div class="date_time">
