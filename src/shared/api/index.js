@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://b07e7c04260c.ngrok.io'; //Live URL
+const SERVER_URL = 'http://b6b97f6bc879.ngrok.io'; //Live URL
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {

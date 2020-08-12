@@ -7,7 +7,7 @@ const { TimePickerInput } = require('../../../../components/atoms/time-picker')
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const {
     Input,
-} = require(`../../../../components/${PLATFORM}/atoms/input`);
+} = require(`../../../../components/atoms/input`);
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 
@@ -128,6 +128,15 @@ export const Screen = ({ listWatchParty, history,
     const updateFields = (type, value) => {
         setFields({ ...fields, [type]: value })
     }
+
+    const validateFields = (type) => {
+        if (fields[type] === '') {
+            return `${type} is required.`
+        } else {
+            return ''
+        }
+    }
+
     useEffect(() => {
 
     }, [rowToEdit])
@@ -137,6 +146,12 @@ export const Screen = ({ listWatchParty, history,
     useEffect(() => {
         // console.log(fields.time)
     }, [fields])
+    useEffect(() => {
+        changeStartTime()
+    }, [fields.endTime])
+    useEffect(() => {
+        changeStartTime()
+    }, [fields.time])
     const diff_minutes = (dt2, dt1) => {
         dt2 = new Date(dt2)
         dt1 = new Date(dt1)
@@ -145,12 +160,11 @@ export const Screen = ({ listWatchParty, history,
         diff /= 60;
         return Math.abs(Math.round(diff));
     }
-    const changeStartTime = (type, time) => {
-        console.log(type, time)
-        updateFields(type, time)
+    const changeStartTime = () => {
         let min = diff_minutes(fields.time, fields.endTime)
         updateFields('contentLength', min)
     }
+
     return (
         <div className="container-fluid">
             <SnackbarWrapper
@@ -160,19 +174,19 @@ export const Screen = ({ listWatchParty, history,
                 message={snackbarData.message}
             />
             <div className="content-panel">
-                <div className="page-title">
-                    <h1>Content Management</h1>
-                    <div class="up_btn">
-                        <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.CONTENT))}>Upload New</button>
-                    </div>
-                    <div class="up_btn">
-                        <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.ADD_WATCH_PARTY))}>Add New</button>
+                <div className="row align-items-center page-title">
+                    <h1 class="col-md-6">Content Management</h1>
+                    <div class="col-md-6">
+                        <div class="form-row group-btn justify-content-end">
+                            <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.CONTENT))}>Upload New</button>
+                            <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.ADD_WATCH_PARTY))}>Add New</button>
+                        </div>
                     </div>
                 </div>
+
                 <div className="managment_list">
                     <div class="d-flex table_title">
                         <h3>Live & Upcoming</h3>
-
                     </div>
                     <div className="table-responsive">
                         <table className="table">
@@ -192,23 +206,31 @@ export const Screen = ({ listWatchParty, history,
                                 <th></th>
                             </thead>
                             <tbody>
-                                {upcomingAndLiveListing && upcomingAndLiveListing.map((party, index) => {
+                                {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ? upcomingAndLiveListing.map((party, index) => {
                                     return <tr key={index}>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <Field name="Content Name" component={Input} type="text" placefolder="Content Name"
-                                                    config={{
-                                                        value: fields.show,
-                                                        onChange: (e) => updateFields('show', e.target.value)
-                                                    }}
-                                                    meta={{}}
-                                                    onBlur={() => { }}
+                                                <input name="Content Name" type="text" placefolder="Content Name"
+
+                                                    value={fields.show}
+                                                    onChange={(e) => updateFields('show', e.target.value)}
+
+
                                                 />
                                                 : party.contentName}
+                                            {fields.show === '' ? (
+                                                <>
+                                                    <span className="error_msg text-danger">{validateFields('show')}</span></>
+                                            ) : null}
                                         </div></td>
                                         <td><div className="input_field">{index === rowToEdit && editMode === true ?
                                             <input type="text" placefolder="Host Name" value={fields.host} onChange={(e) => updateFields('host', e.target.value)} />
-                                            : party.host} </div></td>
+                                            : party.host}
+                                            {fields.host === '' ? (
+                                                <>
+                                                    <span className="error_msg text-danger">{validateFields('host')}</span></>
+                                            ) : null}
+                                        </div></td>
                                         <td>
                                             <div className="input_field">
 
@@ -270,8 +292,9 @@ export const Screen = ({ listWatchParty, history,
 
                                                 <TimePickerInput
                                                     value={fields.time}
+                                                    minTime={new Date()}
                                                     onChangeTime={(time) => {
-                                                        changeStartTime('time', time)
+                                                        updateFields('time', time)
                                                     }}
                                                 />
                                                 : moment(party && party.startTime).format('LT')}
@@ -281,8 +304,10 @@ export const Screen = ({ listWatchParty, history,
 
                                                 <TimePickerInput
                                                     value={fields.endTime}
+                                                    minTime={new Date(fields.time)}
                                                     onChangeTime={(time) => {
-                                                        changeStartTime('endTime', time)
+                                                        updateFields('endTime', time)
+                                                        // changeStartTime('endTime', time)
                                                     }}
                                                 />
                                                 : moment(party && party.endTime).format('LT')}
@@ -309,7 +334,7 @@ export const Screen = ({ listWatchParty, history,
                                         }
                                         </td>
                                     </tr>
-                                })}
+                                }) : 'No Watch Parties found.'}
                             </tbody>
                         </table>
                         <CustomPagination
@@ -350,7 +375,7 @@ export const Screen = ({ listWatchParty, history,
                                 </tr>
                             </thead>
                             <tbody>
-                                {pastListing && pastListing.map((pastParty, index) => {
+                                {pastListing && pastListing.length > 0 ? pastListing.map((pastParty, index) => {
                                     return <tr className="preview_mode" key={index}>
                                         <td><div className="input_field">{pastParty.contentName}</div></td>
                                         <td><div className="input_field">{pastParty.host}</div></td>
@@ -384,7 +409,7 @@ export const Screen = ({ listWatchParty, history,
                                         <td><div className="input_field">{pastParty.interested}</div></td>
                                         <td style={{ minWidth: '86px' }}> </td>
                                     </tr>
-                                })}
+                                }) : 'No Watch Parties found.'}
                             </tbody>
                         </table>
                         <CustomPagination

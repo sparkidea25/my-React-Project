@@ -18,18 +18,23 @@ export const TimePickerInput = ({
     config,
     minDate,
     maxDate,
+    minTime,
+    maxTime,
     widthStyle,
     disabled = false,
     onChangeTime,
-    timeValue
+    timeValue,
+    error = () => { }
 }) => {
     const [openCalendar, setOpenCalendar] = useState(false);
+    const [openSnackBar, setOpenSnackbar] = useState(false);
     const [inputValue, setTimeInputValue] = useState('');
+    const [errorMsg, setErrorMsg] = useState('')
     widthStyle = widthStyle ? widthStyle : "col-md-6";
-    // const validationSpan =
-    //     touched && error ? (
-    //         <span className="error_msg text-danger">{error}</span>
-    //     ) : null;
+    const validationSpan =
+        errorMsg !== '' ? (
+            <span className="error_msg text-danger">{errorMsg}</span>
+        ) : null;
     useEffect(() => {
         setTimeInputValue(value)
     }, [value !== inputValue])
@@ -47,7 +52,26 @@ export const TimePickerInput = ({
                             id="time-picker"
                             value={value}
                             placeholder={'Choose Time'}
-                            onChange={(value) => { if (onChangeTime) { onChangeTime(value) } }}
+                            // validationError={(val) => {
+                            //     return <p></p>
+                            // }}
+                            onChange={(value) => {
+                                value.getTime()
+                                console.log(value, 'value')
+                                if (maxTime <= value.getTime()) {
+                                    setOpenSnackbar(true)
+
+                                }
+                                else if (minTime >= value.getTime()) {
+                                    setOpenSnackbar(true)
+                                    setErrorMsg('Past Time cannot be selected')
+                                }
+                                else {
+                                    if (onChangeTime) { onChangeTime(value) }
+                                    setErrorMsg('')
+                                }
+                            }}
+                            // onChange={(value) => { if (onChangeTime) { onChangeTime(value) } }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change time',
                             }}
@@ -64,7 +88,7 @@ export const TimePickerInput = ({
                             open={openCalendar}
                         />
                     </Grid>
-                    {/* {validationSpan} */}
+                    {validationSpan}
                 </MuiPickersUtilsProvider>
             </div>
         </div>
