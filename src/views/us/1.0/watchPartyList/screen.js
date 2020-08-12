@@ -1,11 +1,17 @@
 import React, { Component, useState, useEffect } from 'react'
 import moment from 'moment';
 import { ROUTES } from '../../../../shared/constants';
+import { Field } from "redux-form";
 const { CustomPagination } = require('../../../../components/atoms/pagination')
 const { TimePickerInput } = require('../../../../components/atoms/time-picker')
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
+const {
+    Input,
+} = require(`../../../../components/${PLATFORM}/atoms/input`);
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
+
+
 export const Screen = ({ listWatchParty, history,
     allPlatforms, allLeagues, updateParty, getPlatforms, getLeagues, listPastWatchParty, getSports }) => {
 
@@ -190,7 +196,14 @@ export const Screen = ({ listWatchParty, history,
                                     return <tr key={index}>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <input type="text" placefolder="Content Name" value={fields.show} onChange={(e) => updateFields('show', e.target.value)} />
+                                                <Field name="Content Name" component={Input} type="text" placefolder="Content Name"
+                                                    config={{
+                                                        value: fields.show,
+                                                        onChange: (e) => updateFields('show', e.target.value)
+                                                    }}
+                                                    meta={{}}
+                                                    onBlur={() => { }}
+                                                />
                                                 : party.contentName}
                                         </div></td>
                                         <td><div className="input_field">{index === rowToEdit && editMode === true ?
@@ -276,18 +289,18 @@ export const Screen = ({ listWatchParty, history,
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}
-                                                onChange={(e) => updateFields('contentLength', e.target.value)}
-                                            /> : party.contentLength}
+                                                readonly={true} />
+                                                : party.contentLength}
                                         </div>
                                         </td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} /> : party.joined}
+                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} readOnly={true} /> : party.joined}
                                         </div>
                                         </td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} /> : party.interested}
+                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} readOnly={true} /> : party.interested}
                                         </div>
                                         </td>
                                         <td> {index === rowToEdit && editMode === true ?
