@@ -9,6 +9,7 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import './style.scss';
+import moment from "moment"
 
 export const FieldDatePickerr = ({
     value,
@@ -25,11 +26,14 @@ export const FieldDatePickerr = ({
 }) => {
     const [openCalendar, setOpenCalendar] = useState(false);
     widthStyle = widthStyle ? widthStyle : "";
+
     // const validationSpan =
     //     // touched && error ? (
     //     //     <span className="error_msg text-danger">{error}</span>
     //     // ) : null;
     const [dateVal, setDateVal] = useState(value || null)
+
+    console.log('dateval', moment(dateVal).tz('America/New_York'))
     return (
         <>
             {label && <label>{label}</label>}

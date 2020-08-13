@@ -11,21 +11,47 @@ const {
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
-moment.tz.setDefault("America/New_York");
+// moment.tz.setDefault("America/New_York");
 const copyDate = (date, time) => {
     time = time ? new Date(time) : new Date()
     date = date ? new Date(date) : new Date()
     time.setDate(date.getDate());
     time.setMonth(date.getMonth());
     time.setYear(date.getFullYear());
-    console.log({ time })
+    console.log(time, 'check time')
     return time;
 }
 
-const convertToClientTimeZone = (date) => {
-    console.log(date, 'datee');
-    // var st = moment(new Date(date)).format('YYYY-MM-DD') + 'T' + moment(date).format('HH:mm:ss') + 'Z'
-    return moment(date).tz('America/New_York');//subtract(300, 'minutes')
+const convertToClientTimeZone = (date, format, type) => {
+    // console.log('xhexk date utc', date, type)
+    if (date) {
+        // console.log(moment(date).toDate(), 'check new stamp')
+        var localZone = moment.tz.guess();
+        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
+        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
+        // console.log('xhexk date pdt', moment(new Date(date).getTime()).format(format), type)
+        if (type) {
+            return moment(new Date(date).getTime()).format(format)
+        }
+    }
+}
+
+const convertTimeForEdit = (date, type) => {
+    console.log('xhexk date while edit', date, type)
+    if (date) {
+        // console.log(moment(date).toDate(), 'check new stamp')
+        var localZone = moment.tz.guess();
+
+        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
+
+        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
+        // console.log(zoneOffset, localZone, estOffset)
+
+        console.log(moment(new Date(date).getTime() - estOffset + zoneOffset).format())
+        console.log(moment((new Date(date).getTime() - (2 * zoneOffset) - estOffset)).toISOString(), 'check before update')
+        // console.log('check before update', moment(new Date(date).getTime()).format('hh:mm A'))
+        return moment(new Date(date).getTime() - estOffset + zoneOffset).format()
+    }
 }
 
 export const Screen = ({ listWatchParty, history,
@@ -50,12 +76,12 @@ export const Screen = ({ listWatchParty, history,
     useEffect(() => {
 
         postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
-            console.log(response, 'upcoming')
+
             setUpcomingAndLiveListing(response && response.watchPartyListing)
             setLiveTotalCount(response && response.totalCount)
         })
         pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
-            console.log(response, 'past')
+
             setPastListing(response && response.watchPartyListing)
             setPastTotalCount(response && response.totalCount)
         })
@@ -96,15 +122,17 @@ export const Screen = ({ listWatchParty, history,
     })
 
     const editRow = (index, party) => {
+
         setFields({
             ...fields, watchPartyId: party._id, show: party.contentName, host: party.host,
             sports: party.sports === true ? 'Yes' : 'No', league: party && party.leagueInfo && party.leagueInfo._id,
             platform: party && party.platformInfo && party.platformInfo._id,
             month: moment(party && party.startTime).format('MMM').toUpperCase(),
-            date: convertToClientTimeZone(party && party.startTime),//moment(party && party.startTime).format('Do').split('th')[0],
+            date: convertTimeForEdit(party && party.startTime),//moment(party && party.startTime).format('Do').split('th')[0],
             year: moment(party && party.startTime).format('YYYY'),
-            time: convertToClientTimeZone(copyDate(party.startTime, party.startTime)),
-            endTime: convertToClientTimeZone(copyDate(party.startTime, party.endTime)),
+            time: convertTimeForEdit(party && party.startTime, party && party.contentName),
+
+            endTime: convertTimeForEdit(party && party.endTime),
             joined: party && party.joined,
             interested: party && party.interested,
             contentLength: party && party.contentLength,
@@ -115,17 +143,19 @@ export const Screen = ({ listWatchParty, history,
     }
 
     const convertToServerTimeZone = (date) => {
-        console.log(date, 'datee');
-        var st = moment(new Date(date)).format('YYYY-MM-DD') + 'T' + moment(date).format('HH:mm:ss') + 'Z'
-        return moment(st).add(630, 'minutes')
-
+        var localZone = moment.tz.guess();
+        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
+        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
+        // console.log(estOffset, 'estOffset')
+        // console.log(moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
+        return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
 
     const updateWatchParty = () => {
-        let st = convertToServerTimeZone(copyDate(fields.date, fields.time))
-        let et = convertToServerTimeZone(copyDate(fields.date, fields.endTime))
+        let st = convertToServerTimeZone(fields.time)
+        let et = convertToServerTimeZone(fields.endTime)
         // const stime = moment.utc(date)
-        console.log({ fields });
+        // console.log({ fields });
         const postData = {
             "watchPartyId": fields.watchPartyId,
             "contentName": fields.show,
@@ -138,7 +168,7 @@ export const Screen = ({ listWatchParty, history,
             "contentLength": fields.contentLength
         }
 
-        console.log('chcek uo', postData)
+        // console.log('chcek uo', postData)
 
         updateParty(postData, (response) => {
             setSnackBarData({
@@ -159,11 +189,12 @@ export const Screen = ({ listWatchParty, history,
         setEditMode(false)
     }
     const updateFields = (type, value) => {
+
         setFields({ ...fields, [type]: value })
     }
 
     const validateFields = (type) => {
-        console.log(type)
+        // console.log(type)
         if (fields[type] === '') {
             return `${type} is required.`
         } else {
@@ -178,7 +209,7 @@ export const Screen = ({ listWatchParty, history,
 
     }, [editMode])
     useEffect(() => {
-        // console.log(fields.time)
+        // console.log(fields, 'check fields')
     }, [fields])
     useEffect(() => {
         changeStartTime()
@@ -189,7 +220,7 @@ export const Screen = ({ listWatchParty, history,
     const diff_minutes = (dt2, dt1) => {
         dt2 = new Date(dt2)
         dt1 = new Date(dt1)
-        console.log(dt2, dt1)
+
         var diff = (dt2.getTime() - dt1.getTime()) / 1000;
         diff /= 60;
         return Math.abs(Math.round(diff));
@@ -204,7 +235,12 @@ export const Screen = ({ listWatchParty, history,
         console.log('check watch fields', fields)
     }, [fields])
 
-    console.log({ fields })
+    useEffect(() => {
+
+
+    }, [fields.date])
+
+    // console.log({ fields })
     return (
         <div className="container-fluid">
             <SnackbarWrapper
@@ -306,30 +342,23 @@ export const Screen = ({ listWatchParty, history,
                                                     : party && party.platformInfo && party.platformInfo.name}
                                             </div>
                                         </td>
-                                        {/* <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <select value={fields.month} onChange={(e) => updateFields('month', e.target.value)}>
-
-                                                    {
-                                                        MONTH_OPTIONS && MONTH_OPTIONS.map(month => {
-                                                            return <option>{month && month.value}</option>
-                                                        })
-                                                    }
-                                                </select>
-                                                : moment(party && party.startTime).format('MMM')}
-                                        </div></td> */}
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
                                                 <>
                                                     <FieldDatePickerr
                                                         value={(fields.date)}
-                                                        onChangeDate={(value) => { updateFields('date', value) }}
+                                                        onChangeDate={(value) => {
+
+                                                            updateFields('date', value)
+                                                            console.log(value, 'check updation')
+                                                            updateFields('endTime', copyDate(fields.date, fields.endTime))
+                                                            updateFields('time', copyDate(fields.date, fields.time))
+
+                                                        }}
 
                                                     /></> :
-                                                convertToClientTimeZone(party && party.startTime).format('Do MMM')
-
-
-
+                                                convertToClientTimeZone(party && party.startTime, 'Do MMM', party && party.contentName)
+                                                // .format('Do MMM')
                                             }
                                         </div></td>
                                         <td><div className="input_field">
@@ -344,7 +373,9 @@ export const Screen = ({ listWatchParty, history,
                                                         updateFields('time', copyDate(fields.date, time))
                                                     }}
                                                 />
-                                                : convertToClientTimeZone(party && party.startTime).format('LT')}
+                                                : convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)
+                                                // .format('LT')
+                                            }
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
@@ -357,7 +388,10 @@ export const Screen = ({ listWatchParty, history,
                                                         // changeStartTime('endTime', time)
                                                     }}
                                                 />
-                                                : convertToClientTimeZone(party && party.endTime).format('LT')}
+                                                : convertToClientTimeZone(party && party.endTime, "hh:mm A", party && party.contentName)
+                                                // .format('LT')
+                                            }
+
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}
@@ -390,7 +424,7 @@ export const Screen = ({ listWatchParty, history,
                             itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
                             currentPage={liveTableIndex + 1}
                             onPageChange={(value) => {
-                                console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
+
                                 postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
                                     setUpcomingAndLiveListing(response && response.watchPartyListing)
                                 })
@@ -465,7 +499,7 @@ export const Screen = ({ listWatchParty, history,
                             itemsCount={pastListing && pastListing.length}
                             currentPage={PastTableIndex + 1}
                             onPageChange={(value) => {
-                                console.log('skip', (value && value.selected - 1) * STRINGS.SHOW_LIMIT)
+
                                 pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
                                     setPastListing(response && response.watchPartyListing)
                                 })

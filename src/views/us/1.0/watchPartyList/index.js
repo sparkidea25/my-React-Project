@@ -10,7 +10,7 @@ const {
 } = require(`../../../../redux/actions`);
 
 const mapStateToProps = (state) => {
-    console.log(state)
+
     return ({
         allPlatforms: state.ContentReducer.plaformList,
         allLeagues: state.ContentReducer.leagueList,

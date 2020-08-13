@@ -7,18 +7,23 @@ import { connect } from 'react-redux';
 import "./style.scss";
 
 import validator from "./validator";
-import moment from "moment"
+import moment from "moment-timezone"
+// const moment = require('moment-timezone').instance();
+
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { Form } = require(`../../../../components/atoms/form`);
 const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
 const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
 const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
+// const { ReactDate } = require(`../../../../components/atoms/react-date`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
 const { onSubmitFail } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
+
+moment.tz.setDefault('America/New_York');
 
 const WatchPartyForm = ({
     handleSubmit = () => { },
@@ -36,7 +41,7 @@ const WatchPartyForm = ({
         "sports": "",
         "league": "",
         "platform": "",
-        "contentLength": 0,
+        "contentLength": "",
         "endTime": null,
         'show': "",
     })
@@ -77,17 +82,17 @@ const WatchPartyForm = ({
     }, [fields])
 
     const convertToServerTimeZone = (date) => {
-        console.log(date, 'datee');
-        var st = moment(new Date(date)).format('YYYY-MM-DD') + 'T' + moment(date).format('HH:mm:ss') + 'Z'
-        return moment(st).add(300, 'minutes')
-
+        var localZone = moment.tz.guess();
+        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
+        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
+        // console.log(estOffset, 'estOffset')
+        // console.log(moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
+        return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
 
     const onSubmit = () => {
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
-
-        console.log(JSON.stringify(st), JSON.stringify(et), 'check utc')
 
         let postData = {
             "contentName": fields.show,
@@ -145,6 +150,11 @@ const WatchPartyForm = ({
         getLeagues(() => { }, () => { })
         getPlatforms(() => { }, () => { })
     }, [])
+
+    const [reactd, setReactd] = useState(new Date())
+
+
+
     return (
         <div class="container">
             <SnackbarWrapper
@@ -166,7 +176,7 @@ const WatchPartyForm = ({
                                 <Field
                                     name={STRINGS.SHOW_NAME}
                                     component={Input}
-                                    placeholder={STRINGS.SHOW_NAME}
+                                    placeholder={'Show'}
                                     value={fields.show}
                                     type={'text'}
                                     onChange={event => onChangeField('show', event.target.value)}
@@ -180,7 +190,7 @@ const WatchPartyForm = ({
                                     name={STRINGS.HOST_NAME}
                                     component={Input}
                                     value={fields.host}
-                                    placeholder={STRINGS.HOST_NAME}
+                                    placeholder={'Host'}
                                     type={"text"}
                                     onChange={event => onChangeField('host', event.target.value)}
                                 />
@@ -197,7 +207,7 @@ const WatchPartyForm = ({
                                     component={Select}
                                     options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
                                     value={selectedSport}
-                                    placeholder={STRINGS.SPORTS_NAME}
+                                    placeholder={'Sports'}
                                     onChange={value => {
                                         onChangeField('sports', value.value)
                                         setSelectedSport(value.label)
@@ -214,7 +224,7 @@ const WatchPartyForm = ({
                                     component={Select}
                                     options={leagues}
                                     value={selectedLeague}
-                                    placeholder={STRINGS.LEAGUE_NAME}
+                                    placeholder={"League"}
                                     onChange={value => {
                                         onChangeField('league', value.value)
                                         setSelectedLeague(value.label)
@@ -226,14 +236,14 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
-                            <label>Plateform Name</label>
+                            <label>Platform Name</label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.PLATFORM_NAME}
                                     component={Select}
                                     options={platforms}
                                     value={selectedPlatform}
-                                    placeholder={STRINGS.PLATFORM_NAME}
+                                    placeholder={'Platform'}
                                     onChange={value => {
                                         onChangeField('platform', value.value)
                                         setSelectedPlatform(value.label)
@@ -247,7 +257,7 @@ const WatchPartyForm = ({
                                 <Field
                                     name={STRINGS.START_TIME}
                                     component={KeyboardDateTimePickerr}
-                                    placeholder={STRINGS.START_TIME}
+                                    placeholder={'Start Time'}
                                     minDate={new Date()}
                                     minTime={new Date()}
                                     value={fields.startTime}
@@ -266,10 +276,11 @@ const WatchPartyForm = ({
                             <Field
                                 name={STRINGS.END_TIME}
                                 component={TimePickerInputField}
-                                placeholder={STRINGS.END_TIME}
+                                placeholder={'End Time'}
                                 defaultValue={fields.endTime}
                                 minTime={fields.startTime}
                                 onChange={time => {
+                                    console.log('time', time)
                                     onChangeField('endTime', time)
 
                                 }}
@@ -284,7 +295,7 @@ const WatchPartyForm = ({
                                     name={STRINGS.CONTENT_LENGTH}
                                     component={Input}
 
-                                    placeholder={STRINGS.CONTENT_LENGTH}
+                                    placeholder={'Content Length'}
                                     config={{
                                         type: 'number',
                                         value: fields.contentLength,
@@ -300,7 +311,13 @@ const WatchPartyForm = ({
                         <InputSubmit buttonLabel={'Add Watch Party'} />
                     </div>
                 </Form>
+
+                {/* <ReactDate value={reactd} onChangeDate={(value) => {
+                    console.log(JSON.stringify(moment(value)), 'reactd')
+                    setReactd(value)
+                }} /> */}
             </div>
+
         </div>
     );
 };

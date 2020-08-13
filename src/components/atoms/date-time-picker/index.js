@@ -1,16 +1,14 @@
-import { KeyboardDateTimePicker } from '@material-ui/pickers'
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+
 import React, { useState } from "react";
 
 import 'date-fns';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment'
 import './style.scss';
-
+import moment from "moment-timezone"
+moment.tz.setDefault('America/New_York');
 export const KeyboardDateTimePickerr = ({
     value,
     input,

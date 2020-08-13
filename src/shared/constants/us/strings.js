@@ -18,6 +18,7 @@ export const STRINGS = {
   PASSWORD: 'Password',
   LOGIN: 'Login',
   PASSWORD_LABEL: 'Password',
+  NAME_VALIDATION: 'Show Name cannot have numbers and special characters.',
   EMAIL_LABEL: 'Email',
   VALUE_CANNOT_BE_ONLY_SPACES: 'Value cannot be only spaces.',
   PASSWORD_PLACEHOLDER: 'Password',

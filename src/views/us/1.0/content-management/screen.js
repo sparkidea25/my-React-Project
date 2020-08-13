@@ -55,12 +55,14 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
     const uploadWatchParty = () => {
         let file = { file: buttonRef.current.state.file }
         exportWatchParty(file, (response) => {
+            document.getElementsByTagName('body')[0].scrollTo(0, 0)
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
                 message: response.msg
             });
             setOpenSnackbar(true)
         }, (response) => {
+            document.getElementsByTagName('body')[0].scrollTo(0, 0)
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
                 message: response.msg
@@ -149,7 +151,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                                             </ul>
                                                             <div class="button_group">
                                                                 <button class="btn btn-lg btn-primary btn-radius">Join</button>
-                                                                <button class="btn btn-lg btn-secondary btn-radius">Intersted</button>
+                                                                <button class="btn btn-lg btn-secondary btn-radius">Interested</button>
                                                             </div>
                                                         </div>
                                                     </div> </>

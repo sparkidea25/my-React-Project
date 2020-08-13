@@ -1,5 +1,5 @@
 const { STRINGS } = require(`../../../../shared/constants/us/strings`);
-const { VALIDATION_MESSAGES, EMAIL_REGX } = require(`../../../../shared/constants`)
+const { VALIDATION_MESSAGES, NAME_REGX } = require(`../../../../shared/constants`)
 
 const validator = values => {
     const errors = {};
@@ -7,6 +7,11 @@ const validator = values => {
     if (!values[STRINGS.SHOW_NAME]) {
         errors[STRINGS.SHOW_NAME] =
             VALIDATION_MESSAGES.SHOW_NAME_REQUIRED;
+    } else if (
+        !NAME_REGX.test(
+            values[STRINGS.SHOW_NAME]
+        )) {
+        errors[STRINGS.SHOW_NAME] = VALIDATION_MESSAGES.NAME_VALIDATION;
     }
     if (!values[STRINGS.HOST_NAME]) {
         errors[STRINGS.HOST_NAME] =
