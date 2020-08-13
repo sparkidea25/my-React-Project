@@ -29,11 +29,10 @@
 }
 
 .pagination {
-    justify-content: center;
+    justify-content: flex-end;
     list-style: none;
     outline: none; 
-    width:100%;  
-    padding: 0 15px!important;
+    width:100%;    
   }
   .pagination > .active > a{
     background-color: #64d2ff ;
@@ -65,6 +64,10 @@
     outline: none ;
   } 
 .previous, .next {
+    &.disabled {
+        opacity: .5;
+        pointer-events: none;
+    }
     a {
         font-family: monospace;
         &:hover, &:focus {
