@@ -28,10 +28,13 @@ const convertToClientTimeZone = (date, format, type) => {
         // console.log(moment(date).toDate(), 'check new stamp')
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
-        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
+        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime() + 60) * 60000;
         // console.log('xhexk date pdt', moment(new Date(date).getTime()).format(format), type)
+
+        var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
+        console.log('check while list', new Date(toEST), type)
         if (type) {
-            return moment(new Date(date).getTime()).format(format)
+            return moment(toEST).format(format)
         }
     }
 }
@@ -45,8 +48,9 @@ const convertTimeForEdit = (date, type) => {
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
 
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-
-        return moment(new Date(date).getTime() - estOffset + zoneOffset).format()
+        console.log('while edit0', estOffset)
+        var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
+        return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
     }
 }
 
@@ -141,26 +145,27 @@ export const Screen = ({ listWatchParty, history,
     }
 
     const convertToServerTimeZone = (date) => {
+
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        // console.log(estOffset, 'estOffset')
+        console.log(estOffset, 'estOffset before update')
         // console.log(moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
-        return moment(date.getTime() - zoneOffset + estOffset).toISOString()
+        return moment(date.getTime() - zoneOffset + (estOffset + 3600000)).toISOString()
     }
     const [error, setError] = useState({})
 
     const updateWatchParty = (index) => {
-
         let obj = checkValidateFields()
         setError(obj)
+        // console.log('while name', obj)
         if (obj['show'] || obj['host'] || obj['time'] || obj['endTime']) {
             return
         }
         else {
-
-            let st = convertToServerTimeZone(fields.time)
-            let et = convertToServerTimeZone(fields.endTime)
+            console.log('only name', fields.time)
+            let st = convertToServerTimeZone(new Date(fields.time))
+            let et = convertToServerTimeZone(new Date(fields.endTime))
 
             const postData = {
                 "watchPartyId": fields.watchPartyId,
@@ -211,12 +216,17 @@ export const Screen = ({ listWatchParty, history,
 
             error['host'] = VALIDATION_MESSAGES.HOST_REQUIRED
         }
+        var localZone = moment.tz.guess();
+        let currTime = new Date();
+        var zoneOffset = moment.tz(new Date(), localZone).utcOffset();
+        var estOffset = moment.tz(new Date(), 'America/New_York').utcOffset();
+        currTime = currTime.setHours((currTime.getHours() - (zoneOffset / 60) + (estOffset / 60)), (currTime.getMinutes() - (zoneOffset % 60) + (estOffset % 60)), 0)
 
-
-
-        if (new Date(fields.time) < new Date()) {
-
+        if (new Date(fields.time) < new Date(currTime)) {
             error['time'] = VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST
+        }
+        if (new Date(fields.endTime) < new Date(currTime)) {
+            error['endTime'] = VALIDATION_MESSAGES.END_TIME_SHOUDLD_NOT_BE_IN_PAST
         }
         if (diff_minutes(fields.time, fields.endTime) == 0) {
             error['endTime'] = VALIDATION_MESSAGES.SAME_TIME_VALIDATION

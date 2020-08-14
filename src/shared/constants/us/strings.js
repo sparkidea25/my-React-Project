@@ -20,6 +20,7 @@ export const STRINGS = {
   SELECT_START_TIME_FIRST: 'Select Start Date and Time first.',
   START_TIME_SHOULD_BE_AHEAD: 'Start Time should be before end time',
   TIME_SHOUDLD_NOT_BE_IN_PAST: 'Start Time cannot be in past.',
+  END_TIME_SHOUDLD_NOT_BE_IN_PAST: "End Time cannot be in past.",
   LOGIN: 'Login',
   PASSWORD_LABEL: 'Password',
   NAME_VALIDATION: 'Name cannot have numbers and special characters.',

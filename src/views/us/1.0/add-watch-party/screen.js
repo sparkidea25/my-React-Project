@@ -99,8 +99,8 @@ const WatchPartyForm = ({
     const convertToServerTimeZone = (date) => {
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
-        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        // console.log(estOffset, 'estOffset')
+        var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) + 60) * 60000;
+        console.log(estOffset, 'estOffset')
 
         return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
@@ -219,7 +219,7 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
-                            <label>Sports Name</label>
+                            <label>Sports </label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.SPORTS_NAME}
@@ -255,7 +255,7 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
-                            <label>Platform Name</label>
+                            <label>Platform </label>
                             <div className="row">
                                 <Field
                                     name={STRINGS.PLATFORM_NAME}
@@ -271,7 +271,7 @@ const WatchPartyForm = ({
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label>Start Time</label>
+                            <label>Start Time(EST).</label>
                             <div className="form-group">
                                 <Field
                                     name={STRINGS.START_TIME}
@@ -291,7 +291,7 @@ const WatchPartyForm = ({
                     <div className="row">
                         <div class="col-md-6">
                             {/* <div className="row"> */}
-                            <label>End Time</label>
+                            <label>End Time(EST).</label>
                             <Field
                                 name={STRINGS.END_TIME}
                                 component={TimePickerInputField}
