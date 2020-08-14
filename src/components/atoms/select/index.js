@@ -33,7 +33,7 @@ export const Select = ({
           value={value}
           onChange={(value) => {
             input.onChange(value);
-            console.log('value', value)
+
             onValueChange(value)
           }}
           onBlur={event => event.preventDefault()}

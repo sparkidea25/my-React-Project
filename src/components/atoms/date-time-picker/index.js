@@ -32,11 +32,10 @@ export const KeyboardDateTimePickerr = ({
     const validationSpan =
         touched && error ? (
             <span className="error_msg text-danger">{error}</span>
-        ) :
-            (err !== '') ? (
-                <span className="error_msg text-danger">{err}</span>
-            ) : null;
+        ) : null;
     const [dateVal, setDateVal] = useState(null)
+
+
     return (
         <>
             {label && <label>{label}</label>}
@@ -71,31 +70,24 @@ export const KeyboardDateTimePickerr = ({
                         }}
                         onChange={(value) => {
                             if (onChangeDate) {
-                                value.getTime()
-                                console.log('dfdf', value, minTime)
-                                if (maxTime <= value.getTime()) {
-                                    setErr('')
-                                }
-                                else if (minTime >= value.getTime()) {
-                                    setErr('Past Time cannot be selected')
-                                }
-                                else {
-                                    onChangeDate(value)
-                                    setErr('')
-                                    setOpenCalendar(false)
+
+                                input.onChange(value);
+                                onChangeDate(value)
+                                setErr('')
+                                setOpenCalendar(false)
 
 
-                                    setDateVal(value)
-                                }
+                                setDateVal(value)
+
                             }
                         }}
                         onOpen={() => { setOpenCalendar(true) }}
                         onClose={() => { setOpenCalendar(false) }}
                         open={openCalendar}
                     />
-
+                    {validationSpan}
                 </Grid>
-                {validationSpan}
+
             </MuiPickersUtilsProvider>
         </>
 

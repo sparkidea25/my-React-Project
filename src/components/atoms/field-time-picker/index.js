@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
+
 import 'date-fns';
 import Grid from '@material-ui/core/Grid';
 import moment from 'moment-timezone';
-import FloatingLabelInput from 'react-floating-label-input';
-import TextField from '@material-ui/core/TextField';
-
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
 } from '@material-ui/pickers';
 import './style.scss';
-import { SnackbarWrapper } from '../../molecules/snackbar-wrapper'
-let reference;
+
 export const TimePickerInputField = ({
     value,
     input,
@@ -21,108 +18,86 @@ export const TimePickerInputField = ({
     config,
     minDate,
     maxDate,
+    minTime,
+    maxTime,
     widthStyle,
     disabled = false,
-    onChangeTime = () => { },
+    onChangeTime,
     timeValue,
-    maxTime,
-    minTime,
     defaultValue,
-    placeholder = 'Choose Time',
-    VALIDATION_MESSAGES
+    placeholder
+    // error = () => { }
 }) => {
     const [openCalendar, setOpenCalendar] = useState(false);
-    const [inputValue, setTimeInputValue] = useState('');
-    const [formError, setError] = useState(false)
     const [openSnackBar, setOpenSnackbar] = useState(false);
-    const [dateSelected, setDateSelected] = useState()
-
-    const [snackbarData, setSnackBarData] = useState({
-        variant: '',
-        message: ''
-    });
-    const [err, setErr] = useState('')
-    widthStyle = widthStyle ? widthStyle : "col-md-6";
+    const [inputValue, setTimeInputValue] = useState(defaultValue || '');
+    console.log({ defaultValue }, 'check end time in picker')
+    const [errorMsg, setErrorMsg] = useState('')
+    widthStyle = widthStyle ? widthStyle : "";
     const validationSpan =
-        (touched && error) ? (
+        touched && error ? (
             <span className="error_msg text-danger">{error}</span>
-        ) :
-            (err !== '') ? (
-                <span className="error_msg text-danger">{err}</span>
-            )
-                : null
+        ) : null;
+    useEffect(() => {
+        setTimeInputValue(defaultValue)
+    }, [defaultValue !== inputValue])
 
+    const copyDate = (date, time) => {
+        time = time ? new Date(time) : new Date()
+        date = date ? new Date(date) : new Date()
+        time.setDate(date.getDate());
+        time.setMonth(date.getMonth());
+        time.setYear(date.getFullYear());
+        console.log(time, 'check time')
+        return time;
+    }
 
+    return (
+        //<div className={widthStyle}>
+        <div className="form-group">
+            {label && <label>{label}</label>}
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid>
+                    <KeyboardTimePicker
+                        {...input}
+                        {...config}
+                        className='form-control'
+                        margin="normal"
+                        helperText={''}
+                        error={false}
+                        id="time-picker"
+                        value={defaultValue}
+                        placeholder={placeholder}
+                        onChange={(value) => {
 
-    return (<>
-        <SnackbarWrapper
-            visible={openSnackBar}
-            onClose={() => setOpenSnackbar(false)}
-            // variant={snackbarData.variant}
-            variant={'error'}
-            message={VALIDATION_MESSAGES && VALIDATION_MESSAGES.INVALID_TIME}
-        />
-        {((!!config && !!config.value) || (!!input && !!input.value)) && <label className="float_label">{placeholder}</label>}
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid>
-                <KeyboardTimePicker
-                    className='form-control'
-                    margin="normal"
-                    helperText={''}
-                    error={false}
-                    id="time-picker"
-                    value={defaultValue}
-                    defaultValue={defaultValue}
-                    keyboardIcon={<></>}
-                    placeholder={placeholder}
-                    onChange={(value) => {
-                        value.getTime()
-                        console.log(value, minTime)
-                        if (maxTime <= value.getTime()) {
-                            setErr('')
-                        }
-                        else if (minTime >= value.getTime()) {
-                            setErr('End Time should be greater than Start Time')
-                        }
-                        else {
-                            input && input.onChange(value)
-                            setErr('')
-                            setOpenCalendar(false)
-                        }
-                    }}
-                    InputProps={{
-                        readOnly: true,
-                        style: { color: 'black' },
-                        onClick: () => {
-                            !disabled && setOpenCalendar(true)
-                        },
-                        value: config && config.value ? moment(config.value).format("h:mm A") : input.value ? moment(input.value).format("h:mm A") : ''
-                    }}
-                    onClick={() => {
-                        setOpenCalendar(true)
-                    }}
-                    KeyboardButtonProps={{ disabled: true, style: {} }}
-                    onOpen={() => { setOpenCalendar(true) }}
-                    onClose={(value) => {
-                        setOpenCalendar(false)
-                    }}
-                    open={openCalendar}
-                    {...config}
-                />
-                {/* <TextField id="standard-basic" value={dateSelected} label="Standard"
-                            disabled={true}
-                        /> */}
+                            let update = copyDate(minTime, value)
 
-                {/* <FloatingLabelInput
-                            id="example-3"
-                            label={placeholder}
-                            // onFocus={}
-                            editable={false}
-                            onClick={() => { }}
-                        /> */}
-            </Grid>
-            {validationSpan}
-        </MuiPickersUtilsProvider>
-    </>
+                            input.onChange(update);
+                            if (onChangeTime) { onChangeTime(value) }
+                            setErrorMsg('')
+
+                        }}
+                        // onChange={(value) => { if (onChangeTime) { onChangeTime(value) } }}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change time',
+                        }}
+                        InputProps={{
+                            disabled: true,
+                            style: { color: 'black' },
+                            onClick: () => {
+                                !disabled && setOpenCalendar(true)
+                            },
+                            //value: value ? moment(value) : ''
+                        }}
+                        onOpen={() => { setOpenCalendar(true) }}
+                        onClose={() => { setOpenCalendar(false) }}
+                        open={openCalendar}
+                    />
+                </Grid>
+                {validationSpan}
+            </MuiPickersUtilsProvider>
+        </div>
+        //</div>
+
     );
 };

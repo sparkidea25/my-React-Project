@@ -22,10 +22,9 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
         getSports(() => { }, () => { })
     }, [])
     useEffect(() => {
-        // console.log(allPlatforms, 'appl')
+
     }, [allPlatforms])
     const handleOnFileLoad = (data) => {
-        // csvToPartydata(data)
 
         let arr = []
         for (let i = 1; i < data.length; i++) {
@@ -36,7 +35,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
             arr.push(obj)
         }
-        // console.log(arr, 'check')
+
         setPartyData(arr)
     }
     const handleOnError = () => {

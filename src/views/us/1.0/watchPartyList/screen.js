@@ -1,24 +1,24 @@
 import React, { Component, useState, useEffect } from 'react'
 import moment from 'moment';
 import { ROUTES } from '../../../../shared/constants';
-import { Field } from "redux-form";
 const { CustomPagination } = require('../../../../components/atoms/pagination')
 const { TimePickerInput } = require('../../../../components/atoms/time-picker')
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const {
     Input,
 } = require(`../../../../components/atoms/input`);
-const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS } = require('../../../../shared/constants/constants')
+const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS, NAME_REGX, VALIDATION_MESSAGES } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
-// moment.tz.setDefault("America/New_York");
+
+
 const copyDate = (date, time) => {
     time = time ? new Date(time) : new Date()
     date = date ? new Date(date) : new Date()
     time.setDate(date.getDate());
     time.setMonth(date.getMonth());
     time.setYear(date.getFullYear());
-    console.log(time, 'check time')
+    // console.log(time, 'check time')
     return time;
 }
 
@@ -37,7 +37,7 @@ const convertToClientTimeZone = (date, format, type) => {
 }
 
 const convertTimeForEdit = (date, type) => {
-    console.log('xhexk date while edit', date, type)
+    // console.log('xhexk date while edit', date, type)
     if (date) {
         // console.log(moment(date).toDate(), 'check new stamp')
         var localZone = moment.tz.guess();
@@ -47,8 +47,8 @@ const convertTimeForEdit = (date, type) => {
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
         // console.log(zoneOffset, localZone, estOffset)
 
-        console.log(moment(new Date(date).getTime() - estOffset + zoneOffset).format())
-        console.log(moment((new Date(date).getTime() - (2 * zoneOffset) - estOffset)).toISOString(), 'check before update')
+        // console.log(moment(new Date(date).getTime() - estOffset + zoneOffset).format())
+        // console.log(moment((new Date(date).getTime() - (2 * zoneOffset) - estOffset)).toISOString(), 'check before update')
         // console.log('check before update', moment(new Date(date).getTime()).format('hh:mm A'))
         return moment(new Date(date).getTime() - estOffset + zoneOffset).format()
     }
@@ -121,8 +121,9 @@ export const Screen = ({ listWatchParty, history,
         watchPartyId: ''
     })
 
-    const editRow = (index, party) => {
+    const [validateFields, setValidateFields] = useState({})
 
+    const editRow = (index, party) => {
         setFields({
             ...fields, watchPartyId: party._id, show: party.contentName, host: party.host,
             sports: party.sports === true ? 'Yes' : 'No', league: party && party.leagueInfo && party.leagueInfo._id,
@@ -140,6 +141,8 @@ export const Screen = ({ listWatchParty, history,
         })
         setRowToEdit(index)
         setEditMode(true)
+        checkValidateFields('show', party.contentName)
+        checkValidateFields('host', party.host)
     }
 
     const convertToServerTimeZone = (date) => {
@@ -152,10 +155,17 @@ export const Screen = ({ listWatchParty, history,
     }
 
     const updateWatchParty = () => {
+        // console.log(validateFields, 'validateFields')
+        Object.keys(validateFields).map(field => {
+            if (field !== "") {
+                return
+            }
+        })
+
+
         let st = convertToServerTimeZone(fields.time)
         let et = convertToServerTimeZone(fields.endTime)
-        // const stime = moment.utc(date)
-        // console.log({ fields });
+
         const postData = {
             "watchPartyId": fields.watchPartyId,
             "contentName": fields.show,
@@ -168,7 +178,6 @@ export const Screen = ({ listWatchParty, history,
             "contentLength": fields.contentLength
         }
 
-        // console.log('chcek uo', postData)
 
         updateParty(postData, (response) => {
             setSnackBarData({
@@ -187,18 +196,37 @@ export const Screen = ({ listWatchParty, history,
             setOpenSnackbar(true)
         })
         setEditMode(false)
+
     }
     const updateFields = (type, value) => {
 
         setFields({ ...fields, [type]: value })
+        checkValidateFields(type, value)
     }
 
-    const validateFields = (type) => {
+    const checkValidateFields = (type, value) => {
         // console.log(type)
-        if (fields[type] === '') {
-            return `${type} is required.`
+        if (value === '') {
+            setValidateFields({ ...validateFields, [type]: `${type} is required.` })
         } else {
-            return ''
+            setValidateFields({ ...validateFields, [type]: '' })
+            // console.log('check prev time', fields.time)
+            if (fields.time < new Date()) {
+                setValidateFields({ ...validateFields, ['time']: VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST })
+
+            } else {
+                let min = diff_minutes(fields.time, fields.endTime)
+                if (min == 0) {
+                    setValidateFields({ ...validateFields, ['endTime']: VALIDATION_MESSAGES.SAME_TIME_VALIDATION })
+                } else if (type !== 'endTime' && (fields.endTime < fields.time)) {
+                    // console.log('check comparison', fields.endTime, fields.time)
+                    setValidateFields({ ...validateFields, ['endTime']: VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD })
+                }
+                else if (type === 'endTime' && (value < fields.time)) {
+                    // console.log('check comparison', fields.endTime, fields.time)
+                    setValidateFields({ ...validateFields, ['endTime']: VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD })
+                }
+            }
         }
     }
 
@@ -232,15 +260,22 @@ export const Screen = ({ listWatchParty, history,
 
 
     useEffect(() => {
-        console.log('check watch fields', fields)
+        // console.log('check watch fields', fields)
     }, [fields])
 
     useEffect(() => {
+        // console.log('check validation', validateFields)
+    }, [validateFields])
 
-
+    useEffect(() => {
+        updateFields('time', copyDate(fields.date, fields.time))
     }, [fields.date])
 
-    // console.log({ fields })
+    useEffect(() => {
+        updateFields('endTime', copyDate(fields.date, fields.endTime))
+    }, [fields.time])
+
+
     return (
         <div className="container-fluid">
             <SnackbarWrapper
@@ -289,22 +324,25 @@ export const Screen = ({ listWatchParty, history,
                                                 <> <input name="Content Name" type="text" placefolder="Content Name"
 
                                                     value={fields.show}
-                                                    onChange={(e) => updateFields('show', e.target.value)}
+                                                    onChange={(e) => {
+                                                        updateFields('show', e.target.value)
+                                                        // checkValidateFields('show',e.target)
+                                                    }}
 
 
                                                 />
-                                                    {fields.show === '' ? (
+                                                    {validateFields.show !== '' ? (
                                                         <>
-                                                            <span className="error_msg text-danger">{validateFields('show')}</span></>
+                                                            <span className="error_msg text-danger">{validateFields.show}</span></>
                                                     ) : null}</>
                                                 : party.contentName}
 
                                         </div></td>
                                         <td><div className="input_field">{index === rowToEdit && editMode === true ? <>
                                             <input type="text" placefolder="Host Name" value={fields.host} onChange={(e) => updateFields('host', e.target.value)} />
-                                            {fields.host === '' ? (
+                                            {validateFields.host !== '' ? (
                                                 <>
-                                                    <span className="error_msg text-danger">{validateFields('host')}</span></>
+                                                    <span className="error_msg text-danger">{validateFields.host}</span></>
                                             ) : null}</>
                                             : party.host}
 
@@ -350,9 +388,6 @@ export const Screen = ({ listWatchParty, history,
                                                         onChangeDate={(value) => {
 
                                                             updateFields('date', value)
-                                                            console.log(value, 'check updation')
-                                                            updateFields('endTime', copyDate(fields.date, fields.endTime))
-                                                            updateFields('time', copyDate(fields.date, fields.time))
 
                                                         }}
 
@@ -363,31 +398,39 @@ export const Screen = ({ listWatchParty, history,
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
+                                                <>
+                                                    <TimePickerInput
+                                                        value={fields.time}
+                                                        minTime={new Date()}
 
-                                                <TimePickerInput
-                                                    value={fields.time}
-                                                    minTime={new Date()}
+                                                        onChangeTime={(time) => {
 
-                                                    onChangeTime={(time) => {
-
-                                                        updateFields('time', copyDate(fields.date, time))
-                                                    }}
-                                                />
+                                                            updateFields('time', copyDate(fields.date, time))
+                                                        }}
+                                                    />
+                                                    {validateFields.time !== '' ? (
+                                                        <>
+                                                            <span className="error_msg text-danger">{validateFields.time}</span></>
+                                                    ) : null}</>
                                                 : convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)
                                                 // .format('LT')
                                             }
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-
-                                                <TimePickerInput
-                                                    value={fields.endTime}
-                                                    minTime={new Date()}
-                                                    onChangeTime={(time) => {
-                                                        updateFields('endTime', copyDate(fields.date, time))
-                                                        // changeStartTime('endTime', time)
-                                                    }}
-                                                />
+                                                <>
+                                                    <TimePickerInput
+                                                        value={fields.endTime}
+                                                        minTime={new Date()}
+                                                        onChangeTime={(time) => {
+                                                            updateFields('endTime', copyDate(fields.date, time))
+                                                            // changeStartTime('endTime', time)
+                                                        }}
+                                                    />
+                                                    {validateFields.endTime !== '' ? (
+                                                        <>
+                                                            <span className="error_msg text-danger">{validateFields.endTime}</span></>
+                                                    ) : null}</>
                                                 : convertToClientTimeZone(party && party.endTime, "hh:mm A", party && party.contentName)
                                                 // .format('LT')
                                             }
@@ -395,18 +438,18 @@ export const Screen = ({ listWatchParty, history,
                                         </div></td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}
-                                                readonly={true} />
+                                                readonly={true} disabled={true} />
                                                 : party.contentLength}
                                         </div>
                                         </td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} readOnly={true} /> : party.joined}
+                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} disabled={true} readOnly={true} /> : party.joined}
                                         </div>
                                         </td>
                                         <td><div className="input_field">
                                             {index === rowToEdit && editMode === true ?
-                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} readOnly={true} /> : party.interested}
+                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} disabled={true} readOnly={true} /> : party.interested}
                                         </div>
                                         </td>
                                         <td> {index === rowToEdit && editMode === true ?
@@ -429,6 +472,7 @@ export const Screen = ({ listWatchParty, history,
                                     setUpcomingAndLiveListing(response && response.watchPartyListing)
                                 })
                                 setLiveTableIndex(value && value.selected)
+                                setEditMode(false)
 
                             }}
                         />

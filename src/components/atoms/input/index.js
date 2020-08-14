@@ -25,6 +25,9 @@ export const Input = ({
           placeholder={placeholder}
           {...input}
           {...config}
+          onChange={(value) => {
+            input.onChange(value);
+          }}
           // value={data}
           maxLength={60}
           autoComplete='off' />

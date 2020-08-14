@@ -45,6 +45,11 @@ const WatchPartyForm = ({
         "endTime": null,
         'show': "",
     })
+
+    const [validateFields, setValidateFields] = useState({
+        "startTime": false,
+        "endTime": false
+    })
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
@@ -69,6 +74,16 @@ const WatchPartyForm = ({
         setPlatforms(arr)
     }, [allPlatforms])
 
+    const copyDate = (date, time) => {
+        time = time ? new Date(time) : new Date()
+        date = date ? new Date(date) : new Date()
+        time.setDate(date.getDate());
+        time.setMonth(date.getMonth());
+        time.setYear(date.getFullYear());
+        console.log(time, 'check time')
+        return time;
+    }
+
     useEffect(() => {
         let arr = []
         allLeagues && allLeagues.map(platform => {
@@ -86,14 +101,23 @@ const WatchPartyForm = ({
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
         // console.log(estOffset, 'estOffset')
-        // console.log(moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
+        console.log('on submit', moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
         return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
 
+    const validateTime = (field, message) => {
+        if (validateFields[field] === true) {
+            return message
+        }
+    }
+
     const onSubmit = () => {
+
+        // validateTime('startTime')
+        // validateTime('endTime')
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
-
+        // console.log(st, et, 'while on submit')
         let postData = {
             "contentName": fields.show,
             "host": fields.host,
@@ -123,37 +147,32 @@ const WatchPartyForm = ({
     const diff_minutes = (dt2, dt1) => {
         dt2 = new Date(dt2)
         dt1 = new Date(dt1)
-        console.log(dt2, dt1)
+        // console.log(dt2, dt1)
         var diff = (dt2.getTime() - dt1.getTime()) / 1000;
         diff /= 60;
         return Math.abs(Math.round(diff));
     }
     useEffect(() => {
-        uponChangeStartTime()
-
+        // uponChangeStartTime()
+        if (fields.endTime !== null) {
+            onChangeField('endTime', null)
+        }
     }, [fields.startTime])
 
-    const uponChangeStartTime = () => {
-        onChangeField('endTime', fields.startTime)
-        // let min = diff_minutes(fields.startTime, fields.endTime)
-        // onChangeField('contentLength', min)
-
-    }
+    // const uponChangeStartTime = () => {
+    //     onChangeField('endTime', fields.startTime)
+    // }
 
     useEffect(() => {
-
         let min = diff_minutes(fields.startTime, fields.endTime)
         onChangeField('contentLength', min)
+
     }, [fields.endTime])
 
     useEffect(() => {
         getLeagues(() => { }, () => { })
         getPlatforms(() => { }, () => { })
     }, [])
-
-    const [reactd, setReactd] = useState(new Date())
-
-
 
     return (
         <div class="container">
@@ -279,10 +298,15 @@ const WatchPartyForm = ({
                                 placeholder={'End Time'}
                                 defaultValue={fields.endTime}
                                 minTime={fields.startTime}
-                                onChange={time => {
-                                    console.log('time', time)
-                                    onChangeField('endTime', time)
-
+                                // meta={{
+                                //     error:
+                                //       validateFields.endTime &&
+                                //       validateFields.endTime,
+                                //     touched: validateFields.endTime && true,
+                                //   }}
+                                onChangeTime={time => {
+                                    console.log('checking on change end time', time)
+                                    onChangeField('endTime', copyDate(fields.startTime, time))
                                 }}
 
                             />
@@ -297,12 +321,10 @@ const WatchPartyForm = ({
 
                                     placeholder={'Content Length'}
                                     config={{
-                                        type: 'number',
                                         value: fields.contentLength,
+                                        type: 'number',
                                         readOnly: true
                                     }}
-
-
                                 />
                             </div>
                         </div>
@@ -311,31 +333,26 @@ const WatchPartyForm = ({
                         <InputSubmit buttonLabel={'Add Watch Party'} />
                     </div>
                 </Form>
-
-                {/* <ReactDate value={reactd} onChangeDate={(value) => {
-                    console.log(JSON.stringify(moment(value)), 'reactd')
-                    setReactd(value)
-                }} /> */}
             </div>
 
         </div>
     );
 };
 
-const mapStateToProps = (state, props) => {
-    var _secretKey = "some-unique-key";
-    var simpleCrypto = new SimpleCrypto(_secretKey);
-    return {
+// const mapStateToProps = (state, props) => {
+//     var _secretKey = "some-unique-key";
+//     var simpleCrypto = new SimpleCrypto(_secretKey);
+//     return {
 
-    };
-}
+//     };
+// }
 
-const reduxFormFunction = reduxForm({
+export const Screen = reduxForm({
     form: "watchparty",
-    fields: ['email', 'password'],
+    // fields: ['email', 'password'],
     onSubmitFail,
     validate: validator,
-    enableReinitialize: true
+    // enableReinitialize: true
 })(WatchPartyForm);
 
-export const Screen = connect(mapStateToProps, null)(reduxFormFunction);
+// export const Screen = (reduxFormFunction);
