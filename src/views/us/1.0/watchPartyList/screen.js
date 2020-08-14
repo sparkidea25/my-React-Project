@@ -32,7 +32,7 @@ const convertToClientTimeZone = (date, format, type) => {
         // console.log('xhexk date pdt', moment(new Date(date).getTime()).format(format), type)
 
         var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
-        console.log('check while list', new Date(toEST), type)
+        // console.log('check while list', new Date(toEST), type)
         if (type) {
             return moment(toEST).format(format)
         }
@@ -48,7 +48,7 @@ const convertTimeForEdit = (date, type) => {
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
 
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        console.log('while edit0', estOffset)
+        // console.log('while edit0', estOffset)
         var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
         return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
     }
@@ -149,7 +149,7 @@ export const Screen = ({ listWatchParty, history,
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        console.log(estOffset, 'estOffset before update')
+        // console.log(estOffset, 'estOffset before update')
         // console.log(moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
         return moment(date.getTime() - zoneOffset + (estOffset + 3600000)).toISOString()
     }
@@ -163,7 +163,7 @@ export const Screen = ({ listWatchParty, history,
             return
         }
         else {
-            console.log('only name', fields.time)
+
             let st = convertToServerTimeZone(new Date(fields.time))
             let et = convertToServerTimeZone(new Date(fields.endTime))
 
@@ -231,7 +231,9 @@ export const Screen = ({ listWatchParty, history,
         if (diff_minutes(fields.time, fields.endTime) == 0) {
             error['endTime'] = VALIDATION_MESSAGES.SAME_TIME_VALIDATION
         }
-        if (fields.endTime < fields.time) {
+        console.log('before start time', new Date(fields.endTime), new Date(fields.time))
+
+        if (new Date(fields.endTime) < new Date(fields.time)) {
 
             error['endTime'] = VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD
         }
