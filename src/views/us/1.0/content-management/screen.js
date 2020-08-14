@@ -157,7 +157,8 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
                                             })}
                                         </Carousel> :
-                                        'Csv cannot be uploaded' : ''
+                                        <h4>csv cannot be uploaded</h4>
+                                    : ''
                                 }
                                 {partyData && partyData.length > 0 && partyData[0].sports && partyData[0].league ? <PreviewSlider
                                     currentPage={previewIndex}
