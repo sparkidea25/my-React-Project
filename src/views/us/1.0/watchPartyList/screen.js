@@ -45,11 +45,7 @@ const convertTimeForEdit = (date, type) => {
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
 
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        // console.log(zoneOffset, localZone, estOffset)
 
-        // console.log(moment(new Date(date).getTime() - estOffset + zoneOffset).format())
-        // console.log(moment((new Date(date).getTime() - (2 * zoneOffset) - estOffset)).toISOString(), 'check before update')
-        // console.log('check before update', moment(new Date(date).getTime()).format('hh:mm A'))
         return moment(new Date(date).getTime() - estOffset + zoneOffset).format()
     }
 }
@@ -141,8 +137,7 @@ export const Screen = ({ listWatchParty, history,
         })
         setRowToEdit(index)
         setEditMode(true)
-        checkValidateFields('show', party.contentName)
-        checkValidateFields('host', party.host)
+
     }
 
     const convertToServerTimeZone = (date) => {
@@ -153,81 +148,85 @@ export const Screen = ({ listWatchParty, history,
         // console.log(moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
         return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
+    const [error, setError] = useState({})
 
-    const updateWatchParty = () => {
-        // console.log(validateFields, 'validateFields')
-        Object.keys(validateFields).map(field => {
-            if (field !== "") {
-                return
-            }
-        })
+    const updateWatchParty = (index) => {
 
-
-        let st = convertToServerTimeZone(fields.time)
-        let et = convertToServerTimeZone(fields.endTime)
-
-        const postData = {
-            "watchPartyId": fields.watchPartyId,
-            "contentName": fields.show,
-            "host": fields.host,
-            "startTime": st,
-            "endTime": et,
-            "sports": fields.sports === 'No' ? 'false' : 'true',
-            "league": fields.league,
-            "platform": fields.platform,
-            "contentLength": fields.contentLength
+        let obj = checkValidateFields()
+        setError(obj)
+        if (obj['show'] || obj['host'] || obj['time'] || obj['endTime']) {
+            return
         }
+        else {
+
+            let st = convertToServerTimeZone(fields.time)
+            let et = convertToServerTimeZone(fields.endTime)
+
+            const postData = {
+                "watchPartyId": fields.watchPartyId,
+                "contentName": fields.show,
+                "host": fields.host,
+                "startTime": st,
+                "endTime": et,
+                "sports": fields.sports === 'No' ? 'false' : 'true',
+                "league": fields.league,
+                "platform": fields.platform,
+                "contentLength": fields.contentLength
+            }
 
 
-        updateParty(postData, (response) => {
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
-            postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
-                setUpcomingAndLiveListing(response && response.watchPartyListing)
+            updateParty(postData, (response) => {
+                setSnackBarData({
+                    variant: response.status ? 'success' : 'error',
+                    message: response.msg
+                });
+                setOpenSnackbar(true)
+                postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+                    setUpcomingAndLiveListing(response && response.watchPartyListing)
+                })
+            }, (error) => {
+                setSnackBarData({
+                    variant: error.status ? 'success' : 'error',
+                    message: error.msg
+                });
+                setOpenSnackbar(true)
             })
-        }, (error) => {
-            setSnackBarData({
-                variant: error.status ? 'success' : 'error',
-                message: error.msg
-            });
-            setOpenSnackbar(true)
-        })
-        setEditMode(false)
-
+            setEditMode(false)
+        }
     }
     const updateFields = (type, value) => {
-
+        if (error[type]) {
+            setError({ ...error, [type]: null })
+        }
         setFields({ ...fields, [type]: value })
-        checkValidateFields(type, value)
     }
 
-    const checkValidateFields = (type, value) => {
-        // console.log(type)
-        if (value === '') {
-            setValidateFields({ ...validateFields, [type]: `${type} is required.` })
-        } else {
-            setValidateFields({ ...validateFields, [type]: '' })
-            // console.log('check prev time', fields.time)
-            if (fields.time < new Date()) {
-                setValidateFields({ ...validateFields, ['time']: VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST })
+    const checkValidateFields = () => {
+        let error = {}
+        if (fields.show === '') {
 
-            } else {
-                let min = diff_minutes(fields.time, fields.endTime)
-                if (min == 0) {
-                    setValidateFields({ ...validateFields, ['endTime']: VALIDATION_MESSAGES.SAME_TIME_VALIDATION })
-                } else if (type !== 'endTime' && (fields.endTime < fields.time)) {
-                    // console.log('check comparison', fields.endTime, fields.time)
-                    setValidateFields({ ...validateFields, ['endTime']: VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD })
-                }
-                else if (type === 'endTime' && (value < fields.time)) {
-                    // console.log('check comparison', fields.endTime, fields.time)
-                    setValidateFields({ ...validateFields, ['endTime']: VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD })
-                }
-            }
+            error['show'] = VALIDATION_MESSAGES.SHOW_NAME_REQUIRED
         }
+        if (fields.host === '') {
+
+            error['host'] = VALIDATION_MESSAGES.HOST_REQUIRED
+        }
+
+
+
+        if (new Date(fields.time) < new Date()) {
+
+            error['time'] = VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST
+        }
+        if (diff_minutes(fields.time, fields.endTime) == 0) {
+            error['endTime'] = VALIDATION_MESSAGES.SAME_TIME_VALIDATION
+        }
+        if (fields.endTime < fields.time) {
+
+            error['endTime'] = VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD
+        }
+        setError(error)
+        return error
     }
 
     useEffect(() => {
@@ -237,7 +236,7 @@ export const Screen = ({ listWatchParty, history,
 
     }, [editMode])
     useEffect(() => {
-        // console.log(fields, 'check fields')
+
     }, [fields])
     useEffect(() => {
         changeStartTime()
@@ -264,7 +263,7 @@ export const Screen = ({ listWatchParty, history,
     }, [fields])
 
     useEffect(() => {
-        // console.log('check validation', validateFields)
+
     }, [validateFields])
 
     useEffect(() => {
@@ -300,6 +299,7 @@ export const Screen = ({ listWatchParty, history,
                         <h3>Live & Upcoming</h3>
                     </div>
                     <div className="table-responsive">
+                        {/* <form name="myForm" > */}
                         <table className="table">
                             <thead>
                                 <th>Show</th>
@@ -318,70 +318,68 @@ export const Screen = ({ listWatchParty, history,
                             </thead>
                             <tbody>
                                 {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ? upcomingAndLiveListing.map((party, index) => {
-                                    return <tr key={index}>
-                                        <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <> <input name="Content Name" type="text" placefolder="Content Name"
-
+                                    return index === rowToEdit && editMode === true ?
+                                        <tr key={index}>
+                                            <td><div className="input_field">
+                                                <input name="Content Name" type="text" placefolder="Content Name"
                                                     value={fields.show}
                                                     onChange={(e) => {
                                                         updateFields('show', e.target.value)
-                                                        // checkValidateFields('show',e.target)
+
                                                     }}
-
-
                                                 />
-                                                    {validateFields.show !== '' ? (
-                                                        <>
-                                                            <span className="error_msg text-danger">{validateFields.show}</span></>
-                                                    ) : null}</>
-                                                : party.contentName}
 
-                                        </div></td>
-                                        <td><div className="input_field">{index === rowToEdit && editMode === true ? <>
-                                            <input type="text" placefolder="Host Name" value={fields.host} onChange={(e) => updateFields('host', e.target.value)} />
-                                            {validateFields.host !== '' ? (
-                                                <>
-                                                    <span className="error_msg text-danger">{validateFields.host}</span></>
-                                            ) : null}</>
-                                            : party.host}
+                                                {error && error.show ? (
+                                                    <span className="error_msg text-danger">{error.show}</span>
+                                                ) : null}
+                                            </div></td>
+                                            <td><div className="input_field">
+                                                <input type="text" placefolder="Host Name" value={fields.host}
+                                                    onChange={(e) => updateFields('host', e.target.value)} />
+                                                {error && error.host !== '' ? (
 
-                                        </div></td>
-                                        <td>
-                                            <div className="input_field">
+                                                    <span className="error_msg text-danger">{error.host}</span>
+                                                ) : null}
 
-                                                {index === rowToEdit && editMode === true ?
+
+                                            </div></td>
+                                            <td>
+                                                <div className="input_field">
+
+
                                                     <select value={fields.sports} onChange={(e) => updateFields('sports', e.target.value)}>
                                                         {SPORTS_OPTIONS.map(sport => {
                                                             return <option>{sport && sport.value}</option>
                                                         })}
                                                     </select>
-                                                    : party && party.sports === true ? 'Yes' : 'No'}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="input_field">
-                                                {index === rowToEdit && editMode === true ?
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+
                                                     <select value={fields.league} onChange={(e) => updateFields('league', e.target.value)}>
                                                         {allLeagues && allLeagues.map(league => {
                                                             return <option value={league._id}>{league && league.name}</option>
                                                         })}
-                                                    </select> : party && party.leagueInfo && party.leagueInfo.name}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="input_field">
-                                                {index === rowToEdit && editMode === true ?
+                                                    </select>
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+
                                                     <select value={fields.platform} onChange={(e) => updateFields('platform', e.target.value)}>
                                                         {allPlatforms && allPlatforms.map(platform => {
                                                             return <option value={platform._id}>{platform && platform.name}</option>
                                                         })}
                                                     </select>
-                                                    : party && party.platformInfo && party.platformInfo.name}
-                                            </div>
-                                        </td>
-                                        <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ?
+
+                                                </div>
+                                            </td>
+                                            <td><div className="input_field">
+
+
                                                 <>
                                                     <FieldDatePickerr
                                                         value={(fields.date)}
@@ -391,76 +389,135 @@ export const Screen = ({ listWatchParty, history,
 
                                                         }}
 
-                                                    /></> :
-                                                convertToClientTimeZone(party && party.startTime, 'Do MMM', party && party.contentName)
-                                                // .format('Do MMM')
-                                            }
-                                        </div></td>
-                                        <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <>
-                                                    <TimePickerInput
-                                                        value={fields.time}
-                                                        minTime={new Date()}
+                                                    /></>
 
-                                                        onChangeTime={(time) => {
+                                            </div></td>
+                                            <td><div className="input_field">
 
-                                                            updateFields('time', copyDate(fields.date, time))
-                                                        }}
-                                                    />
-                                                    {validateFields.time !== '' ? (
-                                                        <>
-                                                            <span className="error_msg text-danger">{validateFields.time}</span></>
-                                                    ) : null}</>
-                                                : convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)
-                                                // .format('LT')
-                                            }
-                                        </div></td>
-                                        <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <>
-                                                    <TimePickerInput
-                                                        value={fields.endTime}
-                                                        minTime={new Date()}
-                                                        onChangeTime={(time) => {
-                                                            updateFields('endTime', copyDate(fields.date, time))
-                                                            // changeStartTime('endTime', time)
-                                                        }}
-                                                    />
-                                                    {validateFields.endTime !== '' ? (
-                                                        <>
-                                                            <span className="error_msg text-danger">{validateFields.endTime}</span></>
-                                                    ) : null}</>
-                                                : convertToClientTimeZone(party && party.endTime, "hh:mm A", party && party.contentName)
-                                                // .format('LT')
-                                            }
 
-                                        </div></td>
-                                        <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ? <input type="number" value={fields.contentLength}
-                                                readonly={true} disabled={true} />
-                                                : party.contentLength}
-                                        </div>
-                                        </td>
-                                        <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} disabled={true} readOnly={true} /> : party.joined}
-                                        </div>
-                                        </td>
-                                        <td><div className="input_field">
-                                            {index === rowToEdit && editMode === true ?
-                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} disabled={true} readOnly={true} /> : party.interested}
-                                        </div>
-                                        </td>
-                                        <td> {index === rowToEdit && editMode === true ?
-                                            <button className="btn btn-sm btn-secondary" onClick={() => updateWatchParty(index)}>Done</button>
-                                            : <button className="btn btn-sm btn-secondary" onClick={() => editRow(index, party)}>Edit</button>
-                                        }
-                                        </td>
-                                    </tr>
+                                                <TimePickerInput
+                                                    value={fields.time}
+                                                    minTime={new Date()}
+
+                                                    onChangeTime={(time) => {
+
+                                                        updateFields('time', copyDate(fields.date, time))
+                                                    }}
+                                                />
+                                                {error && error.time ? (
+                                                    <span className="error_msg text-danger">{error.time}</span>
+                                                ) : null}
+
+
+                                            </div></td>
+                                            <td><div className="input_field">
+
+
+                                                <TimePickerInput
+                                                    value={fields.endTime}
+                                                    minTime={new Date()}
+                                                    onChangeTime={(time) => {
+                                                        updateFields('endTime', copyDate(fields.date, time))
+
+                                                    }}
+                                                />
+                                                {error && error.endTime ? (
+                                                    <span className="error_msg text-danger">{error.endTime}</span>
+                                                ) : null}
+
+
+
+                                            </div></td>
+                                            <td><div className="input_field">
+                                                <input type="number" value={fields.contentLength}
+                                                    readonly={true} disabled={true} />
+
+                                            </div>
+                                            </td>
+                                            <td><div className="input_field">
+
+                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} disabled={true} readOnly={true} />
+
+                                            </div>
+                                            </td>
+                                            <td><div className="input_field">
+
+                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} disabled={true} readOnly={true} />
+
+                                            </div>
+                                            </td>
+                                            <td>
+                                                <button className="btn btn-sm btn-secondary" onClick={() => updateWatchParty(index)}>Done</button>
+
+
+                                            </td>
+                                        </tr> :
+                                        <tr>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party.contentName}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party.host}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party && party.sports === true ? 'Yes' : 'No'}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party && party.leagueInfo && party.leagueInfo.name}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party && party.platformInfo && party.platformInfo.name}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {convertToClientTimeZone(party && party.startTime, 'Do MMM', party && party.contentName)}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {convertToClientTimeZone(party && party.endTime, "hh:mm A", party && party.contentName)}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party.contentLength}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party.joined}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    {party.interested}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="input_field">
+                                                    <button className="btn btn-sm btn-secondary" onClick={() => editRow(index, party)}>Edit</button></div></td>
+                                        </tr>
+
+
                                 }) : 'No Watch Parties found.'}
                             </tbody>
                         </table>
+                        {/* </form> */}
                         <CustomPagination
                             limit={STRINGS.SHOW_LIMIT}
                             totalPages={LiveTotalCount}
@@ -555,6 +612,6 @@ export const Screen = ({ listWatchParty, history,
                 </div>
 
             </div>
-        </div>
+        </div >
     )
 }

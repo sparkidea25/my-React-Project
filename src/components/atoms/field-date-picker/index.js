@@ -33,7 +33,7 @@ export const FieldDatePickerr = ({
     //     // ) : null;
     const [dateVal, setDateVal] = useState(value || null)
 
-    console.log('dateval', moment(dateVal).tz('America/New_York'))
+
     return (
         <>
             {label && <label>{label}</label>}

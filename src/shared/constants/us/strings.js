@@ -22,7 +22,7 @@ export const STRINGS = {
   TIME_SHOUDLD_NOT_BE_IN_PAST: 'Start Time cannot be in past.',
   LOGIN: 'Login',
   PASSWORD_LABEL: 'Password',
-  NAME_VALIDATION: 'Show Name cannot have numbers and special characters.',
+  NAME_VALIDATION: 'Name cannot have numbers and special characters.',
   EMAIL_LABEL: 'Email',
   VALUE_CANNOT_BE_ONLY_SPACES: 'Value cannot be only spaces.',
   PASSWORD_PLACEHOLDER: 'Password',

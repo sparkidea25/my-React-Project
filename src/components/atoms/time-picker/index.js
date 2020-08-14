@@ -29,7 +29,7 @@ export const TimePickerInput = ({
     const [openCalendar, setOpenCalendar] = useState(false);
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [inputValue, setTimeInputValue] = useState(value || '');
-    console.log({ value })
+
     const [errorMsg, setErrorMsg] = useState('')
     widthStyle = widthStyle ? widthStyle : "";
     const validationSpan =
@@ -57,20 +57,10 @@ export const TimePickerInput = ({
                         //     return <p></p>
                         // }}
                         onChange={(value) => {
-                            value.getTime()
-                            console.log(value, 'value')
-                            if (maxTime <= value.getTime()) {
-                                setOpenSnackbar(true)
 
-                            }
-                            else if (minTime >= value.getTime()) {
-                                setOpenSnackbar(true)
-                                setErrorMsg('Past Time cannot be selected')
-                            }
-                            else {
-                                if (onChangeTime) { onChangeTime(value) }
-                                setErrorMsg('')
-                            }
+                            if (onChangeTime) { onChangeTime(value) }
+                            setErrorMsg('')
+
                         }}
                         // onChange={(value) => { if (onChangeTime) { onChangeTime(value) } }}
                         KeyboardButtonProps={{

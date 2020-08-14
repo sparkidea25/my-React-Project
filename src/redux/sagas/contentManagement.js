@@ -15,7 +15,7 @@ const { updateAuthToken, postRequestNoAuth, postRequest, getRequest, putRequest 
 const { STATUS_CODE } = require(`../../shared/constants`);
 
 const createFormData = (fileData) => {
-    console.log(fileData)
+
     const data = new FormData();
     data.append("file", fileData.file);
     return data;
@@ -59,10 +59,10 @@ function* exportWatchparty({ data, success, failure }) {
 
 function* listWatchparty({ data, success, failure }) {
     try {
-        console.log('called', data)
+
         yield put(startLoader());
         const response = yield getRequest({ API: `${api.URL.WATCH_PARTY_LISTING}?${data}` });
-        console.log(response, 'respo')
+
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({
@@ -88,7 +88,7 @@ function* listWatchparty({ data, success, failure }) {
     }
     catch (error) {
         yield put(stopLoader());
-        console.log(error, 'error')
+
         failure({
             msg: 'Sorry, something went wrong.'
         })

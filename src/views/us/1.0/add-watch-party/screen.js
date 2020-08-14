@@ -80,7 +80,7 @@ const WatchPartyForm = ({
         time.setDate(date.getDate());
         time.setMonth(date.getMonth());
         time.setYear(date.getFullYear());
-        console.log(time, 'check time')
+
         return time;
     }
 
@@ -93,7 +93,7 @@ const WatchPartyForm = ({
         setLeagues(arr)
     }, [allLeagues])
     useEffect(() => {
-        console.log(fields, 'fieldss')
+
     }, [fields])
 
     const convertToServerTimeZone = (date) => {
@@ -101,7 +101,7 @@ const WatchPartyForm = ({
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
         // console.log(estOffset, 'estOffset')
-        console.log('on submit', moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
+
         return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
 
@@ -128,7 +128,7 @@ const WatchPartyForm = ({
             "contentLength": fields.contentLength,
             "endTime": et
         }
-        console.log(postData, 'postdata')
+
         addWatchParty(postData, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -305,7 +305,7 @@ const WatchPartyForm = ({
                                 //     touched: validateFields.endTime && true,
                                 //   }}
                                 onChangeTime={time => {
-                                    console.log('checking on change end time', time)
+
                                     onChangeField('endTime', copyDate(fields.startTime, time))
                                 }}
 
