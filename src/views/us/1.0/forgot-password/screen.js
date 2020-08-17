@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { ForgotReduxForm } from './form';
 import { Helmet } from 'react-helmet';
 import "./style.scss";
+import {
+    useHistory
+} from 'react-router-dom';
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { FormWrapper } = require(`../../../../components/hoc/form-wrapper`);
@@ -16,8 +19,9 @@ const {
 
 export const Screen = ({
     sendForgotEmail,
-    history
+
 }) => {
+    let history = useHistory();
     const [emailSent, setEmailSent] = useState(false);
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
@@ -52,7 +56,7 @@ export const Screen = ({
                                     {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
                                 </div>
                                 {!emailSent && <ForgotReduxForm onSubmit={(credentials) => {
-                                    console.log(credentials, 'credentials')
+
                                     sendForgotEmail({
                                         email: credentials.email,
                                     }, (response) => {
@@ -76,7 +80,7 @@ export const Screen = ({
                                     </form>
                                 }
                             </div>
-                            <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.FORGOT_PASSWORD); }}>
+                            <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
                                 <a href="javascript:void(0);" className="forgot_pwd">Log In?</a>
                             </div>
                         </FormWrapper>

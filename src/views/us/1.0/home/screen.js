@@ -11,7 +11,7 @@ export const Screen = ({
 
     return (
         <>
-            {console.log(history)}
+
             <Helmet>
                 <title>{PAGE_TITLES.dashboard}</title>
             </Helmet>

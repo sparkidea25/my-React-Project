@@ -29,8 +29,8 @@ export const AppHeader = ({
                     </i>
                 </span>
                 }
-                {hamburgerVisible ? menuVisible && <ul className="nav-admin ml-auto">
-                    <li className="active">
+                {hamburgerVisible ? menuVisible && <ul className="nav-admin ml-auto" >
+                    <li className={history.location.pathname === (ROUTES.WATCH_PARTY || ROUTES.ADD_WATCH_PARTY || ROUTES.CONTENT) ? "active" : ""}>
                         <a href="#" onClick={() => history.push(ROUTES.WATCH_PARTY)} >Content</a>
                     </li>
                     <li>
@@ -40,8 +40,9 @@ export const AppHeader = ({
                         <a href="javascript:void(0)" onClick={() => logout()}>Logout</a>
                     </li>
                 </ul> : <ul className="nav-admin ml-auto">
-                        <li className="active">
-                            <a href="#" onClick={() => history.push(ROUTES.WATCH_PARTY)}>Content</a>
+
+                        <li className={(history.location.pathname === ROUTES.WATCH_PARTY) || (history.location.pathname === ROUTES.ADD_WATCH_PARTY) || (history.location.pathname === ROUTES.CONTENT) ? "active" : ""}>
+                            <a onClick={() => history.push(ROUTES.WATCH_PARTY)}>Content</a>
                         </li>
                         <li>
                             <a href="#">Users</a>

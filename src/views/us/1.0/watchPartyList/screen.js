@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment';
 import { ROUTES } from '../../../../shared/constants';
 const { CustomPagination } = require('../../../../components/atoms/pagination')
@@ -18,21 +18,16 @@ const copyDate = (date, time) => {
     time.setDate(date.getDate());
     time.setMonth(date.getMonth());
     time.setYear(date.getFullYear());
-    // console.log(time, 'check time')
     return time;
 }
 
 const convertToClientTimeZone = (date, format, type) => {
-    // console.log('xhexk date utc', date, type)
     if (date) {
-        // console.log(moment(date).toDate(), 'check new stamp')
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime() + 60) * 60000;
-        // console.log('xhexk date pdt', moment(new Date(date).getTime()).format(format), type)
 
         var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
-        // console.log('check while list', new Date(toEST), type)
         if (type) {
             return moment(toEST).format(format)
         }
@@ -40,15 +35,12 @@ const convertToClientTimeZone = (date, format, type) => {
 }
 
 const convertTimeForEdit = (date, type) => {
-    // console.log('xhexk date while edit', date, type)
     if (date) {
-        // console.log(moment(date).toDate(), 'check new stamp')
         var localZone = moment.tz.guess();
 
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
 
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        // console.log('while edit0', estOffset)
         var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
         return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
     }
@@ -92,7 +84,6 @@ export const Screen = ({ listWatchParty, history,
     }, [])
 
     useEffect(() => {
-
     }, [upcomingAndLiveListing])
 
     const [openSnackBar, setOpenSnackbar] = useState(false);
@@ -121,7 +112,6 @@ export const Screen = ({ listWatchParty, history,
         watchPartyId: ''
     })
 
-    const [validateFields, setValidateFields] = useState({})
 
     const editRow = (index, party) => {
         setFields({
@@ -129,7 +119,7 @@ export const Screen = ({ listWatchParty, history,
             sports: party.sports === true ? 'Yes' : 'No', league: party && party.leagueInfo && party.leagueInfo._id,
             platform: party && party.platformInfo && party.platformInfo._id,
             month: moment(party && party.startTime).format('MMM').toUpperCase(),
-            date: convertTimeForEdit(party && party.startTime),//moment(party && party.startTime).format('Do').split('th')[0],
+            date: convertTimeForEdit(party && party.startTime),
             year: moment(party && party.startTime).format('YYYY'),
             time: convertTimeForEdit(party && party.startTime, party && party.contentName),
 
@@ -145,12 +135,9 @@ export const Screen = ({ listWatchParty, history,
     }
 
     const convertToServerTimeZone = (date) => {
-
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        // console.log(estOffset, 'estOffset before update')
-        // console.log(moment(date.getTime() - zoneOffset + estOffset).toISOString(), 'toISOString')
         return moment(date.getTime() - zoneOffset + (estOffset + 3600000)).toISOString()
     }
     const [error, setError] = useState({})
@@ -158,7 +145,7 @@ export const Screen = ({ listWatchParty, history,
     const updateWatchParty = (index) => {
         let obj = checkValidateFields()
         setError(obj)
-        // console.log('while name', obj)
+
         if (obj['show'] || obj['host'] || obj['time'] || obj['endTime']) {
             return
         }
@@ -271,12 +258,8 @@ export const Screen = ({ listWatchParty, history,
 
 
     useEffect(() => {
-        // console.log('check watch fields', fields)
     }, [fields])
 
-    useEffect(() => {
-
-    }, [validateFields])
 
     useEffect(() => {
         updateFields('time', copyDate(fields.date, fields.time))
@@ -311,7 +294,6 @@ export const Screen = ({ listWatchParty, history,
                         <h3>Live & Upcoming</h3>
                     </div>
                     <div className="table-responsive">
-                        {/* <form name="myForm" > */}
                         <table className="table">
                             <thead>
                                 <th>Show</th>
@@ -319,7 +301,6 @@ export const Screen = ({ listWatchParty, history,
                                 <th>Sports</th>
                                 <th>League</th>
                                 <th>Platform</th>
-                                {/* <th>Month</th> */}
                                 <th>Date</th>
                                 <th>Time (EST).</th>
                                 <th>End Time</th>
@@ -329,222 +310,227 @@ export const Screen = ({ listWatchParty, history,
                                 <th></th>
                             </thead>
                             <tbody>
-                                {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ? upcomingAndLiveListing.map((party, index) => {
-                                    return index === rowToEdit && editMode === true ?
-                                        <tr key={index}>
-                                            <td><div className="input_field">
-                                                <input name="Content Name" type="text" placefolder="Content Name"
-                                                    value={fields.show}
-                                                    onChange={(e) => {
-                                                        updateFields('show', e.target.value)
 
-                                                    }}
-                                                />
+                                {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ?
+                                    <>
+                                        {upcomingAndLiveListing.map((party, index) => {
+                                            return index === rowToEdit && editMode === true ?
 
-                                                {error && error.show ? (
-                                                    <span className="error_msg text-danger">{error.show}</span>
-                                                ) : null}
-                                            </div></td>
-                                            <td><div className="input_field">
-                                                <input type="text" placefolder="Host Name" value={fields.host}
-                                                    onChange={(e) => updateFields('host', e.target.value)} />
-                                                {error && error.host !== '' ? (
+                                                <tr key={index}>
+                                                    <td><div className="input_field">
+                                                        <input name="Content Name" type="text" placefolder="Content Name"
+                                                            value={fields.show}
+                                                            onChange={(e) => {
+                                                                updateFields('show', e.target.value)
 
-                                                    <span className="error_msg text-danger">{error.host}</span>
-                                                ) : null}
+                                                            }}
+                                                        />
 
+                                                        {error && error.show ? (
+                                                            <span className="error_msg text-danger">{error.show}</span>
+                                                        ) : null}
+                                                    </div></td>
+                                                    <td><div className="input_field">
+                                                        <input type="text" placefolder="Host Name" value={fields.host}
+                                                            onChange={(e) => updateFields('host', e.target.value)} />
+                                                        {error && error.host !== '' ? (
 
-                                            </div></td>
-                                            <td>
-                                                <div className="input_field">
-
-
-                                                    <select value={fields.sports} onChange={(e) => updateFields('sports', e.target.value)}>
-                                                        {SPORTS_OPTIONS.map(sport => {
-                                                            return <option>{sport && sport.value}</option>
-                                                        })}
-                                                    </select>
-
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-
-                                                    <select value={fields.league} onChange={(e) => updateFields('league', e.target.value)}>
-                                                        {allLeagues && allLeagues.map(league => {
-                                                            return <option value={league._id}>{league && league.name}</option>
-                                                        })}
-                                                    </select>
-
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-
-                                                    <select value={fields.platform} onChange={(e) => updateFields('platform', e.target.value)}>
-                                                        {allPlatforms && allPlatforms.map(platform => {
-                                                            return <option value={platform._id}>{platform && platform.name}</option>
-                                                        })}
-                                                    </select>
-
-                                                </div>
-                                            </td>
-                                            <td><div className="input_field">
+                                                            <span className="error_msg text-danger">{error.host}</span>
+                                                        ) : null}
 
 
-                                                <>
-                                                    <FieldDatePickerr
-                                                        value={(fields.date)}
-                                                        onChangeDate={(value) => {
-
-                                                            updateFields('date', value)
-
-                                                        }}
-
-                                                    /></>
-
-                                            </div></td>
-                                            <td><div className="input_field">
+                                                    </div></td>
+                                                    <td>
+                                                        <div className="input_field">
 
 
-                                                <TimePickerInput
-                                                    value={fields.time}
-                                                    minTime={new Date()}
+                                                            <select value={fields.sports} onChange={(e) => updateFields('sports', e.target.value)}>
+                                                                {SPORTS_OPTIONS.map(sport => {
+                                                                    return <option>{sport && sport.value}</option>
+                                                                })}
+                                                            </select>
 
-                                                    onChangeTime={(time) => {
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
 
-                                                        updateFields('time', copyDate(fields.date, time))
-                                                    }}
-                                                />
-                                                {error && error.time ? (
-                                                    <span className="error_msg text-danger">{error.time}</span>
-                                                ) : null}
+                                                            <select value={fields.league} onChange={(e) => updateFields('league', e.target.value)}>
+                                                                {allLeagues && allLeagues.map(league => {
+                                                                    return <option value={league._id}>{league && league.name}</option>
+                                                                })}
+                                                            </select>
 
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
 
-                                            </div></td>
-                                            <td><div className="input_field">
+                                                            <select value={fields.platform} onChange={(e) => updateFields('platform', e.target.value)}>
+                                                                {allPlatforms && allPlatforms.map(platform => {
+                                                                    return <option value={platform._id}>{platform && platform.name}</option>
+                                                                })}
+                                                            </select>
 
-
-                                                <TimePickerInput
-                                                    value={fields.endTime}
-                                                    minTime={new Date()}
-                                                    onChangeTime={(time) => {
-                                                        updateFields('endTime', copyDate(fields.date, time))
-
-                                                    }}
-                                                />
-                                                {error && error.endTime ? (
-                                                    <span className="error_msg text-danger">{error.endTime}</span>
-                                                ) : null}
-
-
-
-                                            </div></td>
-                                            <td><div className="input_field">
-                                                <input type="number" value={fields.contentLength}
-                                                    readonly={true} disabled={true} />
-
-                                            </div>
-                                            </td>
-                                            <td><div className="input_field">
-
-                                                <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} disabled={true} readOnly={true} />
-
-                                            </div>
-                                            </td>
-                                            <td><div className="input_field">
-
-                                                <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} disabled={true} readOnly={true} />
-
-                                            </div>
-                                            </td>
-                                            <td>
-                                                <button className="btn btn-sm btn-secondary" onClick={() => updateWatchParty(index)}>Done</button>
+                                                        </div>
+                                                    </td>
+                                                    <td><div className="input_field">
 
 
-                                            </td>
-                                        </tr> :
-                                        <tr>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party.contentName}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party.host}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party && party.sports === true ? 'Yes' : 'No'}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party && party.leagueInfo && party.leagueInfo.name}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party && party.platformInfo && party.platformInfo.name}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {convertToClientTimeZone(party && party.startTime, 'Do MMM', party && party.contentName)}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {convertToClientTimeZone(party && party.endTime, "hh:mm A", party && party.contentName)}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party.contentLength}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party.joined}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    {party.interested}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="input_field">
-                                                    <button className="btn btn-sm btn-secondary" onClick={() => editRow(index, party)}>Edit</button></div></td>
-                                        </tr>
+                                                        <>
+                                                            <FieldDatePickerr
+                                                                value={(fields.date)}
+                                                                onChangeDate={(value) => {
+
+                                                                    updateFields('date', value)
+
+                                                                }}
+
+                                                            /></>
+
+                                                    </div></td>
+                                                    <td><div className="input_field">
 
 
-                                }) : 'No Watch Parties found.'}
+                                                        <TimePickerInput
+                                                            value={fields.time}
+                                                            minTime={new Date()}
+
+                                                            onChangeTime={(time) => {
+
+                                                                updateFields('time', copyDate(fields.date, time))
+                                                            }}
+                                                        />
+                                                        {error && error.time ? (
+                                                            <span className="error_msg text-danger">{error.time}</span>
+                                                        ) : null}
+
+
+                                                    </div></td>
+                                                    <td><div className="input_field">
+
+
+                                                        <TimePickerInput
+                                                            value={fields.endTime}
+                                                            minTime={new Date()}
+                                                            onChangeTime={(time) => {
+                                                                updateFields('endTime', copyDate(fields.date, time))
+
+                                                            }}
+                                                        />
+                                                        {error && error.endTime ? (
+                                                            <span className="error_msg text-danger">{error.endTime}</span>
+                                                        ) : null}
+
+
+
+                                                    </div></td>
+                                                    <td><div className="input_field">
+                                                        <input type="number" value={fields.contentLength}
+                                                            readonly={true} disabled={true} />
+
+                                                    </div>
+                                                    </td>
+                                                    <td><div className="input_field">
+
+                                                        <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} disabled={true} readOnly={true} />
+
+                                                    </div>
+                                                    </td>
+                                                    <td><div className="input_field">
+
+                                                        <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} disabled={true} readOnly={true} />
+
+                                                    </div>
+                                                    </td>
+                                                    <td>
+                                                        <button className="btn btn-sm btn-secondary" onClick={() => updateWatchParty(index)}>Done</button>
+
+
+                                                    </td>
+                                                </tr> :
+
+                                                <tr>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party.contentName}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party.host}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party && party.sports === true ? 'Yes' : 'No'}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party && party.leagueInfo && party.leagueInfo.name}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party && party.platformInfo && party.platformInfo.name}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {convertToClientTimeZone(party && party.startTime, 'Do MMM', party && party.contentName)}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {convertToClientTimeZone(party && party.endTime, "hh:mm A", party && party.contentName)}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party.contentLength}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party.joined}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {party.interested}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            <button className="btn btn-sm btn-secondary" onClick={() => editRow(index, party)}>Edit</button></div></td>
+                                                </tr>
+                                        })}
+                                        <CustomPagination
+                                            limit={STRINGS.SHOW_LIMIT}
+                                            totalPages={LiveTotalCount}
+                                            itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
+                                            currentPage={liveTableIndex + 1}
+                                            onPageChange={(value) => {
+
+                                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+                                                    setUpcomingAndLiveListing(response && response.watchPartyListing)
+                                                })
+                                                setLiveTableIndex(value && value.selected)
+                                                setEditMode(false)
+
+                                            }}
+                                        /></>
+
+                                    : 'No Watch Parties found.'}
                             </tbody>
                         </table>
-                        {/* </form> */}
-                        <CustomPagination
-                            limit={STRINGS.SHOW_LIMIT}
-                            totalPages={LiveTotalCount}
-                            itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
-                            currentPage={liveTableIndex + 1}
-                            onPageChange={(value) => {
 
-                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
-                                    setUpcomingAndLiveListing(response && response.watchPartyListing)
-                                })
-                                setLiveTableIndex(value && value.selected)
-                                setEditMode(false)
-
-                            }}
-                        />
                     </div>
                 </div>
                 <div className="managment_list">
@@ -571,55 +557,58 @@ export const Screen = ({ listWatchParty, history,
                                 </tr>
                             </thead>
                             <tbody>
-                                {pastListing && pastListing.length > 0 ? pastListing.map((pastParty, index) => {
-                                    return <tr className="preview_mode" key={index}>
-                                        <td><div className="input_field">{pastParty.contentName}</div></td>
-                                        <td><div className="input_field">{pastParty.host}</div></td>
-                                        <td>
-                                            <div className="input_field">
-                                                {pastParty && pastParty.sports === true ? 'Yes' : 'No'}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="input_field">
-                                                {pastParty && pastParty.leagueInfo && pastParty.leagueInfo.name}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="input_field">
-                                                {pastParty && pastParty.platformInfo && pastParty.platformInfo.name}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="input_field">
-                                                {moment(pastParty && pastParty.startTime).format('MMM').toUpperCase()}
-                                            </div>
-                                        </td>
-                                        <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('Do').split('th')[0]}</div></td>
-                                        <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('LT')}</div></td>
-                                        <td><div className="input_field">{moment(pastParty && pastParty.endTime).format('LT')}</div></td>
-                                        <td><div className="input_field">{pastParty.contentLength}</div></td>
-                                        <td><div className="input_field">{pastParty.joined}</div></td>
-                                        <td><div className="input_field">{pastParty.interested}</div></td>
-                                        <td style={{ minWidth: '86px' }}> </td>
-                                    </tr>
-                                }) : 'No Watch Parties found.'}
+                                {pastListing && pastListing.length > 0 ?
+                                    <>
+                                        {pastListing.map((pastParty, index) => {
+                                            return <tr className="preview_mode" key={index}>
+                                                <td><div className="input_field">{pastParty.contentName}</div></td>
+                                                <td><div className="input_field">{pastParty.host}</div></td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {pastParty && pastParty.sports === true ? 'Yes' : 'No'}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {pastParty && pastParty.leagueInfo && pastParty.leagueInfo.name}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {pastParty && pastParty.platformInfo && pastParty.platformInfo.name}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {moment(pastParty && pastParty.startTime).format('MMM').toUpperCase()}
+                                                    </div>
+                                                </td>
+                                                <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('Do').split('th')[0]}</div></td>
+                                                <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('LT')}</div></td>
+                                                <td><div className="input_field">{moment(pastParty && pastParty.endTime).format('LT')}</div></td>
+                                                <td><div className="input_field">{pastParty.contentLength}</div></td>
+                                                <td><div className="input_field">{pastParty.joined}</div></td>
+                                                <td><div className="input_field">{pastParty.interested}</div></td>
+                                                <td style={{ minWidth: '86px' }}> </td>
+                                            </tr>
+                                        })}
+                                        <CustomPagination
+                                            limit={STRINGS.SHOW_LIMIT}
+                                            totalPages={PastTotalCount}
+                                            itemsCount={pastListing && pastListing.length}
+                                            currentPage={PastTableIndex + 1}
+                                            onPageChange={(value) => {
+
+                                                pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
+                                                    setPastListing(response && response.watchPartyListing)
+                                                })
+                                                setPastTableIndex(value && value.selected)
+
+                                            }}
+                                        />
+                                    </> : 'No Watch Parties found.'}
                             </tbody>
                         </table>
-                        <CustomPagination
-                            limit={STRINGS.SHOW_LIMIT}
-                            totalPages={PastTotalCount}
-                            itemsCount={pastListing && pastListing.length}
-                            currentPage={PastTableIndex + 1}
-                            onPageChange={(value) => {
-
-                                pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
-                                    setPastListing(response && response.watchPartyListing)
-                                })
-                                setPastTableIndex(value && value.selected)
-
-                            }}
-                        />
                     </div>
                 </div>
 

@@ -68,20 +68,15 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
     let platform;
     let league;
 
-    const csvMsg = () => {
-
-    }
-
     useEffect(() => {
-        if ((partyData && partyData[0] && partyData[0].sports && partyData[0].league)) {
-        }
-        else {
+        if ((partyData && partyData[0] && !partyData[0].sports && !partyData[0].league)) {
             setSnackBarData({
                 variant: 'error',
                 message: 'This csv cannot be uploaded'
             });
             setOpenSnackbar(true)
         }
+
 
     }, [partyData])
 
@@ -102,9 +97,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
                         <div class="col-md-5">
                             <div class="upload_csv">
-                                {/* <CustomFileDrop
-                                handleSubmit={handleOnFileLoad}
-                            /> */}
+
                                 <div className="d-flex align-items-center w-100 drag_drop_option">
                                     <i><img src={require(`../../../../assets/img/icons/cloud_icon.svg`)} alt={'non-upload-icon'} width="80" /></i>
                                     <CSVReader
