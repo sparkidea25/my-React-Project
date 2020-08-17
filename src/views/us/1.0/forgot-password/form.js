@@ -24,23 +24,15 @@ const ForgotForm = ({
                     name={STRINGS.EMAIL_INPUT_NAME}
                     component={Input}
                     label={STRINGS.EMAIL_LABEL}
-                    placeholder={STRINGS.EMAIL_PLACEHOLDER}
-                    type={'text'}
-                // config={{
-                //     type: "email",
-                //     placeholder: STRINGS.EMAIL_PLACEHOLDER
-                // }}
+
+                    config={{
+                        type: "email",
+                        placeholder: STRINGS.EMAIL_PLACEHOLDER
+                    }}
                 />
             </div>
             <InputSubmit buttonLabel={STRINGS.SEND_EMAIL} containerStyle={"text-center"} />
-            <div className="row">
-                <Link
-                    className="col-md-12 auth-link text-center"
-                    to={ROUTES.LOGIN}
-                >
-                    {STRINGS.LOG_IN}
-                </Link>
-            </div>
+
         </Form>
     );
 };

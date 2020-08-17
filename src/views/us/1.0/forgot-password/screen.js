@@ -54,6 +54,7 @@ export const Screen = ({
                             {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
                         </div>
                         {!emailSent && <ForgotReduxForm onSubmit={(credentials) => {
+                            console.log(credentials, 'credentials')
                             sendForgotEmail({
                                 email: credentials.email,
                             }, (response) => {

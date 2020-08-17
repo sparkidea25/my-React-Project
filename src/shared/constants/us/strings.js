@@ -51,5 +51,6 @@ export const STRINGS = {
   LOG_OUT: 'Log Out',
   SUCCESS: 'success',
   ERROR: 'error',
-  SHOW_LIMIT: 5
+  SHOW_LIMIT: 5,
+  SEND_EMAIL: 'Send Email'
 }

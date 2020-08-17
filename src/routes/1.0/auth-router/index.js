@@ -4,12 +4,13 @@ import {
     Redirect,
     Switch,
 } from 'react-router-dom';
-const { defaultConfig: {  LOCATION, VERSION } } = require(`../../../config/default`);
+const { defaultConfig: { LOCATION, VERSION } } = require(`../../../config/default`);
 const { ROUTES } = require(`../../../shared/constants/routes`);
 const { LoginScreen } = require(`../../../views/${LOCATION}/${VERSION}/login`);
 const { ForgotScreen } = require(`../../../views/${LOCATION}/${VERSION}/forgot-password`);
 
 const AuthRouter = (props) => {
+
     return (
         <React.Fragment>
             <Switch>

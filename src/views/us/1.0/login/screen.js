@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LoginReduxForm } from './form';
 import { Helmet } from "react-helmet";
 import "./style.scss";
-
+import {
+    useHistory
+} from 'react-router-dom';
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const {
     ROUTES,
@@ -11,9 +13,10 @@ const {
 
 export const Screen = ({
     checkLogin,
-    history,
+
     stopLoader
 }) => {
+    let history = useHistory();
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
@@ -21,6 +24,7 @@ export const Screen = ({
     });
 
     const [credentials, setCredentials] = useState({ email: '', password: '' });
+
     return (
         <React.Fragment>
             <Helmet>
@@ -45,6 +49,7 @@ export const Screen = ({
                                 password: credentials.password
                             }, () => {
                                 stopLoader();
+
                                 history.push(ROUTES.DASHBOARD);
                             },
                                 (response) => {
@@ -65,6 +70,8 @@ export const Screen = ({
                                 password: value
                             })}
                         />
+                        <div onClick={() => { history.push(ROUTES.FORGOT_PASSWORD); }}>
+                            <a style={{ color: 'white' }}>forget-password</a></div>
                     </div>
 
                 </div>
