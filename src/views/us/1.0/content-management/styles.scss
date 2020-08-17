@@ -1,6 +1,8 @@
+@import '../../../../theme/base.scss';
+
 .event_posts {
-    position: relative;
-    display: flex; 
+    position: $relative;
+    @include flexbox; 
     width:100%;    
     @media (max-width:575px){
         flex-direction: column;
@@ -15,65 +17,65 @@
             min-width: 96px
         }
         .time {
-            color:#64d2ff;
-            display: block;
-            font-size: 24px;
-            font-weight: 700;
+            color:$primary-color;
+            display: $block;
+            font-size: $f16+8;
+            font-weight: $f-bold;
             line-height: 32px;
             @media(max-width:991px){
-              font-size: 20px;
+              font-size: $f16+4;
             }
         }
         .date {
             color:#9da2b2;
-            font-size: 19px;
+            font-size: $f16+3;
             text-transform: uppercase;
-            font-weight: 400;
+            font-weight: $f-regular;
             strong {
                 color:inherit;
-                display: block;
-                font-size: 24px;
-                line-height: 18px;
+                display: $block;
+                font-size: $f16+8;
+                line-height: $f16+2;
                 @media(max-width:991px){
-                    font-size: 20px;
+                    font-size: $f16+4;
                 }
             }
         }
     }
     .team_group {
-        border-left: 1px solid #e2e5e8;
+        border-left: 1px solid $grey-color;
         margin-left: 15px;
         padding-left: 20px;
         display: inline-block;
         @media (max-width:575px){
             padding:10px 0 0;
             margin:10px 0 0;
-            border-top:1px solid #e2e5e8;
+            border-top:1px solid $grey-color;
             border-left:0;
         }
         hgroup {
             text-align: left;
             h5 {
-                font-size: 28px;
-                font-weight:700;
-                color:#000;
+                font-size: $f16+12;
+                font-weight:$f-bold;
+                color:$black-color;
             }
             h6 {
-                font-size:23px;
+                font-size:$f16+7;
                 font-weight: 600;
                 color:#1b2031;
                 text-transform: uppercase;
             }
         }
         .total_joined {
-            color:#acb1be;
-            font-size: 20px;
+            color:$grey-color1;
+            font-size: $f16+4;
             text-transform: uppercase;
         }
     }
     .list_group {
-        display: flex;
-        flex-wrap: wrap;
+        @include flexbox; 
+        @include flex-wrap(wrap);
         margin:15px 0;
         li {
             width:80px;
@@ -94,11 +96,11 @@
     }
 }
 .button_group {
-    display: flex;    
+    @include flexbox;
     margin-right:-7px;
     margin-left:-7px;
     @media (max-width:1024px) {
-        flex-wrap: wrap;
+        @include flex-wrap(wrap);
     }
     .btn {
         width:100%;
@@ -106,15 +108,15 @@
     }    
 }
 #upload_btn {    
-    background-color: #414959;
-    border-radius: 5px;
-    color:#fff;
+    background-color: $secondary-color;
     text-align: center;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
+    @include border-radius(5px);
+    color:$white-color;
+    font-size: $f16+2;
+   @include flexbox; 
+   @include align-items(center);
+   @include justify-content(center);
+    font-weight: $f-medium;
     min-height:40px;
     min-width:230px;    
 }
@@ -139,24 +141,24 @@
 }
 .carousel {
     .slide {
-        background: #fff;
+        background: $white-color;
     }
     .control-dots{
-        position: static;
+        position: $static;
         margin-top:25px;
         li.dot {
-            background-color: #000;
+            background-color: $black-color;
             box-shadow: none;
             border-radius: 10px;
             width:12px;
             height:12px;
             &:selected {
-                background: #64d2ff;
+                background: $primary-color;
             }
         }        
     }
     .carousel-status {
-        color:#000;
-        text-shadow: none;
+        color:$black-color;
+        text-shadow: $none;
     }
 }

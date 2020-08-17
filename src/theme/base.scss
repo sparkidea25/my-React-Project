@@ -1,0 +1,37 @@
+// _base.scss
+@import 'variable';
+@import 'flexbox';
+@import 'mixin';
+@import 'fonts';
+
+$primary-color:#64d2ff;
+$secondary-color:#424959;
+$base-color:#4D4D4F;
+$grey-color: #e3e5e8;
+$grey-color1:#ababab;
+$grey-color2:#e5e5e5;
+$grey-color3:#f5f5f5;
+$grey-color4:#dddddd;
+$grey-color5:#a3a3a3;
+$teal-color:#27778d;
+$btn-color:#677088;
+$black-color:#000000;
+$black-color1:#333333;
+$white-color:#ffffff;
+$skyblue-color:#64d2ff;
+$inputTxt-color:#909090;
+$gold-color:#fac802;
+$dark-green: #247801;
+$red-color: #F30031;;
+$transparent: transparent;
+
+$default-font:'SF UI Text';
+
+$f12: 12px;
+$f14: 14px;
+$f16: 16px;
+
+$f-bold:700;
+$f-medium:500;
+$f-regular:400;
+$f-light:300;
