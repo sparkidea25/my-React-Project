@@ -12,6 +12,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
     const [partyData, setPartyData] = useState([])
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [previewIndex, setPreviewIndex] = useState(1);
+    const [uploadMsg, setuploadMsg] = useState(false)
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
         message: ''
@@ -25,7 +26,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
     }, [allPlatforms])
     const handleOnFileLoad = (data) => {
-
+        console.log('check ipload', buttonRef.current.state.file)
         let arr = []
         for (let i = 1; i < data.length; i++) {
             let obj
@@ -38,14 +39,9 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
         setPartyData(arr)
     }
-    const handleOnError = () => {
 
-    }
-    const handleOnRemoveFile = () => {
-
-    }
     const handleOpenDialog = (e) => {
-        // Note that the ref is set async, so it might be null at some point
+
         if (buttonRef.current) {
             buttonRef.current.open(e)
         }
@@ -71,6 +67,24 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
     }
     let platform;
     let league;
+
+    const csvMsg = () => {
+
+    }
+
+    useEffect(() => {
+        if ((partyData && partyData[0] && partyData[0].sports && partyData[0].league)) {
+        }
+        else {
+            setSnackBarData({
+                variant: 'error',
+                message: 'This csv cannot be uploaded'
+            });
+            setOpenSnackbar(true)
+        }
+
+    }, [partyData])
+
     return (
         <>
             <div class="container-fluid">
@@ -96,10 +110,10 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                     <CSVReader
                                         ref={buttonRef}
                                         onFileLoad={handleOnFileLoad}
-                                        onError={handleOnError}
+
                                         noClick
                                         noDrag
-                                        onRemoveFile={handleOnRemoveFile}
+
                                     >
                                         {({ file }) => (
                                             < button
@@ -156,8 +170,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                                     </div> </>
 
                                             })}
-                                        </Carousel> :
-                                        <div id="upload-msg"></div>
+                                        </Carousel> : <div className="upload-msg"></div>
                                     : ''
                                 }
                                 {partyData && partyData.length > 0 && partyData[0].sports && partyData[0].league ? <PreviewSlider
