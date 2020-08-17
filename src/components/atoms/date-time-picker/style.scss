@@ -1,9 +1,11 @@
+@import '../../../theme/base.scss';
+
 button.MuiPickersDay-day {
     padding:0!important;
 }
 .MuiPickersDay-dayDisabled{
     .MuiIconButton-label{
-        color:#e3e5e8;
+        color:$grey-color2;
     }
 }
 .MuiFormControl-marginNormal {
@@ -11,27 +13,27 @@ button.MuiPickersDay-day {
     min-height: initial;
 }
 .MuiPickersToolbar-toolbar{
-    background-color: #64d2ff!important;
+    background-color: $primary-color!important;
 }
 .MuiPickersDay-daySelected{
-    background-color: #64d2ff!important;
+    background-color: $primary-color!important;
     .MuiIconButton-label{
-        color: #fff;
+        color: $white-color;
     }
 }
 .MuiPickerDTTabs-tabs {
-    background-color: #0999d4!important;
+    background-color: $skyblue-color-dark!important;
     svg {
         path {
-            color:#fff;
+            color:$white-color;
         }
     }
 }
 .MuiPickersCalendar-transitionContainer {
     .MuiIconButton-root {
         &:hover, &:focus {
-            background:#64d2ff!important;
-            color: #fff!important;
+            background:$primary-color!important;
+            color: $white-color!important;
             span {
                 color:inherit;
             }
@@ -42,16 +44,16 @@ button.MuiPickersDay-day {
     justify-content: center!important;
     button {
         &:first-child {
-            background: #64d2ff;
-            border-color:#0999d4;
+            background: $primary-color;
+            border-color:$skyblue-color-dark;
             span{
-                color:#fff!important;
+                color:$white-color!important;
             }     
             &:hover {
-                background:#64d2ff;
-                border-color:#64d2ff;
+                background:$primary-color;
+                border-color:$primary-color;
                 span {
-                    color:#fff!important;
+                    color:$white-color!important;
                 }
             }      
         }

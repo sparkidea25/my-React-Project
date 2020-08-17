@@ -1,3 +1,5 @@
+@import '../../../../theme/base.scss';
+
 .managment_list {
     min-height:180px;    
     margin-top:15px;
@@ -12,8 +14,8 @@
     th {
         word-break: keep-all;
         text-decoration: underline;
-        font-size: 18px;
-        color:#000;
+        font-size: $f16+2;
+        color:$black-color;
         font-weight: 500;
         border:0!important;
         line-height: 20px;
@@ -26,8 +28,8 @@
   }
   tbody {
     td {
-        font-size: 14px;
-        color:#000;
+        font-size: $f14;
+         color:$black-color;
         border:0;
         padding: .5rem;
         min-width: 106px;
@@ -49,10 +51,10 @@
         min-width:98px;
         max-width:98px;
         height:26px;
-        font-size: 14px;
-        color:#000;
+        font-size: $f14;
+        color:$black-color;
         border:1px solid #d4d7d9;
-        border-radius: 4px;
+        @include border-radius(8px);
         line-height: 1;
         padding:2px 10px;
         box-sizing: border-box;
@@ -66,10 +68,10 @@
         input, select {
             min-width:98px;
             max-width:98px;
-            font-size: 14px;
-            color:#000;
+            font-size: $f14;
+            color:$black-color;
             border:0;
-            border-radius: 0; 
+            @include border-radius(0px);
             padding:2px 0px;            
             -webkit-appearance: none!important;
             -moz-appearance: none;
@@ -82,13 +84,13 @@ input[type="time"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    display: none;
+    display: $none;
 }
 
 .table_title {
     margin:0 0 15px;
     h3 {
-        font-weight:500;
+        font-weight:$f-medium;
         margin:0; 
     }
 }
@@ -100,4 +102,3 @@ input[type="time"]::-webkit-inner-spin-button {
         margin-bottom:5px;
     }
 }
-
