@@ -19,11 +19,15 @@ const ForgotForm = ({
     return (
         <Form onSubmit={
             handleSubmit(onSubmit)}>
+            <div className="text-center forgot_info">
+                <h4>Forgot Password?</h4>
+                <p>Enter your email address, We will send you a link to reset your password.</p>
+            </div>
             <div className="row">
                 <Field
                     name={STRINGS.EMAIL_INPUT_NAME}
                     component={Input}
-                    label={STRINGS.EMAIL_LABEL}
+                    //label={STRINGS.EMAIL_LABEL}
 
                     config={{
                         type: "email",
@@ -31,8 +35,9 @@ const ForgotForm = ({
                     }}
                 />
             </div>
-            <InputSubmit buttonLabel={STRINGS.SEND_EMAIL} containerStyle={"text-center"} />
-
+            <div className="btn-full mt-4">
+                <InputSubmit buttonLabel={STRINGS.SEND_EMAIL} />
+            </div>
         </Form>
     );
 };

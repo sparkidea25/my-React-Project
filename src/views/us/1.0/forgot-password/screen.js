@@ -29,56 +29,59 @@ export const Screen = ({
             <Helmet>
                 <title>{PAGE_TITLES.forgot}</title>
             </Helmet>
-            <div className="top_rht_bg"></div>
-            <div className="btm_rht_bg"></div>
-            <div className={'container'}>
-                <div className="header-main">
-                    <span className="logo d-inline-block">
-                        {/* <img src={require(`../../../../assets/logo.png`)} alt="SEF" className="img-fluid" width="200px" /> */}
-                    </span>
-                </div>
-                <FormWrapper>
-                    <div className="col-md-12">
-                        <div className="form_title text-center">
-                            <SnackbarWrapper
-                                visible={openSnackBar}
-                                onClose={() => setOpenSnackbar(false)}
-                                variant={snackbarData.variant}
-                                message={snackbarData.message}
-                            />
-                            <i>
-                                {/* <img src={emailSent ? 
-                                    require(`../../../../assets/email-sent.png`) : require(`../../../../assets/forgot.png`)} alt="" className="img-fluid" width="130px" /> */}
-                            </i>
-                            <h3>{emailSent ? LABELS.checkYourMail : LABELS.forgotPassword}</h3>
-                            {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
+            <div className="front-form d-flex align-items-center ">
+                <div className={'container'}>
+                    <div className="login-form">
+                        <div className="logo-header text-center mb-4">
+                            <img src={require(`../../../../assets/img/logo.png`)} alt="SEF" width="325px" className="img-fluid" />
                         </div>
-                        {!emailSent && <ForgotReduxForm onSubmit={(credentials) => {
-                            console.log(credentials, 'credentials')
-                            sendForgotEmail({
-                                email: credentials.email,
-                            }, (response) => {
-                                setEmailSent(true);
+                        <FormWrapper>
+                            <div className="col-md-12">
+                                <div className="form_title text-center">
+                                    <SnackbarWrapper
+                                        visible={openSnackBar}
+                                        onClose={() => setOpenSnackbar(false)}
+                                        variant={snackbarData.variant}
+                                        message={snackbarData.message}
+                                    />
+                                    <i>
+                                        {/* <img src={emailSent ? 
+                                    require(`../../../../assets/email-sent.png`) : require(`../../../../assets/forgot.png`)} alt="" className="img-fluid" width="130px" /> */}
+                                    </i>
+                                    <h3>{emailSent ? LABELS.checkYourMail : LABELS.forgotPassword}</h3>
+                                    {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
+                                </div>
+                                {!emailSent && <ForgotReduxForm onSubmit={(credentials) => {
+                                    console.log(credentials, 'credentials')
+                                    sendForgotEmail({
+                                        email: credentials.email,
+                                    }, (response) => {
+                                        setEmailSent(true);
 
-                            }, (response) => {
-                                setSnackBarData({
-                                    variant: response.status ? 'success' : 'error',
-                                    message: response.msg
-                                });
-                                setOpenSnackbar(true)
-                            })
-                        }} />}
-                        {emailSent &&
-                            <form noValidate onSubmit={(value) => {
-                                history.replace(ROUTES.LOGIN)
-                            }}>
-                                <InputSubmit
-                                    buttonLabel={STRINGS.FORGOT_LOGIN}
-                                    containerStyle={"text-center"} />
-                            </form>
-                        }
+                                    }, (response) => {
+                                        setSnackBarData({
+                                            variant: response.status ? 'success' : 'error',
+                                            message: response.msg
+                                        });
+                                        setOpenSnackbar(true)
+                                    })
+                                }} />}
+                                {emailSent &&
+                                    <form noValidate onSubmit={(value) => {
+                                        history.replace(ROUTES.LOGIN)
+                                    }}>
+                                        <InputSubmit
+                                            buttonLabel={STRINGS.FORGOT_LOGIN}
+                                            containerStyle={"text-center"} />
+                                    </form>
+                                }
+                            </div>
+                            <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.FORGOT_PASSWORD); }}>
+                                <a href="javascript:void(0);" className="forgot_pwd">Log In?</a>
+                            </div>
+                        </FormWrapper>
                     </div>
-                </FormWrapper>
+                </div>
             </div>
         </React.Fragment>
     );

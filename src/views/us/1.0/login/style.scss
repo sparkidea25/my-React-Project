@@ -1,5 +1,7 @@
+@import '../../../../theme/base.scss';
+
 .front-form {
-  background: #414959;
+  background: $secondary-color;
   min-height:100vh;
 }
 .logo-header {   
@@ -21,18 +23,25 @@
   }
 }
 .btn-full .btn { 
-  background-color: #677088;
+  background-color: $btn-color;
   padding:12px 10px;
   min-height: 50px; 
   width:100%;
   &:hover, &:focus {
-    background: #27778d;
+    background: $teal-color;
   }
 }
-
+.forgot_pwd {
+  color:$skyblue-color;
+  font-size: $f16; 
+  text-transform: capitalize;
+  &:focus, &:hover {
+    color:$white-color;
+  }
+}
 .error_msg {
-  font-size: 14px;
+  font-size: $f14;
   margin:5px 0;
-  display: block;
+  display: $block;
   line-height: 14px;
 }

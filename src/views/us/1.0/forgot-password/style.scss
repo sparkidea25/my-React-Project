@@ -1,0 +1,15 @@
+@import '../../../../theme/base.scss';
+
+.forgot_info {
+    color:$white-color;
+    margin:20px 0 30px;
+    h4 {
+        color:inherit;
+        font-size: $f16+8;
+    }
+    p {
+        color:inherit;
+        line-height: $f16;
+        margin:15px 0 0;
+    }
+}

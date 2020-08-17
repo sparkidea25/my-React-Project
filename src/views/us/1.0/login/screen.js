@@ -70,8 +70,9 @@ export const Screen = ({
                                 password: value
                             })}
                         />
-                        <div onClick={() => { history.push(ROUTES.FORGOT_PASSWORD); }}>
-                            <a style={{ color: 'white' }}>forget-password</a></div>
+                        <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.FORGOT_PASSWORD); }}>
+                            <a href="javascript:void(0);" className="forgot_pwd">Forgot Password</a>
+                        </div>
                     </div>
 
                 </div>
