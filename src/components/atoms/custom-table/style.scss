@@ -1,14 +1,16 @@
+@import '../../../theme/base.scss';
+
 .MuiTable-root {     
     th {
         background: #F2F2F2!important;
         word-break: keep-all;
     }
     .MuiTableCell-head {
-        font-weight: 600!important;
-        font-size: 16px!important;   
+        font-weight: $f-medium!important;
+        font-size: $f16!important;   
     }
     .MuiTableCell-root {
-         font-size: 16px!important;   
+         font-size: $f16!important;   
     }
     td {
        word-break: keep-all;
@@ -25,11 +27,6 @@
     }
 }
 .user-name {
-    // cursor: pointer;
-    min-width: 180px;
-    // &:hover {
-    //     color: #f22637;
-    // }
     i {
         margin-right: 1rem;
     }
@@ -41,39 +38,39 @@
     }
 }
 .reject-button {
-    border:1px solid #4d4d4f;
-    color: #4d4d4f;
-    display: inline-block;
+    border:1px solid $base-color;
+    color: $base-color;
+    display: $inline-block;
     padding: 8px 10px;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: $f16;
+    font-weight: $f-medium;
     min-width: 100px;
     text-align: center;
     height: 42px;
     margin:2px 6px;
-    border-radius:7px;
-    background: transparent;
+    @include border-radius(7px);
+    background: $transparent;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     &:hover{
-        border:1px solid #4d4d4f;
-        background: #4d4d4f;
-        color:#fff;
+        border:1px solid $base-color;
+        background: $base-color;
+        color:$white-color;
     }
 }
 .accept-button {
-    border:1px solid #f22637;
-    background: #f22637; 
-    color: #fff;
-    display: inline-block;
+    border:1px solid $red-color;
+    background: $red-color; 
+    color: $white-color;
+    display: $inline-block;
     padding: 8px 10px;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: $f16;
+    font-weight: $f-medium;
     min-width: 100px;
     text-align: center;
     height: 42px; 
     margin:2px 6px;
     margin-right:0;
-    border-radius:7px;
+    @include border-radius(7px);
     cursor: pointer;
      &:hover  {
         border:1px solid #e31422;
@@ -98,30 +95,29 @@
         }
         input{
             appearance: none;
-            outline: none;
+            outline: $none;
             width: 47px;
-            position: relative;
+            position: $relative;
             height: 26px;
-            border-radius: 13px;
+            @include border-radius(13px);
             margin-left: 0;
             cursor: pointer;
             background-color:#E7EAF1;
-            border: 1px solid #E7EAF1;
-            
+            border: 1px solid #E7EAF1;            
             &::before{
                 content:'';
-                position: absolute;
+                position: $absolute;
                 top: 3px;
                 left: 4px;
-                background-color: #fff;
-                border-radius: 50%;
+                background-color: $white-color;
+                @include border-radius(50%);
                 width: 18px;
                 height: 18px;                    
             }            
         }
         input:checked{                    
-            background-color: #82CFF4;
-            border: 1px solid #82CFF4;
+            background-color: $skyblue-color-light;
+            border: 1px solid $skyblue-color-light;
             &::before{
                 transition:all 2000 ease-in-out;
                 transform: translateX(20px);   
@@ -135,11 +131,11 @@ input::-webkit-input-placeholder {
 
 .invited-label {
     margin-bottom: 0;
-    font-weight: 400;
+    font-weight: $f-regular;
     padding: 5px 10px;
     font-size: 1rem;
-    background-color: #82CFF4;
-    display: inline-block;   
+    background-color: $skyblue-color-light;
+    display: $inline-block;   
     line-height: 1;
     text-align: center;
     white-space: nowrap;
@@ -152,12 +148,12 @@ input::-webkit-input-placeholder {
 }
 .edit_btn {
     &:hover, &:focus {
-        background-color: #F42634;
-        border-color: #F42634;
-        color:#fff;
+        background-color: $red-color1;
+        border-color: $red-color1;
+        color:$white-color;
         svg {
             path {
-                fill:#fff;
+                fill:$white-color;
             }
         }
     }

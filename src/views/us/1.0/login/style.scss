@@ -32,7 +32,7 @@
   }
 }
 .forgot_pwd {
-  color:$skyblue-color;
+  color:$primary-color;
   font-size: $f16; 
   text-transform: capitalize;
   &:focus, &:hover {
@@ -43,5 +43,5 @@
   font-size: $f14;
   margin:5px 0;
   display: $block;
-  line-height: 14px;
+  line-height: $f14;
 }

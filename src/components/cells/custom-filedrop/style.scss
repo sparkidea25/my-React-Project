@@ -1,3 +1,4 @@
+@import '../../../theme/base.scss';
 .drag_drop_option {
     i {
         max-width:70px;
@@ -9,22 +10,21 @@
     }
 }
 .upload_btn {    
-    background-color: #414959;
-    border-radius: 5px;
-    color:#fff;
     text-align: center;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
+    color:$white-color;
+    font-size: $f16+2;
+    background-color: $secondary-color;
+    @include border-radius(5px);
+    @include flexbox; 
+    @include align-items(center);
+    @include justify-content(center);
+    font-weight: $f-medium;
     min-height:40px;
     min-width:230px;    
 }
 
-
 .dropzone-div{
-    position: fixed;
+    position: $fixed;
     top: 0;
     left: 0;
     z-index: 1050;
@@ -45,9 +45,9 @@
     }
     .dropzone-dialog {        
         max-width:600px;      
-        display: flex;
-        align-items: center;
-        position: relative;
+        @include flexbox; 
+        @include align-items(center);
+        position: $relative;
         width: auto;        
         margin: 1.75rem auto; 
         z-index: 11;
@@ -55,22 +55,20 @@
             min-height: calc(100% - 3.5rem);
         }
         .dropzone-content{
-            position: relative;
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-direction: column;
-            flex-direction: column;
+            position: $relative;
+            @include flexbox; 
+            @include flex-direction(column); 
             width: calc(100% - 20px);
             pointer-events: auto;
-            background-color: #fff;
+            background-color: $white-color;
             background-clip: padding-box;
             border: 1px solid rgba(0,0,0,.2);
-            border-radius: .3rem;
+            @include border-radius(.3rem);
             outline: 0;
             margin:0 10px;
             .dropzone-body {
                 padding: 1.8rem;
-                border-radius: 12px;
+                @include border-radius(12px);
                  .d-flex {
                     .form-group {
                         margin: 0;
@@ -78,81 +76,81 @@
                 }
                 .form-group {
                     label {
-                        font-weight:500;
+                        font-weight:$f-medium;
                         margin-bottom: 7px;;
                     }
                 }
             }
         }
         .dzu-dropzone {
-            border: 2px dashed #F42634;
+            border: 2px dashed $red-color1;
             border-radius: 12px;
             margin:0 0 15px; 
-            display: flex;
-            width:100%;            
-            flex-direction: row;
-            justify-content: space-evenly;
+            @include flexbox; 
+            @include flex-direction(row); 
+            @include justify-content(space-evenly); 
+            width:100%;          
             overflow: hidden;        
             .dzu-submitButtonContainer{
-                display: none;
+                display: $none;
             }
         }
         .flex-column {
-            flex-direction: row!important;
-            justify-content:flex-end!important;
+            @include flex-direction(row)!important;
+            @include justify-content(flex-end)!important;
         }
     }    
     
     .dzu-inputLabel {        
-        background-color: transparent;        
+        background-color: $transparent;        
         overflow: hidden;     
         width: 100%;
-        position: static;
+        position: $static;
         div{
-            label{
             cursor: pointer;
-            flex-wrap: wrap;           
-            position: absolute;
-            z-index: 0;
-            font-weight: 300;
-            text-align: center;
-            font-size: 16px;        
-            p{
-                margin:0px;
-                color:#F42634;
-                font-size: 16px;
-                span{
-                    color:#F42634;
-                    font-weight: 500;
-                    font-size: 16px;
+            label{
+                cursor: pointer;
+                @include flex-wrap(wrap);        
+                position: $absolute;
+                z-index: 0;
+                font-weight: $f-light;
+                text-align: center;
+                font-size: $f16;        
+                p{
+                    margin:0px;
+                    color:$red-color1;
+                    font-size: $f16;
+                    span{
+                        color:$red-color1;
+                        font-weight: 500;
+                        font-size: $f16;
+                    }
                 }
-            }
-            span{
-                color:#F42634;
-                font-size: 16px;
-                font-weight: 500;
-            }
-        }
-        cursor: pointer;               
+                span{
+                    color:$red-color1;
+                    font-size: $f16;
+                    font-weight: $f-medium;
+                }
+            }               
         }
     }
     
     .dzu-inputLabelWithFiles{
-        display: flex;
-        flex-direction: column;
+        @include flexbox; 
+        @include flex-direction(column); 
+        @include justify-content(center);
+        @include align-items(center);
+        color:$skyblue-color-light;
         text-align:center;
-        align-items: center;
         width: 100%;
-        justify-content: center;
-        color:#82CFF4;
         margin:0;
-        background-color: transparent;
+        background-color: $transparent;
         .dzu-input{
-            display:block;
+            display:$block;
             visibility:visible;
             opacity: 0;
             cursor: pointer;
-            position: absolute;
+            position: $absolute;
             left: 0;
             top: 0;
             height: 100%;
@@ -161,38 +159,38 @@
         }
     }    
     .dzu-inputLabelWithFiles{
-        display: none;
+        display: $none;
     }
     textarea {
         min-height: 90px;
     }
 }
 .dzu-input{
-    display:block;
+    display:$block;
     visibility:visible;
     opacity: 0;
     cursor: pointer;
-    position: absolute;
+    position: $absolute;
     left: 0;
     top: 0;
     height: 100%;
     width: 100%;
     z-index: 11;
 }
-//
+
 .dzu-dropzone {    
     min-width: 350px;
     overflow: hidden;
-    align-items: flex-start;
+    @include align-items(flex-start);    
     border: 0;   
     min-height: 90px;
     .dzu-input {
-        display: none;
+        display: $none;
     }
 }
 .dzu-submitButton{
-    display: flex;
-    background: transparent;
+    @include flexbox; 
+    background: $transparent;
     padding:0;
     border:0px;
 }
@@ -213,13 +211,13 @@
         max-width: initial;
     }
     .dzu-previewStatusContainer{    
-        position: absolute;
+        position: $absolute;
         right:14px;
         top:15px;
         width: 30px;
         height:30px;
         border-radius: 30px;
-        background: #64d2ff;
+        background: $primary-color;
         justify-content: center;
         box-shadow: 0 0 10px #d4d4d4;
         .dzu-previewButton {
@@ -231,7 +229,7 @@
     } 
     .dzu-previewFileName {
         padding-right: 25px;
-        font-size:16px;
-        line-height: 18px;
+        font-size:$f16;
+        line-height: $f16+2;
     }
 }   
