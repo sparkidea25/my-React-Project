@@ -4,7 +4,6 @@ import { reduxForm, Field } from "redux-form";
 const { Form } = require(`../../../../components/atoms/form`);
 const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
-const { onSubmitFail } = require(`../../../../helpers`);
 
 const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
@@ -20,7 +19,7 @@ const UForm = (props) => {
 
     const [startDate, setStartDate] = useState({})
     const [endDate, setEndDate] = useState({})
-
+    const [formId, setFormId] = useState([])
     useEffect(() => {
         let arr = []
         allLeagues && allLeagues.map(platform => {
@@ -29,6 +28,10 @@ const UForm = (props) => {
         })
         setLeagues(arr)
     }, [allLeagues])
+
+    useEffect(() => {
+
+    }, [props])
 
     useEffect(() => {
         let arr = []
@@ -40,87 +43,75 @@ const UForm = (props) => {
         setPlatforms(arr)
     }, [allPlatforms])
 
+    const addRow = () => {
+        fields.push({})
+    }
 
     return (
         <div>
+            <button onClick={() => addRow()}>Add New</button>
             <React.Fragment>
                 {
                     fields && fields.map((member, index) => {
                         return (
                             <React.Fragment key={index + ''}>
-
                                 <div className="form-row">
                                     <div className="col-md-4 col-sm-5 col-10">
                                         <Field
-                                            name={`${STRINGS.SHOW_NAME}${member.parties}`}
+                                            name={`${member}.${STRINGS.SHOW_NAME}`}
                                             component={Input}
                                             placeholder={'Show'}
-                                            // value={fields.show}
                                             type={'text'}
-                                        // onChange={event => onChangeField('show', event.target.value)}
                                         />
                                     </div>
                                     <div className="col-md-2 col-sm-4 col-10">
                                         <div className="form-group">
                                             <Field
-                                                name={`${STRINGS.HOST_NAME}${member.parties}`}
+                                                name={`${member}.${STRINGS.HOST_NAME}`}
                                                 component={Input}
-                                                // value={fields.host}
                                                 placeholder={'Host'}
                                                 type={"text"}
-                                            // onChange={event => onChangeField('host', event.target.value)}
+
                                             />
                                         </div>
                                     </div>
                                     <div className="col-md-2 col-sm-4 col-10">
                                         <div className="form-group">
                                             <Field
-                                                name={`${STRINGS.SPORTS_NAME}${member.parties}`}
+                                                name={`${member}.${STRINGS.SPORTS_NAME}`}
                                                 component={Select}
                                                 options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
-                                                // value={selectedSport}
                                                 placeholder={'Sports'}
-                                            // onChange={value => {
-                                            //     onChangeField('sports', value.value)
-                                            //     setSelectedSport(value.label)
-                                            // }}
+
                                             />
                                         </div>
                                     </div>
                                     <div className="col-md-2 col-sm-4 col-10">
                                         <div className="form-group">
                                             <Field
-                                                name={`${STRINGS.LEAGUE_NAME}${member.parties}`}
+                                                name={`${member}.${STRINGS.LEAGUE_NAME}`}
                                                 component={Select}
                                                 options={leagues}
-                                                // value={selectedLeague}
                                                 placeholder={"League"}
-                                            // onChange={value => {
-                                            //     onChangeField('league', value.value)
-                                            //     setSelectedLeague(value.label)
-                                            // }}
+
                                             />
                                         </div>
                                     </div>
                                     <div className="col-md-2 col-sm-4 col-10">
                                         <div className="form-group">
                                             <Field
-                                                name={`${STRINGS.PLATFORM_NAME}${member.parties}`}
+                                                name={`${member}.${STRINGS.PLATFORM_NAME}`}
                                                 component={Select}
                                                 options={platforms}
-                                                // value={selectedPlatform}
                                                 placeholder={'Platform'}
-                                            // onChange={value => {
-                                            //     onChangeField('platform', value.value)
-                                            //     setSelectedPlatform(value.label)
-                                            // }}
+
                                             />
                                         </div>
                                     </div>
                                     <div className="col-md-2 col-sm-4 col-10">
                                         <div className="form-group">
                                             <Field
-                                                name={`${STRINGS.START_TIME}${member.parties}`}
+                                                name={`${member}.${STRINGS.START_TIME}`}
                                                 component={KeyboardDateTimePickerr}
                                                 placeholder={'Start Time'}
                                                 minDate={new Date()}
@@ -135,7 +126,7 @@ const UForm = (props) => {
                                     <div className="col-md-2 col-sm-4 col-10">
                                         <div className="form-group">
                                             <Field
-                                                name={`${STRINGS.END_TIME}${member.parties}`}
+                                                name={`${member}.${STRINGS.END_TIME}`}
                                                 component={TimePickerInputField}
                                                 placeholder={'End Time'}
                                                 defaultValue={endDate[`${STRINGS.END_TIME}${member.parties}`]}
@@ -150,12 +141,10 @@ const UForm = (props) => {
                                     <div className="col-md-2 col-sm-4 col-10">
                                         <div className="form-group">
                                             <Field
-                                                name={`${STRINGS.CONTENT_LENGTH}${member.parties}`}
+                                                name={`${member}.${STRINGS.CONTENT_LENGTH}`}
                                                 component={Input}
-
                                                 placeholder={'Content Length'}
                                                 config={{
-                                                    // value: fields.contentLength,
                                                     type: 'number',
                                                     readOnly: true
                                                 }}

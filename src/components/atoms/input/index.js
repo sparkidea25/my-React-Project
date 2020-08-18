@@ -12,6 +12,7 @@ export const Input = ({
   ...props
 }) => {
   widthStyle = widthStyle ? widthStyle : "col-md-12";
+
   const validationSpan =
     touched && error ? (
       <span className="error_msg text-danger">{error}</span>
