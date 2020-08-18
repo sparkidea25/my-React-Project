@@ -17,7 +17,7 @@ const { ContentManagementScreen } = require(`../../../views/${LOCATION}/${VERSIO
 const { WatchPartyScreen } = require(`../../../views/${LOCATION}/${VERSION}/watchPartyList`);
 const { AddWatchPartyScreen } = require(`../../../views/${LOCATION}/${VERSION}/add-watch-party`);
 const { ForgotScreen } = require(`../../../views/${LOCATION}/${VERSION}/forgot-password`);
-
+const { UploadWatchPartyScreen } = require(`../../../views/${LOCATION}/${VERSION}/upload-watch-party`);
 const { styles } = require(`../../../theme`);
 const {
   DRAWER_ITEMS,
@@ -103,7 +103,7 @@ const AuthenticatedRouter = (props) => {
           <Route exact path={`${ROUTES.CONTENT}`} component={ContentManagementScreen} />
           <Route exact path={`${ROUTES.WATCH_PARTY}`} component={WatchPartyScreen} />
           <Route exact path={`${ROUTES.ADD_WATCH_PARTY}`} component={AddWatchPartyScreen} />
-
+          <Route exact path={`${ROUTES.UPLOAD_WATCH_PARTY}`} component={UploadWatchPartyScreen} />
           <Redirect to={ROUTES.DASHBOARD} />
         </Switch>
       </ScreenHOC>

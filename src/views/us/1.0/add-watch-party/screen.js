@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import { Link } from "react-router-dom";
 import { reduxForm, Field } from "redux-form";
-import SimpleCrypto from "simple-crypto-js";
-import { connect } from 'react-redux';
 import "./style.scss";
 
 import validator from "./validator";
 import moment from "moment-timezone"
-// const moment = require('moment-timezone').instance();
 
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { Form } = require(`../../../../components/atoms/form`);
@@ -16,7 +12,6 @@ const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
 const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
 const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
-// const { ReactDate } = require(`../../../../components/atoms/react-date`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
 const { onSubmitFail } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
@@ -113,11 +108,8 @@ const WatchPartyForm = ({
 
     const onSubmit = () => {
 
-        // validateTime('startTime')
-        // validateTime('endTime')
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
-        // console.log(st, et, 'while on submit')
         let postData = {
             "contentName": fields.show,
             "host": fields.host,
@@ -147,21 +139,15 @@ const WatchPartyForm = ({
     const diff_minutes = (dt2, dt1) => {
         dt2 = new Date(dt2)
         dt1 = new Date(dt1)
-        // console.log(dt2, dt1)
         var diff = (dt2.getTime() - dt1.getTime()) / 1000;
         diff /= 60;
         return Math.abs(Math.round(diff));
     }
     useEffect(() => {
-        // uponChangeStartTime()
         if (fields.endTime !== null) {
             onChangeField('endTime', null)
         }
     }, [fields.startTime])
-
-    // const uponChangeStartTime = () => {
-    //     onChangeField('endTime', fields.startTime)
-    // }
 
     useEffect(() => {
         let min = diff_minutes(fields.startTime, fields.endTime)
@@ -298,19 +284,13 @@ const WatchPartyForm = ({
                                 placeholder={'End Time'}
                                 defaultValue={fields.endTime}
                                 minTime={fields.startTime}
-                                // meta={{
-                                //     error:
-                                //       validateFields.endTime &&
-                                //       validateFields.endTime,
-                                //     touched: validateFields.endTime && true,
-                                //   }}
                                 onChangeTime={time => {
 
                                     onChangeField('endTime', copyDate(fields.startTime, time))
                                 }}
 
                             />
-                            {/* </div> */}
+
                         </div>
                         <div class="col-md-6">
                             <label>Length</label>
@@ -339,20 +319,10 @@ const WatchPartyForm = ({
     );
 };
 
-// const mapStateToProps = (state, props) => {
-//     var _secretKey = "some-unique-key";
-//     var simpleCrypto = new SimpleCrypto(_secretKey);
-//     return {
-
-//     };
-// }
 
 export const Screen = reduxForm({
     form: "watchparty",
-    // fields: ['email', 'password'],
     onSubmitFail,
     validate: validator,
-    // enableReinitialize: true
 })(WatchPartyForm);
 
-// export const Screen = (reduxFormFunction);

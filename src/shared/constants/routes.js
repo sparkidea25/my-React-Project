@@ -8,5 +8,6 @@ export const ROUTES = {
     CONTENT: '/content',
     WATCH_PARTY: '/watch-party',
     ADD_WATCH_PARTY: '/add-watch-party',
+    UPLOAD_WATCH_PARTY: '/upload-watch-party',
     FORGOT_PASSWORD: '/forget-password'
 }

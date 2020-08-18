@@ -70,8 +70,8 @@ export const KeyboardDateTimePickerr = ({
                         }}
                         onChange={(value) => {
                             if (onChangeDate) {
-
                                 input.onChange(value);
+
                                 onChangeDate(value)
                                 setErr('')
                                 setOpenCalendar(false)

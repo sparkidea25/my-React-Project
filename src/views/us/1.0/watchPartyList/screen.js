@@ -283,7 +283,7 @@ export const Screen = ({ listWatchParty, history,
                     <h1 class="col-md-6">Content Management</h1>
                     <div class="col-md-6">
                         <div class="form-row group-btn justify-content-end">
-                            <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.CONTENT))}>Upload New</button>
+                            <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.UPLOAD_WATCH_PARTY))}>Upload New</button>
                             <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.ADD_WATCH_PARTY))}>Add New</button>
                         </div>
                     </div>
