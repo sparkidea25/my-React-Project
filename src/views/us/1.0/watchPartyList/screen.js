@@ -511,27 +511,28 @@ export const Screen = ({ listWatchParty, history,
                                                             <button className="btn btn-sm btn-secondary" onClick={() => editRow(index, party)}>Edit</button></div></td>
                                                 </tr>
                                         })}
-                                        <CustomPagination
-                                            limit={STRINGS.SHOW_LIMIT}
-                                            totalPages={LiveTotalCount}
-                                            itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
-                                            currentPage={liveTableIndex + 1}
-                                            onPageChange={(value) => {
-
-                                                postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
-                                                    setUpcomingAndLiveListing(response && response.watchPartyListing)
-                                                })
-                                                setLiveTableIndex(value && value.selected)
-                                                setEditMode(false)
-
-                                            }}
-                                        /></>
+                                    </>
 
                                     : 'No Watch Parties found.'}
                             </tbody>
                         </table>
 
                     </div>
+                    <CustomPagination
+                        limit={STRINGS.SHOW_LIMIT}
+                        totalPages={LiveTotalCount}
+                        itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
+                        currentPage={liveTableIndex + 1}
+                        onPageChange={(value) => {
+
+                            postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+                                setUpcomingAndLiveListing(response && response.watchPartyListing)
+                            })
+                            setLiveTableIndex(value && value.selected)
+                            setEditMode(false)
+
+                        }}
+                    />
                 </div>
                 <div className="managment_list">
                     <div class="d-flex table_title">
@@ -592,24 +593,25 @@ export const Screen = ({ listWatchParty, history,
                                                 <td style={{ minWidth: '86px' }}> </td>
                                             </tr>
                                         })}
-                                        <CustomPagination
-                                            limit={STRINGS.SHOW_LIMIT}
-                                            totalPages={PastTotalCount}
-                                            itemsCount={pastListing && pastListing.length}
-                                            currentPage={PastTableIndex + 1}
-                                            onPageChange={(value) => {
 
-                                                pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
-                                                    setPastListing(response && response.watchPartyListing)
-                                                })
-                                                setPastTableIndex(value && value.selected)
-
-                                            }}
-                                        />
                                     </> : 'No Watch Parties found.'}
                             </tbody>
                         </table>
                     </div>
+                    <CustomPagination
+                        limit={STRINGS.SHOW_LIMIT}
+                        totalPages={PastTotalCount}
+                        itemsCount={pastListing && pastListing.length}
+                        currentPage={PastTableIndex + 1}
+                        onPageChange={(value) => {
+
+                            pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
+                                setPastListing(response && response.watchPartyListing)
+                            })
+                            setPastTableIndex(value && value.selected)
+
+                        }}
+                    />
                 </div>
 
             </div>
