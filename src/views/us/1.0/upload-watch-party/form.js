@@ -50,7 +50,7 @@ const UForm = (props) => {
     return (
         <>
 
-            <div className="container">
+            <div className="container-fluid">
                 <React.Fragment>
                     {
                         fields && fields.map((member, index) => {
@@ -59,7 +59,7 @@ const UForm = (props) => {
                                     <div class="page-title col-12"><h4>Add Watch Party</h4></div>
                                     <fieldset>
                                         <div className="form-row">
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-3 col-sm-6">
                                                 <Field
                                                     name={`${member}.${STRINGS.SHOW_NAME}`}
                                                     component={Input}
@@ -67,7 +67,7 @@ const UForm = (props) => {
                                                     type={'text'}
                                                 />
                                             </div>
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <Field
                                                         name={`${member}.${STRINGS.HOST_NAME}`}
@@ -79,7 +79,7 @@ const UForm = (props) => {
                                                 </div>
                                             </div>
 
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <Field
                                                         name={`${member}.${STRINGS.SPORTS_NAME}`}
@@ -90,10 +90,8 @@ const UForm = (props) => {
                                                     />
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="form-row">
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <Field
                                                         name={`${member}.${STRINGS.LEAGUE_NAME}`}
@@ -105,7 +103,7 @@ const UForm = (props) => {
                                                 </div>
                                             </div>
 
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <Field
                                                         name={`${member}.${STRINGS.PLATFORM_NAME}`}
@@ -116,7 +114,7 @@ const UForm = (props) => {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <div className="col-md-12">
                                                         <Field
@@ -133,10 +131,8 @@ const UForm = (props) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="form-row">
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <div className="col-md-12">
                                                         <Field
@@ -153,7 +149,7 @@ const UForm = (props) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-2 col-sm-4">
                                                 <div className="form-group">
                                                     <Field
                                                         name={`${member}.${STRINGS.CONTENT_LENGTH}`}
@@ -166,7 +162,7 @@ const UForm = (props) => {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="col-md-4 col-sm-6">
+                                            <div className="col-md-1 col-sm-1">
                                                 <div className="remove_row col-12">
                                                     <img src={require("../../../../assets/img/icons/delete_icon.svg")} alt="" width="20" />
                                                 </div>
