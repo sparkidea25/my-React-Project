@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 
-import { reduxForm, Field } from "redux-form";
-const { Form } = require(`../../../../components/atoms/form`);
+import { Field } from "redux-form";
 const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
 
 const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
-const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
+const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`);
+const { diff_minutes, changeEndDate } = require(`../../../../helpers`);
 
 const UForm = (props) => {
 
-    const { fields, onAdd, onChangeField, name, extraItemsList, removeSelected, allPlatforms, allLeagues } = props
+    const { fields, name, removeSelected, allPlatforms, allLeagues } = props
 
     const [leagues, setLeagues] = useState([])
     const [platforms, setPlatforms] = useState([])
 
-    const [startDate, setStartDate] = useState({})
-    const [endDate, setEndDate] = useState({})
-    const [formId, setFormId] = useState([])
+    const [startDate, setStartDate] = useState(null)
+    const [endDate, setEndDate] = useState(null)
+    const [contentLength, setContentLength] = useState(0)
+
     useEffect(() => {
         let arr = []
         allLeagues && allLeagues.map(platform => {
@@ -28,10 +29,6 @@ const UForm = (props) => {
         })
         setLeagues(arr)
     }, [allLeagues])
-
-    useEffect(() => {
-
-    }, [props])
 
     useEffect(() => {
         let arr = []
@@ -46,6 +43,15 @@ const UForm = (props) => {
     const addRow = () => {
         fields.push({})
     }
+
+    useEffect(() => {
+        let min = diff_minutes(startDate, endDate)
+        setContentLength(min)
+    }, [endDate])
+    useEffect(() => {
+        let min = diff_minutes(startDate, endDate)
+        setContentLength(min)
+    }, [startDate])
 
     return (
         <div>
@@ -116,9 +122,9 @@ const UForm = (props) => {
                                                 placeholder={'Start Time'}
                                                 minDate={new Date()}
                                                 minTime={new Date()}
-                                                value={startDate[`${STRINGS.START_TIME}${member.parties}`]}
+                                                value={startDate}
                                                 onChangeDate={(value) => {
-                                                    setStartDate({ ...startDate, [`${STRINGS.START_TIME}${member.parties}`]: value })
+                                                    setStartDate(value)
                                                 }}
                                             />
                                         </div>
@@ -129,10 +135,11 @@ const UForm = (props) => {
                                                 name={`${member}.${STRINGS.END_TIME}`}
                                                 component={TimePickerInputField}
                                                 placeholder={'End Time'}
-                                                defaultValue={endDate[`${STRINGS.END_TIME}${member.parties}`]}
-                                                minTime={startDate[`${STRINGS.START_TIME}${member.parties}`]}
+                                                defaultValue={endDate}
+                                                minTime={startDate}
                                                 onChangeTime={value => {
-                                                    setEndDate({ ...endDate, [`${STRINGS.END_TIME}${member.parties}`]: value })
+                                                    let convertedTime = changeEndDate(startDate, value)
+                                                    setEndDate(convertedTime)
                                                 }}
 
                                             />
@@ -146,7 +153,8 @@ const UForm = (props) => {
                                                 placeholder={'Content Length'}
                                                 config={{
                                                     type: 'number',
-                                                    readOnly: true
+                                                    readOnly: true,
+                                                    value: contentLength
                                                 }}
                                             />
                                         </div>

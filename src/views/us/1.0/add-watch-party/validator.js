@@ -1,10 +1,11 @@
 import moment from "moment"
 const { STRINGS } = require(`../../../../shared/constants/us/strings`);
 const { VALIDATION_MESSAGES, NAME_REGX } = require(`../../../../shared/constants`)
+const { calculateCurrentTimeInEst } = require(`../../../../helpers`);
 
 const validator = values => {
     const errors = {};
-    console.log(values, 'errors')
+
     if (!values[STRINGS.SHOW_NAME]) {
         errors[STRINGS.SHOW_NAME] =
             VALIDATION_MESSAGES.SHOW_NAME_REQUIRED;
@@ -27,10 +28,6 @@ const validator = values => {
         errors[STRINGS.PLATFORM_NAME] =
             VALIDATION_MESSAGES.PLATFORM_REQUIRED;
     }
-    // if (!values[STRINGS.CONTENT_LENGTH]) {
-    //     errors[STRINGS.CONTENT_LENGTH] =
-    //         VALIDATION_MESSAGES.CONTENT_REQUIRED;
-    // }
     if (!values[STRINGS.LEAGUE_NAME]) {
         errors[STRINGS.LEAGUE_NAME] =
             VALIDATION_MESSAGES.LEAGUE_REQUIRED;
@@ -49,7 +46,6 @@ const validator = values => {
             VALIDATION_MESSAGES.START_TIME_REQUIRED;
     }
     if (values[STRINGS.START_TIME] && values[STRINGS.END_TIME]) {
-        console.log('starttime before end time', values[STRINGS.END_TIME] < values[STRINGS.START_TIME])
         if (values[STRINGS.END_TIME] < values[STRINGS.START_TIME]) {
             errors[STRINGS.END_TIME] =
                 VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD;
@@ -70,29 +66,24 @@ const validator = values => {
         errors[STRINGS.END_TIME] =
             VALIDATION_MESSAGES.SELECT_START_TIME_FIRST;
     }
-    var localZone = moment.tz.guess();
-    let currTime = new Date();
-    var zoneOffset = moment.tz(new Date(), localZone).utcOffset();
-    var estOffset = moment.tz(new Date(), 'America/New_York').utcOffset();
+    // var localZone = moment.tz.guess();
+    let currTime
+    // = new Date();
+    // var zoneOffset = moment.tz(new Date(), localZone).utcOffset();
+    // var estOffset = moment.tz(new Date(), 'America/New_York').utcOffset();
 
-    currTime = currTime.setHours((currTime.getHours() - (zoneOffset / 60) + (estOffset / 60)), (currTime.getMinutes() - (zoneOffset % 60) + (estOffset % 60)), 0)
+    currTime = calculateCurrentTimeInEst()
+    // currTime.setHours((currTime.getHours() - (zoneOffset / 60) + (estOffset / 60)), (currTime.getMinutes() - (zoneOffset % 60) + (estOffset % 60)), 0)
     if (values[STRINGS.START_TIME]) {
-        // console.log(new Date(currTime), 'easttern time')
         let pickedTime = values[STRINGS.START_TIME]
 
-        // pickedTime.setHours((pickedTime.getHours() - (zoneOffset / 60) + (estOffset / 60)), (pickedTime.getMinutes() - (zoneOffset % 60) + (estOffset % 60)), 0)
-        // console.log(new Date(pickedTime), 'pickedTime')
         if (new Date(pickedTime) < new Date(currTime)) {
             errors[STRINGS.START_TIME] =
                 VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST;
         }
     }
     if (values[STRINGS.END_TIME]) {
-        // console.log(new Date(currTime), 'easttern time')
         let pickedTime = values[STRINGS.END_TIME]
-
-        // pickedTime.setHours((pickedTime.getHours() - (zoneOffset / 60) + (estOffset / 60)), (pickedTime.getMinutes() - (zoneOffset % 60) + (estOffset % 60)), 0)
-        // console.log(new Date(pickedTime), 'pickedTime')
         if (new Date(pickedTime) < new Date(currTime)) {
             errors[STRINGS.END_TIME] =
                 VALIDATION_MESSAGES.END_TIME_SHOUDLD_NOT_BE_IN_PAST;

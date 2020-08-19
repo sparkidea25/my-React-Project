@@ -30,7 +30,7 @@ export const AppHeader = ({
                 </span>
                 }
                 {hamburgerVisible ? menuVisible && <ul className="nav-admin ml-auto" >
-                    <li className={history.location.pathname === (ROUTES.WATCH_PARTY || ROUTES.ADD_WATCH_PARTY || ROUTES.CONTENT) ? "active" : ""}>
+                    <li className={history.location.pathname === (ROUTES.WATCH_PARTY || ROUTES.ADD_WATCH_PARTY || ROUTES.UPLOAD_WATCH_PARTY) ? "active" : ""}>
                         <a href="#" onClick={() => history.push(ROUTES.WATCH_PARTY)} >Content</a>
                     </li>
                     <li>
@@ -41,7 +41,7 @@ export const AppHeader = ({
                     </li>
                 </ul> : <ul className="nav-admin ml-auto">
 
-                        <li className={(history.location.pathname === ROUTES.WATCH_PARTY) || (history.location.pathname === ROUTES.ADD_WATCH_PARTY) || (history.location.pathname === ROUTES.CONTENT) ? "active" : ""}>
+                        <li className={(history.location.pathname === ROUTES.WATCH_PARTY) || (history.location.pathname === ROUTES.ADD_WATCH_PARTY) || (history.location.pathname === ROUTES.UPLOAD_WATCH_PARTY) ? "active" : ""}>
                             <a onClick={() => history.push(ROUTES.WATCH_PARTY)}>Content</a>
                         </li>
                         <li>

@@ -22,11 +22,11 @@ const createFormData = (fileData) => {
 };
 
 function* exportWatchparty({ data, success, failure }) {
-    const formData = createFormData(data);
-    formData.append("file", formData);
+    // const formData = createFormData(data);
+    // formData.append("file", formData);
     try {
         yield put(startLoader());
-        const response = yield postRequest({ API: `${api.URL.EXPORT_CSV}`, DATA: formData });
+        const response = yield postRequest({ API: `${api.URL.EXPORT_CSV}`, DATA: data });
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Screen } from "./screen";
 
-const { } = require(`../../../../redux/actions`);
+const { exportWatchParty } = require(`../../../../redux/actions`);
 
 const mapStateToProps = (state) => {
 
@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        exportWatchParty: (data, success, onError) => dispatch(exportWatchParty(data, success, onError)),
     }
 }
 export const UploadWatchPartyScreen = connect(mapStateToProps, mapDispatchToProps)(Screen);

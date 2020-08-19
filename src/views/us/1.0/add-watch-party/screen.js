@@ -13,7 +13,7 @@ const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
 const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
-const { onSubmitFail } = require(`../../../../helpers`);
+const { onSubmitFail, diff_minutes, changeEndDate } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
@@ -69,15 +69,15 @@ const WatchPartyForm = ({
         setPlatforms(arr)
     }, [allPlatforms])
 
-    const copyDate = (date, time) => {
-        time = time ? new Date(time) : new Date()
-        date = date ? new Date(date) : new Date()
-        time.setDate(date.getDate());
-        time.setMonth(date.getMonth());
-        time.setYear(date.getFullYear());
+    // const copyDate = (date, time) => {
+    //     time = time ? new Date(time) : new Date()
+    //     date = date ? new Date(date) : new Date()
+    //     time.setDate(date.getDate());
+    //     time.setMonth(date.getMonth());
+    //     time.setYear(date.getFullYear());
 
-        return time;
-    }
+    //     return time;
+    // }
 
     useEffect(() => {
         let arr = []
@@ -136,13 +136,7 @@ const WatchPartyForm = ({
             setOpenSnackbar(true)
         })
     }
-    const diff_minutes = (dt2, dt1) => {
-        dt2 = new Date(dt2)
-        dt1 = new Date(dt1)
-        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
-        diff /= 60;
-        return Math.abs(Math.round(diff));
-    }
+
     useEffect(() => {
         if (fields.endTime !== null) {
             onChangeField('endTime', null)
@@ -285,8 +279,7 @@ const WatchPartyForm = ({
                                 defaultValue={fields.endTime}
                                 minTime={fields.startTime}
                                 onChangeTime={time => {
-
-                                    onChangeField('endTime', copyDate(fields.startTime, time))
+                                    onChangeField('endTime', changeEndDate(fields.startTime, time))
                                 }}
 
                             />

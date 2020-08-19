@@ -10,7 +10,7 @@ const {
 const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS, NAME_REGX, VALIDATION_MESSAGES } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
-
+const { diff_minutes } = require('../../../../helpers')
 
 const copyDate = (date, time) => {
     time = time ? new Date(time) : new Date()
@@ -53,6 +53,7 @@ export const Screen = ({ listWatchParty, history,
     const [pastListing, setPastListing] = useState([])
     const [LiveTotalCount, setLiveTotalCount] = useState(0)
     const [PastTotalCount, setPastTotalCount] = useState(0)
+
     const postWatchPartyApi = (data, response) => {
         let postData = Object.keys(data)
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
@@ -243,14 +244,7 @@ export const Screen = ({ listWatchParty, history,
     useEffect(() => {
         changeStartTime()
     }, [fields.time])
-    const diff_minutes = (dt2, dt1) => {
-        dt2 = new Date(dt2)
-        dt1 = new Date(dt1)
 
-        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
-        diff /= 60;
-        return Math.abs(Math.round(diff));
-    }
     const changeStartTime = () => {
         let min = diff_minutes(fields.time, fields.endTime)
         updateFields('contentLength', min)
