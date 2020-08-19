@@ -13,17 +13,19 @@ const UploadScreen = ({ allPlatforms, allLeagues, handleSubmit = () => { } }) =>
     }
 
     return (
-        <>
-            <Form onSubmit={handleSubmit(onsubmit)}>
-                <FieldArray
-                    name="WatchParty"
-                    component={UploadForm}
-                    allLeagues={allLeagues}
-                    allPlatforms={allPlatforms}
-                />
-                <InputSubmit buttonLabel={'Upload'} />
-            </Form>
-        </>
+        <div className="container-fluid">
+            <div class="content-panel">
+                <Form onSubmit={handleSubmit(onsubmit)}>
+                    <FieldArray
+                        name="WatchParty"
+                        component={UploadForm}
+                        allLeagues={allLeagues}
+                        allPlatforms={allPlatforms}
+                    />
+                    <InputSubmit buttonLabel={'Upload'} />
+                </Form>
+            </div>
+        </div>
     )
 }
 

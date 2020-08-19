@@ -48,114 +48,127 @@ const UForm = (props) => {
     }
 
     return (
-        <div>
-            <button onClick={() => addRow()}>Add New</button>
-            <React.Fragment>
-                {
-                    fields && fields.map((member, index) => {
-                        return (
-                            <React.Fragment key={index + ''}>
-                                <div className="form-row">
-                                    <div className="col-md-4 col-sm-5 col-10">
-                                        <Field
-                                            name={`${member}.${STRINGS.SHOW_NAME}`}
-                                            component={Input}
-                                            placeholder={'Show'}
-                                            type={'text'}
-                                        />
-                                    </div>
-                                    <div className="col-md-2 col-sm-4 col-10">
-                                        <div className="form-group">
+        <>
+            <button className="btn btn-lg btn-primary btn-radius" onClick={() => addRow()}>Add New</button>
+            <div className="container">
+                <React.Fragment>
+                    {
+                        fields && fields.map((member, index) => {
+                            return (
+                                <React.Fragment key={index + ''}>
+                                    <div className="form-row">
+                                        <div className="col-md-6">
                                             <Field
-                                                name={`${member}.${STRINGS.HOST_NAME}`}
+                                                name={`${member}.${STRINGS.SHOW_NAME}`}
                                                 component={Input}
-                                                placeholder={'Host'}
-                                                type={"text"}
+                                                placeholder={'Show'}
+                                                type={'text'}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <Field
+                                                    name={`${member}.${STRINGS.HOST_NAME}`}
+                                                    component={Input}
+                                                    placeholder={'Host'}
+                                                    type={"text"}
 
-                                            />
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="col-md-2 col-sm-4 col-10">
-                                        <div className="form-group">
-                                            <Field
-                                                name={`${member}.${STRINGS.SPORTS_NAME}`}
-                                                component={Select}
-                                                options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
-                                                placeholder={'Sports'}
+                                    <div className="form-row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <Field
+                                                    name={`${member}.${STRINGS.SPORTS_NAME}`}
+                                                    component={Select}
+                                                    options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
+                                                    placeholder={'Sports'}
 
-                                            />
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="col-md-2 col-sm-4 col-10">
-                                        <div className="form-group">
-                                            <Field
-                                                name={`${member}.${STRINGS.LEAGUE_NAME}`}
-                                                component={Select}
-                                                options={leagues}
-                                                placeholder={"League"}
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <Field
+                                                    name={`${member}.${STRINGS.LEAGUE_NAME}`}
+                                                    component={Select}
+                                                    options={leagues}
+                                                    placeholder={"League"}
 
-                                            />
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="col-md-2 col-sm-4 col-10">
-                                        <div className="form-group">
-                                            <Field
-                                                name={`${member}.${STRINGS.PLATFORM_NAME}`}
-                                                component={Select}
-                                                options={platforms}
-                                                placeholder={'Platform'}
+                                    <div className="form-row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <Field
+                                                    name={`${member}.${STRINGS.PLATFORM_NAME}`}
+                                                    component={Select}
+                                                    options={platforms}
+                                                    placeholder={'Platform'}
 
-                                            />
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <div className="col-md-12">
+                                                    <Field
+                                                        name={`${member}.${STRINGS.START_TIME}`}
+                                                        component={KeyboardDateTimePickerr}
+                                                        placeholder={'Start Time'}
+                                                        minDate={new Date()}
+                                                        minTime={new Date()}
+                                                        value={startDate[`${STRINGS.START_TIME}${member.parties}`]}
+                                                        onChangeDate={(value) => {
+                                                            setStartDate({ ...startDate, [`${STRINGS.START_TIME}${member.parties}`]: value })
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="col-md-2 col-sm-4 col-10">
-                                        <div className="form-group">
-                                            <Field
-                                                name={`${member}.${STRINGS.START_TIME}`}
-                                                component={KeyboardDateTimePickerr}
-                                                placeholder={'Start Time'}
-                                                minDate={new Date()}
-                                                minTime={new Date()}
-                                                value={startDate[`${STRINGS.START_TIME}${member.parties}`]}
-                                                onChangeDate={(value) => {
-                                                    setStartDate({ ...startDate, [`${STRINGS.START_TIME}${member.parties}`]: value })
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-2 col-sm-4 col-10">
-                                        <div className="form-group">
-                                            <Field
-                                                name={`${member}.${STRINGS.END_TIME}`}
-                                                component={TimePickerInputField}
-                                                placeholder={'End Time'}
-                                                defaultValue={endDate[`${STRINGS.END_TIME}${member.parties}`]}
-                                                minTime={startDate[`${STRINGS.START_TIME}${member.parties}`]}
-                                                onChangeTime={value => {
-                                                    setEndDate({ ...endDate, [`${STRINGS.END_TIME}${member.parties}`]: value })
-                                                }}
+                                    <div className="form-row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <div className="col-md-12">
+                                                    <Field
+                                                        name={`${member}.${STRINGS.END_TIME}`}
+                                                        component={TimePickerInputField}
+                                                        placeholder={'End Time'}
+                                                        defaultValue={endDate[`${STRINGS.END_TIME}${member.parties}`]}
+                                                        minTime={startDate[`${STRINGS.START_TIME}${member.parties}`]}
+                                                        onChangeTime={value => {
+                                                            setEndDate({ ...endDate, [`${STRINGS.END_TIME}${member.parties}`]: value })
+                                                        }}
 
-                                            />
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <Field
+                                                    name={`${member}.${STRINGS.CONTENT_LENGTH}`}
+                                                    component={Input}
+                                                    placeholder={'Content Length'}
+                                                    config={{
+                                                        type: 'number',
+                                                        readOnly: true
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="col-md-2 col-sm-4 col-10">
-                                        <div className="form-group">
-                                            <Field
-                                                name={`${member}.${STRINGS.CONTENT_LENGTH}`}
-                                                component={Input}
-                                                placeholder={'Content Length'}
-                                                config={{
-                                                    type: 'number',
-                                                    readOnly: true
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </React.Fragment>
-                        )
-                    })}  </React.Fragment>
-
-        </div >)
+                                </React.Fragment>
+                            )
+                        })}
+                </React.Fragment>
+            </div>
+        </>
+    )
 }
 export const UploadForm = UForm
