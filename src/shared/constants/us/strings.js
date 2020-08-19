@@ -17,6 +17,8 @@ export const STRINGS = {
   EMAIL: 'Email',
   PASSWORD: 'Password',
   SAME_TIME_VALIDATION: 'Start time and End time cannot be same.',
+  PASSWORD_MINLENGTH: 'Password must be of minimum 6 characters.',
+  PASSWORD_SUCCESSFUL: 'Your password has been changed successfully.',
   EMAIL_RESPONSE_MESSAGE: 'Reset password link has been sent to your email address.',
   PASSWORD_RESPONSE_MESSAGE: 'Please enter new password below.',
   RESET_PASSWORD: 'RESET PASSWORD',

@@ -12,6 +12,9 @@ const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-w
 const { Input } = require(`../../../../components/atoms/input`);
 const { onSubmitFail } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`);
+const {
+    ROUTES
+} = require(`../../../../shared/constants`);
 
 const ResetScreen = ({ handleSubmit, resetPassword }) => {
     let history = useHistory();
@@ -22,6 +25,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
     });
     const parsed = queryString.parse(history.location.search)
 
+    const [passwordIsSet, changePasswordIsSet] = useState(false)
     const onSubmit = (credentials) => {
         let data = {
             password: credentials.password,
@@ -34,6 +38,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                 message: response.msg
             });
             setOpenSnackbar(true)
+            changePasswordIsSet(true)
         }, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -56,7 +61,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                             variant={snackbarData.variant}
                             message={snackbarData.message}
                         />
-                        <Form onSubmit={
+                        {!passwordIsSet ? <Form onSubmit={
                             handleSubmit(onSubmit)}>
                             <div className="text-center forgot_info">
                                 <h4>Reset Password</h4>
@@ -76,6 +81,14 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                                 <InputSubmit buttonLabel={STRINGS.RESET_PASSWORD} />
                             </div>
                         </Form>
+
+                            : <><h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Congratulations!</h3>
+                                <p style={{ color: 'white' }}>{STRINGS.PASSWORD_SUCCESSFUL}</p>
+                                <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
+                                    <a href="javascript:void(0);" className="forgot_pwd">Go to Login</a>
+                                </div></>
+                        }
+
                     </div>
                 </div>
             </div>
