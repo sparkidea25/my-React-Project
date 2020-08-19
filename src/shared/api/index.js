@@ -1,4 +1,4 @@
-const SERVER_URL = 'https://4bc840e74b57.ngrok.io'; //Live URL
+const SERVER_URL = 'https://api.getcollyde.com'; //Live URL
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {
@@ -13,6 +13,7 @@ module.exports = {
     GET_PLATFORMS: SERVER_URL + API_VERSION + '/platform/getAllPlatforms',
     GET_SPORTS: SERVER_URL + API_VERSION + '/sports/getAllSports',
     ADD_WATCH_PARTY: SERVER_URL + API_VERSION + '/watchParty/add',
-    FORGOT_PASSWORD: SERVER_URL + API_VERSION + '/admin/forgot-password'
+    FORGOT_PASSWORD: SERVER_URL + API_VERSION + '/admin/forgot-password',
+    RESET_PASSWORD: SERVER_URL + API_VERSION + '/admin/reset-password'
   }
 };

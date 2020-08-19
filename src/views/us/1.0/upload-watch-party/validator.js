@@ -66,6 +66,10 @@ const validator = values => {
                 partyErrors.endTime = VALIDATION_MESSAGES.END_TIME_SHOUDLD_NOT_BE_IN_PAST;
             }
         }
+        if (!party.startTime && party.endTime) {
+            partyErrors.endTime =
+                VALIDATION_MESSAGES.SELECT_START_TIME_FIRST;
+        }
     })
 
     if (partyArrayErrors.length) {

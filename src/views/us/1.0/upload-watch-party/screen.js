@@ -55,6 +55,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, han
                     variant={snackbarData.variant}
                     message={snackbarData.message}
                 />
+                <div class="page-title col-12"><h4>Add Watch Party</h4></div>
                 <Form onSubmit={handleSubmit(onsubmit)}>
                     <FieldArray
                         name="WatchParty"

@@ -3,6 +3,7 @@ export const CHECK_LOGIN = 'CHECK_LOGIN';
 export const SEND_FORGOT_EMAIL = 'SEND_FORGOT_EMAIL';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const SET_PLATFORM_TYPE = 'SET_PLATFORM_TYPE';
+export const RESET_PASSWORD = "RESET_PASSWORD";
 
 export const setAuthorization = (userToken) => {
     return {
@@ -40,6 +41,14 @@ export const logout = (token, success, failure) => {
     return {
         type: LOGOUT_USER,
         token,
+        success,
+        failure
+    }
+};
+export const resetPassword = (data, success, failure) => {
+    return {
+        type: RESET_PASSWORD,
+        data,
         success,
         failure
     }
