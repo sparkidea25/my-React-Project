@@ -203,4 +203,32 @@ export const DAY_OPTIONS = [
   { value: 31 }
 ]
 
+export const pastPartyTable = [{ name: 'Show' },
+{ name: 'Host' },
+{ name: 'Sports' },
+{ name: 'League' },
+{ name: 'Platform' },
+{ name: 'Month' },
+{ name: 'Date' },
+{ name: 'Time (EST)' },
+{ name: 'End Time' },
+{ name: 'Content length' },
+{ name: 'Joined' },
+{ name: 'Interested' }
+]
+
+export const upcomingPartyTable = [{ name: 'Show' },
+{ name: 'Host' },
+{ name: 'Sports' },
+{ name: 'League' },
+{ name: 'Platform' },
+{ name: 'Date' },
+{ name: 'Time (EST)' },
+{ name: 'End Time' },
+{ name: 'Content length' },
+{ name: 'Joined' },
+{ name: 'Interested' },
+{ name: '' }
+]
+
 

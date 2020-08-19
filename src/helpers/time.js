@@ -27,7 +27,7 @@ export const changeEndDate = (date, time) => {
     return time;
 }
 
-const convertToESTTimeZone = (date) => {
+export const convertToESTTimeZone = (date) => {
     var localZone = moment.tz.guess();
     var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
     var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) + 60) * 60000;

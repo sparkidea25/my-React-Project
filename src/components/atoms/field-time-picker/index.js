@@ -31,7 +31,7 @@ export const TimePickerInputField = ({
     const [openCalendar, setOpenCalendar] = useState(false);
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [inputValue, setTimeInputValue] = useState(defaultValue || '');
-    console.log({ defaultValue }, 'check end time in picker')
+
     const [errorMsg, setErrorMsg] = useState('')
     widthStyle = widthStyle ? widthStyle : "";
     const validationSpan =

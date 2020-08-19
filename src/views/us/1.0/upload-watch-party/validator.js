@@ -9,11 +9,11 @@ const validator = values => {
     values && values.WatchParty && values.WatchParty.forEach((party, partyIndex) => {
         const partyErrors = {};
 
-        if (!party || !party.show) {
-            partyErrors.show = VALIDATION_MESSAGES.SHOW_NAME_REQUIRED
+        if (!party || !party.contentName) {
+            partyErrors.contentName = VALIDATION_MESSAGES.SHOW_NAME_REQUIRED
             partyArrayErrors[partyIndex] = partyErrors
-        } else if (!NAME_REGX.test(party.show)) {
-            partyErrors.show = VALIDATION_MESSAGES.NAME_VALIDATION
+        } else if (!NAME_REGX.test(party.contentName)) {
+            partyErrors.contentName = VALIDATION_MESSAGES.NAME_VALIDATION
             partyArrayErrors[partyIndex] = partyErrors
         }
         if (!party.host) {
@@ -67,7 +67,7 @@ const validator = values => {
             }
         }
     })
-    console.log(partyArrayErrors, 'partyArrayErrors')
+
     if (partyArrayErrors.length) {
         errors.WatchParty = partyArrayErrors;
     }

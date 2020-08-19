@@ -3,35 +3,70 @@ import { FieldArray, reduxForm, Field } from "redux-form";
 import validator from './validator'
 const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
 const { UploadForm } = require('./form')
-const { onSubmitFail, convertToESTTimeZone } = require(`../../../../helpers`);
+const { onSubmitFail, convertToESTTimeZone, diff_minutes } = require(`../../../../helpers`);
 const { Form } = require(`../../../../components/atoms/form`);
+const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
+const { ROUTES } = require(`../../../../shared/constants`);
 
-const UploadScreen = ({ allPlatforms, exportWatchParty, allLeagues, handleSubmit = () => { } }) => {
+const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, handleSubmit = () => { } }) => {
+    const [openSnackBar, setOpenSnackbar] = useState(false);
+    const [snackbarData, setSnackBarData] = useState({
+        variant: '',
+        message: ''
+    });
+
+
 
     const onsubmit = (credentials) => {
         console.log(credentials)
 
         credentials.WatchParty.map(party => {
-            if (party.startTime) {
-                party.startTime = convertToESTTimeZone(party.startTime);
-                party.endTime = convertToESTTimeZone(party.endTime);
-            }
+            party.contentLength = diff_minutes(party.startTime, party.endTime)
+            party.startTime = convertToESTTimeZone(party.startTime);
+            party.endTime = convertToESTTimeZone(party.endTime);
+            party.league = party.league.value
+            party.platform = party.platform.value
+            party.sports = party.sports.value === 'Yes' ? true : false
+
         })
-        exportWatchParty(credentials.WatchParty, () => { }, () => { })
+        console.log(credentials.WatchParty, ' credentials.WatchParty')
+        exportWatchParty(credentials.WatchParty, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+            history.push(ROUTES.WATCH_PARTY)
+        }, (error) => {
+            setSnackBarData({
+                variant: error.status ? 'success' : 'error',
+                message: error.msg
+            });
+            setOpenSnackbar(true)
+        })
     }
 
     return (
-        <>
-            <Form onSubmit={handleSubmit(onsubmit)}>
-                <FieldArray
-                    name="WatchParty"
-                    component={UploadForm}
-                    allLeagues={allLeagues}
-                    allPlatforms={allPlatforms}
+        <div className="container-fluid">
+            <div class="content-panel">
+                <SnackbarWrapper
+                    visible={openSnackBar}
+                    onClose={() => setOpenSnackbar(false)}
+                    variant={snackbarData.variant}
+                    message={snackbarData.message}
                 />
-                <InputSubmit buttonLabel={'Upload'} />
-            </Form>
-        </>
+                <Form onSubmit={handleSubmit(onsubmit)}>
+                    <FieldArray
+                        name="WatchParty"
+                        component={UploadForm}
+                        allLeagues={allLeagues}
+                        allPlatforms={allPlatforms}
+
+                    />
+                    <InputSubmit buttonLabel={'Upload'} />
+                </Form>
+            </div>
+        </div>
     )
 }
 

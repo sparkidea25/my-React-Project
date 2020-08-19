@@ -7,7 +7,7 @@ const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-w
 const {
     Input,
 } = require(`../../../../components/atoms/input`);
-const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS, NAME_REGX, VALIDATION_MESSAGES } = require('../../../../shared/constants/constants')
+const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS, NAME_REGX, VALIDATION_MESSAGES, upcomingPartyTable, pastPartyTable } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
 const { diff_minutes } = require('../../../../helpers')
@@ -290,18 +290,9 @@ export const Screen = ({ listWatchParty, history,
                     <div className="table-responsive">
                         <table className="table">
                             <thead>
-                                <th>Show</th>
-                                <th>Host</th>
-                                <th>Sports</th>
-                                <th>League</th>
-                                <th>Platform</th>
-                                <th>Date</th>
-                                <th>Time (EST).</th>
-                                <th>End Time</th>
-                                <th>Content length</th>
-                                <th>Joined</th>
-                                <th>Interested </th>
-                                <th></th>
+                                {upcomingPartyTable && upcomingPartyTable.map(party => {
+                                    return <th>{party && party.name}</th>
+                                })}
                             </thead>
                             <tbody>
 
@@ -512,7 +503,7 @@ export const Screen = ({ listWatchParty, history,
                         </table>
 
                     </div>
-                    <CustomPagination
+                    {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ? <CustomPagination
                         limit={STRINGS.SHOW_LIMIT}
                         totalPages={LiveTotalCount}
                         itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
@@ -526,7 +517,7 @@ export const Screen = ({ listWatchParty, history,
                             setEditMode(false)
 
                         }}
-                    />
+                    /> : ''}
                 </div>
                 <div className="managment_list">
                     <div class="d-flex table_title">
@@ -536,19 +527,9 @@ export const Screen = ({ listWatchParty, history,
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>Show</th>
-                                    <th>Host</th>
-                                    <th>Sports</th>
-                                    <th>League</th>
-                                    <th>Platform</th>
-                                    <th>Month</th>
-                                    <th>Date</th>
-                                    <th>Time (EST).</th>
-                                    <th>End Time</th>
-                                    <th>Content length</th>
-                                    <th>Joined</th>
-                                    <th>Interested </th>
-                                    <th></th>
+                                    {pastPartyTable && pastPartyTable.map(party => {
+                                        return <th>{party && party.name}</th>
+                                    })}
                                 </tr>
                             </thead>
                             <tbody>
@@ -592,7 +573,7 @@ export const Screen = ({ listWatchParty, history,
                             </tbody>
                         </table>
                     </div>
-                    <CustomPagination
+                    {pastListing && pastListing.length > 0 ? <CustomPagination
                         limit={STRINGS.SHOW_LIMIT}
                         totalPages={PastTotalCount}
                         itemsCount={pastListing && pastListing.length}
@@ -605,7 +586,7 @@ export const Screen = ({ listWatchParty, history,
                             setPastTableIndex(value && value.selected)
 
                         }}
-                    />
+                    /> : ''}
                 </div>
 
             </div>

@@ -26,7 +26,7 @@ function* exportWatchparty({ data, success, failure }) {
     // formData.append("file", formData);
     try {
         yield put(startLoader());
-        const response = yield postRequest({ API: `${api.URL.EXPORT_CSV}`, DATA: data });
+        const response = yield postRequest({ API: `${api.URL.EXPORT_CSV}`, DATA: { data: data } });
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({

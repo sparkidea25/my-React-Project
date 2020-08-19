@@ -1,4 +1,4 @@
-const SERVER_URL = 'https://api.getcollyde.com'; //Live URL
+const SERVER_URL = 'https://4bc840e74b57.ngrok.io'; //Live URL
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {

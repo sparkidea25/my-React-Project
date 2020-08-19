@@ -55,7 +55,7 @@ export const Screen = ({
                                     <h3>{emailSent ? LABELS.checkYourMail : LABELS.forgotPassword}</h3>
                                     {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
                                 </div>
-                                {!emailSent && <ForgotReduxForm onSubmit={(credentials) => {
+                                {!emailSent && <><ForgotReduxForm onSubmit={(credentials) => {
 
                                     sendForgotEmail({
                                         email: credentials.email,
@@ -69,20 +69,18 @@ export const Screen = ({
                                         });
                                         setOpenSnackbar(true)
                                     })
-                                }} />}
+                                }} />
+                                    <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
+                                        <a href="javascript:void(0);" className="forgot_pwd">Log In?</a>
+                                    </div></>
+                                }
                                 {emailSent &&
-                                    <form noValidate onSubmit={(value) => {
-                                        history.replace(ROUTES.LOGIN)
-                                    }}>
-                                        <InputSubmit
-                                            buttonLabel={STRINGS.FORGOT_LOGIN}
-                                            containerStyle={"text-center"} />
-                                    </form>
+                                    <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
+                                        <a href="javascript:void(0);" className="forgot_pwd">Log In?</a>
+                                    </div>
                                 }
                             </div>
-                            <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
-                                <a href="javascript:void(0);" className="forgot_pwd">Log In?</a>
-                            </div>
+
                         </FormWrapper>
                     </div>
                 </div>
