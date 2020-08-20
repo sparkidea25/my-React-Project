@@ -47,7 +47,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, upl
     }
 
     return (
-        <div className="container-fluid">
+        <div class="container-fluid">
             <div class="content-panel">
                 <SnackbarWrapper
                     visible={openSnackBar}
@@ -56,6 +56,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, upl
                     message={snackbarData.message}
                 />
                 <div class="page-title"><h4>Add Watch Party</h4></div>
+
                 <Form onSubmit={handleSubmit(onsubmit)}>
                     <FieldArray
                         name="WatchParty"

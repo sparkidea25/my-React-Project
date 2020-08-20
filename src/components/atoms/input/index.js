@@ -11,7 +11,7 @@ export const Input = ({
   data,
   ...props
 }) => {
-  widthStyle = widthStyle ? widthStyle : "col-md-12";
+  widthStyle = widthStyle ? widthStyle : "";
 
   const validationSpan =
     touched && error ? (
@@ -19,21 +19,21 @@ export const Input = ({
     ) : null;
 
   return (
-    <div className={widthStyle}>
-      <div className="form-group" style={style}>
-        {label && <label>{label}</label>}
-        <input className="form-control"
-          placeholder={placeholder}
-          {...input}
-          {...config}
-          onChange={(value) => {
-            input.onChange(value);
-          }}
-          // value={data}
-          maxLength={60}
-          autoComplete='off' />
-        {validationSpan}
-      </div>
+    // <div className={widthStyle}>
+    <div className="form-group" style={style}>
+      {label && <label>{label}</label>}
+      <input className="form-control"
+        placeholder={placeholder}
+        {...input}
+        {...config}
+        onChange={(value) => {
+          input.onChange(value);
+        }}
+        // value={data}
+        maxLength={60}
+        autoComplete='off' />
+      {validationSpan}
     </div>
+    // </div>
   );
 };

@@ -11,18 +11,18 @@ export const TextArea = ({
 }) => {
 
 
-    widthStyle = widthStyle ? widthStyle : "col-md-12";
+    widthStyle = widthStyle ? widthStyle : "";
     const validationSpan =
         touched && error ? (
             <span className="error_msg text-danger">{error}</span>
         ) : null;
     return (
-        <div className={widthStyle}>
-            <div className="form-group">
-                {label && <label>{label}</label>}
-                <textarea className="form-control" {...input} style={{ color: 'black' }} placeholder={placeholder} {...config} />
-                {validationSpan}
-            </div>
+        // <div className={widthStyle}>
+        <div className="form-group">
+            {label && <label>{label}</label>}
+            <textarea className="form-control" {...input} style={{ color: 'black' }} placeholder={placeholder} {...config} />
+            {validationSpan}
         </div>
+        // </div>
     );
 };

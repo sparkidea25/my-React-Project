@@ -29,27 +29,31 @@ const LoginForm = ({
         <Form onSubmit={
             handleSubmit(onSubmit)}>
             <div className="row">
-                <Field
-                    name={STRINGS.EMAIL_INPUT_NAME}
-                    component={Input}
-                    placeholder={STRINGS.EMAIL_PLACEHOLDER}
-                    type={'text'}
-                    config={{
-                        type: "email",
-                        onChange: event => onEmailChange(event.target.value)
-                    }}
-                />
+                <div className="col-md-12">
+                    <Field
+                        name={STRINGS.EMAIL_INPUT_NAME}
+                        component={Input}
+                        placeholder={STRINGS.EMAIL_PLACEHOLDER}
+                        type={'text'}
+                        config={{
+                            type: "email",
+                            onChange: event => onEmailChange(event.target.value)
+                        }}
+                    />
+                </div>
             </div>
             <div className="row">
-                <Field
-                    name={STRINGS.PASSWORD_INPUT_NAME}
-                    component={Input}
-                    placeholder={STRINGS.PASSWORD_PLACEHOLDER}
-                    config={{
-                        type: "password",
-                        onChange: event => onPasswordChange(event.target.value),
-                    }}
-                />
+                <div className="col-md-12">
+                    <Field
+                        name={STRINGS.PASSWORD_INPUT_NAME}
+                        component={Input}
+                        placeholder={STRINGS.PASSWORD_PLACEHOLDER}
+                        config={{
+                            type: "password",
+                            onChange: event => onPasswordChange(event.target.value),
+                        }}
+                    />
+                </div>
             </div>
             <div className="btn-full mt-4">
                 <InputSubmit buttonLabel={STRINGS.BUTTON_LABEL_LOGIN} />
