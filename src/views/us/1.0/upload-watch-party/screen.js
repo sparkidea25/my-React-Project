@@ -15,7 +15,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, han
         message: ''
     });
 
-
+    const [file, onFile] = useState(null)
 
     const onsubmit = (credentials) => {
         console.log(credentials)
@@ -29,7 +29,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, han
             party.sports = party.sports.value === 'Yes' ? true : false
 
         })
-        console.log(credentials.WatchParty, ' credentials.WatchParty')
+        // console.log(credentials.WatchParty, ' credentials.WatchParty')
         exportWatchParty(credentials.WatchParty, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -62,7 +62,9 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, han
                         component={UploadForm}
                         allLeagues={allLeagues}
                         allPlatforms={allPlatforms}
-
+                        onFileChange={(file) => {
+                            onFile(file)
+                        }}
                     />
                     <InputSubmit buttonLabel={'Upload'} />
                 </Form>

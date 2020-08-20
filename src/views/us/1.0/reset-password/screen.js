@@ -40,6 +40,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
             setOpenSnackbar(true)
             changePasswordIsSet(true)
         }, (response) => {
+            console.log('error', response)
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
                 message: response.msg
