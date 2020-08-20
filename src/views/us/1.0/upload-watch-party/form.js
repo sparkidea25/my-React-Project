@@ -9,10 +9,11 @@ const { TimePickerInputField } = require(`../../../../components/atoms/field-tim
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`);
 const { diff_minutes, changeEndDate } = require(`../../../../helpers`);
+const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop`)
 
 const UForm = (props) => {
 
-    const { fields, name, removeSelected, allPlatforms, allLeagues, } = props
+    const { fields, name, removeSelected, allPlatforms, allLeagues, onFileChange } = props
 
     const [leagues, setLeagues] = useState([])
     const [platforms, setPlatforms] = useState([])
@@ -20,7 +21,6 @@ const UForm = (props) => {
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
     const [contentLength, setContentLength] = useState(0)
-
 
     useEffect(() => {
         let arr = []
@@ -65,6 +65,8 @@ const UForm = (props) => {
         }
     }, [startDate])
 
+
+
     return (
         <>
             <div className="container-fluid">
@@ -84,6 +86,13 @@ const UForm = (props) => {
                                                     type={'text'}
                                                 />
                                             </div>
+                                            <Field
+                                                name={`${member}.contentPicture`}
+                                                component={CustomFileDrop}
+                                                placeholder={'ContentPicture'}
+
+                                            />
+
                                             <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <Field

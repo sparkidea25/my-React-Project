@@ -96,8 +96,8 @@
             }
         }
         .flex-column {
-            @include flex-direction(row)!important;
-            @include justify-content(flex-end)!important;
+            flex-direction: row !important;
+            justify-content:flex-end !important
         }
     }    
     

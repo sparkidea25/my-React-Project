@@ -17,6 +17,7 @@ const { onSubmitFail, diff_minutes, changeEndDate } = require(`../../../../helpe
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
+const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop`)
 
 moment.tz.setDefault('America/New_York');
 
@@ -182,6 +183,12 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
+                        <Field
+                            name={`contentPicture`}
+                            component={CustomFileDrop}
+                            placeholder={'ContentPicture'}
+
+                        />
                         <div className="col-md-6">
                             <label>Host</label>
                             <div className="row">
