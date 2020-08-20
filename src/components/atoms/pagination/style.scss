@@ -1,56 +1,58 @@
+@import '../../../theme/base.scss';
+
 .pagination-div{
-    display: flex;
-    flex-direction: row;          
-    align-items: center;
+    @include flexbox; 
+    @include flex-direction(column);         
+    @include align-items(center);
     -webkit-tap-highlight-color: transparent; 
     margin:30px 0;     
     @media (max-width:480px) {
-        flex-direction: column-reverse;  
-        justify-content: center;
+        @include flex-direction(column-reverse);        
+        @include justify-content (center);
     }
     .pagination-text {
         margin:0; 
-        color: #4d4d4f;
-        font-size: 16px;
-        font-weight: 400;       
+        color: $base-color;
+        font-size: $f16;      
         min-width: 230px; 
-        font-weight: 500;
+        font-weight: $f-medium;
         @media (max-width:767px) {
-            font-size: 15px;
+            font-size: $f14+1;
             flex:auto;
             padding:10px 0;
             text-align: center;
         } 
         span {
-            font-weight:700;
-            color:#000;
+            font-weight:$f-bold;
+            color:$black-color;
         }
     }
 }
 
-.pagination {
-    justify-content: flex-end;
-    list-style: none;
-    outline: none; 
+.pagination { 
+    @include justify-content(flex-end); 
+    list-style: $none;
+    outline: $none; 
     width:100%;    
   }
   .pagination > .active > a{
-    background-color: #64d2ff ;
-    border-color: #64d2ff ; 
-    color: #fff;
+    background-color: $primary-color ;
+    border-color: $primary-color; 
+    color: $white-color;
   }
   .pagination > li > a{
-    border: 1px solid #424959;
-    color:#000;
+    border: 1px solid $secondary-color;
+    color:$black-color;
     padding: 5px 10px;
-    border-radius: 50px;
     margin:0 7px;    
-    outline: none; 
+    outline: $none; 
     min-width: 36px;
     min-height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;    
+    @include flexbox; 
+    font-size:$f14;
+    @include border-radius(50px);
+    @include align-items (center);
+    @include justify-content(center);  
     cursor: pointer;
     text-align: center;
      @media (max-width:767px){
@@ -59,20 +61,20 @@
      }
   }
   .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus{
-    background-color: #64d2ff ;
-    border-color: #64d2ff ;
-    outline: none ;
+    background-color: $primary-color ;
+    border-color: $primary-color;
+    outline: $none ;
   } 
 .previous, .next {
     &.disabled {
-        opacity: .5;
-        pointer-events: none;
+        @include opacity(.5); 
+        pointer-events: $none;
     }
     a {
         font-family: monospace;
         &:hover, &:focus {
-            background-color: #424959;
-            color:#fff!important;
+            background-color: $secondary-color;
+            color:$white-color !important;
         }
     }
 }

@@ -125,7 +125,7 @@
         overflow: hidden;     
         width: 100%;
         position: $static;
-        div{
+        div {
             cursor: pointer;
             label{
                 cursor: pointer;
@@ -218,30 +218,31 @@
     padding:10px 40px 10px 12px;
     min-height: initial;
     max-width:100%;
-    position: relative;
-    border:1px solid #e5e5e5;
-    border-radius: 4px;
+    position: $relative;
+    border:1px solid $grey-color2;
+    @include border-radius(4px);
+    height:49px;
     @media (max-width:767px){
         width:100%;
     }
     .dzu-previewImage {
-        width:20px;
+        height:40px;
         max-height: initial;
         max-width: initial;
     }
     + .dzu-submitButtonContainer {
-        display: none;
+        display: $none;
     }
     .dzu-previewStatusContainer{    
         position: $absolute;
         right:14px;
-        top:10px;
+        top:9px;
         width: 30px;
         height:30px;
-        border-radius: 30px;
+        @include border-radius(30px);
         background: $primary-color;
         justify-content: center;
-        box-shadow: 0 0 10px #d4d4d4;
+        box-shadow: 0 0 10px $grey-color6;
         .dzu-previewButton {
             background-size: 11px;
             width: 30px;
