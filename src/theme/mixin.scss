@@ -64,6 +64,13 @@
   width: 1px;
 } 
 
+// Opacity
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie);
+}
+
 /* @include transition(all,5s,ease-out); */
 @mixin transition($what: all, $time: 0.5s, $how: ease-in-out) {
     -webkit-transition: $what $time $how;

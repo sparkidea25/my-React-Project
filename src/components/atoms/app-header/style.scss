@@ -1,7 +1,9 @@
+@import '../../../theme/base.scss';
+
 header {
     padding:40px 15px 10px;    
     width:100%;
-    background: #414959; 
+    background: $secondary-color; 
     z-index: 1; 
      @media (max-width:767px){
         padding:10px 15px; 
@@ -22,7 +24,7 @@ header {
     margin-left: auto;
     cursor: pointer; 
     @media (min-width:767px){
-        display: none;
+        display: $none;
     }
 }
 .navbar-menu {
@@ -31,35 +33,36 @@ header {
     .nav-admin {
         transition: all .5s ease-in-out;
         @media (max-width:767px){
-            display: block;
+            display: $block;
             padding: 10px 0;
             width:100%;
-            position: absolute;
+            position: $absolute;
             top:79px;
             left:0;
-            background-color: #424959;    
+            background-color: $secondary-color;    
             box-shadow: 0 0 10px rgba(0,0,0,.2);        
         }
         &.show {
-            display: block;
+            display:$block;
         }
         li  {
-            display: inline-block;
+            display: $inline-block;
             margin-left: 10px;
             @media (max-width:767px){
                 width:100%;
-                display: block;
+                display: $block;
                 text-align: left;                
             }
             &.active a {
-                color:#64d2ff;
+                color:$primary-color;
             }            
             a {
-                color:#fff;
-                font-size: 18px;
+                color:$white-color;
+                font-size: $f16+2;
                 font-weight: 700;
                 padding: 5px;
-                display: block;
+                display: $block;
+                cursor: pointer;
                 text-transform: capitalize;
                 @media (max-width:767px){
                     padding:5px 10px
