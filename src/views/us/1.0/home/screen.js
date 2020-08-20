@@ -19,7 +19,7 @@ export const Screen = ({
                 <div className="content-panel">
                     <ul className="content_section">
                         <li onClick={() => history.push(ROUTES.WATCH_PARTY)}><a href="#">Content Management </a></li>
-                        <li><a href="#">User Management</a></li>
+                        <li onClick={()=>history.push(ROUTES.USERS)}><a href="#">User Management</a></li>
                     </ul>
                 </div>
             </div>

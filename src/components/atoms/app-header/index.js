@@ -2,6 +2,7 @@ import React from 'react';
 import './style.scss';
 import { CustomMenu } from '../custom-menu';
 import { ROUTES } from '../../../shared/constants';
+import { Link } from 'react-router-dom';
 
 export const AppHeader = ({
     hamburgerIcon,
@@ -33,8 +34,8 @@ export const AppHeader = ({
                     <li className={history.location.pathname === (ROUTES.WATCH_PARTY || ROUTES.ADD_WATCH_PARTY || ROUTES.UPLOAD_WATCH_PARTY) ? "active" : ""}>
                         <a href="#" onClick={() => history.push(ROUTES.WATCH_PARTY)} >Content</a>
                     </li>
-                    <li>
-                        <a href="#">Users</a>
+                    <li className={history.location.pathname===(ROUTES.USERS)?"active":""}>
+                        <a href="#" onClick={()=> history.push(ROUTES.USERS)}>Users</a>
                     </li>
                     <li>
                         <a href="javascript:void(0)" onClick={() => logout()}>Logout</a>
@@ -44,8 +45,9 @@ export const AppHeader = ({
                         <li className={(history.location.pathname === ROUTES.WATCH_PARTY) || (history.location.pathname === ROUTES.ADD_WATCH_PARTY) || (history.location.pathname === ROUTES.UPLOAD_WATCH_PARTY) ? "active" : ""}>
                             <a onClick={() => history.push(ROUTES.WATCH_PARTY)}>Content</a>
                         </li>
-                        <li>
-                            <a href="#">Users</a>
+                        <li className={history.location.pathname=== ROUTES.USERS?"active":""}>
+                            {/* <Link to={ROUTES.USERS}>Users</Link> */}
+                            <a href="#" onClick={()=> history.push(ROUTES.USERS)}>Users</a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" onClick={() => logout()}>Logout</a>

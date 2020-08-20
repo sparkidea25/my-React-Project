@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
+import { UserManagementScreen } from '../../../views/us/1.0/user-management';
 
 const { defaultConfig: { PLATFORM, LOCATION, VERSION } } = require(`../../../config/default`);
 const { STRINGS } = require(`../../../shared/constants/${LOCATION}/strings`);
@@ -101,6 +102,7 @@ const AuthenticatedRouter = (props) => {
         <Switch>
           <Route exact path={`${ROUTES.DASHBOARD}`} component={HomeScreen} />
           <Route exact path={`${ROUTES.CONTENT}`} component={ContentManagementScreen} />
+          <Route exact path={`${ROUTES.USERS}`} component={UserManagementScreen} />
           <Route exact path={`${ROUTES.WATCH_PARTY}`} component={WatchPartyScreen} />
           <Route exact path={`${ROUTES.ADD_WATCH_PARTY}`} component={AddWatchPartyScreen} />
           <Route exact path={`${ROUTES.UPLOAD_WATCH_PARTY}`} component={UploadWatchPartyScreen} />
