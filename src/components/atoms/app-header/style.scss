@@ -33,10 +33,10 @@ header {
     .nav-admin {
         transition: all .5s ease-in-out;
         @media (max-width:767px){
+            position: $absolute;
             display: $block;
             padding: 10px 0;
             width:100%;
-            position: $absolute;
             top:79px;
             left:0;
             background-color: $secondary-color;    
@@ -59,7 +59,7 @@ header {
             a {
                 color:$white-color;
                 font-size: $f16+2;
-                font-weight: 700;
+                font-weight: $f-bold;
                 padding: 5px;
                 display: $block;
                 cursor: pointer;

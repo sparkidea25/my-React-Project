@@ -7,8 +7,8 @@
     -webkit-tap-highlight-color: transparent; 
     margin:30px 0;     
     @media (max-width:480px) {
-        flex-direction: column-reverse;  
-        justify-content: center;
+        @include flex-direction(column-reverse);        
+        @include justify-content (center);
     }
     .pagination-text {
         margin:0; 
@@ -32,7 +32,7 @@
 .pagination { 
     @include justify-content(flex-end); 
     list-style: $none;
-    outline: none; 
+    outline: $none; 
     width:100%;    
   }
   .pagination > .active > a{
@@ -48,7 +48,7 @@
     outline: $none; 
     min-width: 36px;
     min-height: 36px;
-    display: flex;
+    @include flexbox; 
     font-size:$f14;
     @include border-radius(50px);
     @include align-items (center);
@@ -67,7 +67,7 @@
   } 
 .previous, .next {
     &.disabled {
-         @include opacity(.5); 
+        @include opacity(.5); 
         pointer-events: $none;
     }
     a {
