@@ -12,17 +12,21 @@
 .add_formList {
     .dzu-dropzone {
         min-width: 100%;
+        width:100%;
     }
     .upload_btn {    
         min-width:initial;
         width: 100%;
-        font-size:15px;
-    }    
+        font-size:$f14+1;
+    } 
+    .drag_drop_option {
+        position: $static;        
+    }
 }
 .upload_btn {    
     text-align: center;
     color:$white-color;
-    font-size: $f16+2;
+    font-size: $f16;
     background-color: $secondary-color;
     @include border-radius(5px);
     @include flexbox; 
@@ -32,6 +36,10 @@
     min-height:40px;
     min-width:230px;    
     padding:0 15px;
+}
+.dzu-inputLabel {
+    position:$static;
+    width:100%;
 }
 
 .dropzone-div{
@@ -212,7 +220,7 @@
     max-width:100%;
     position: relative;
     border:1px solid #e5e5e5;
-    border-radius: 10px;
+    border-radius: 4px;
     @media (max-width:767px){
         width:100%;
     }

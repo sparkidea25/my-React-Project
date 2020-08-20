@@ -174,18 +174,17 @@ const WatchPartyForm = ({
                     <div className="row">
                         <div className="col-md-6">
                             <label>Name</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.SHOW_NAME}
-                                    component={Input}
-                                    placeholder={'Show'}
-                                    value={fields.show}
-                                    type={'text'}
-                                    onChange={event => onChangeField('show', event.target.value)}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.SHOW_NAME}
+                                component={Input}
+                                placeholder={'Show'}
+                                value={fields.show}
+                                type={'text'}
+                                onChange={event => onChangeField('show', event.target.value)}
+                            />
                         </div>
                         <div className="col-md-6">
+                            <label className="d-none d-md-block">&nbsp;</label>
                             <Field
                                 name={`contentPicture`}
                                 component={CustomFileDrop}
@@ -195,67 +194,59 @@ const WatchPartyForm = ({
                         </div>
                         <div className="col-md-6">
                             <label>Host</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.HOST_NAME}
-                                    component={Input}
-                                    value={fields.host}
-                                    placeholder={'Host'}
-                                    type={"text"}
-                                    onChange={event => onChangeField('host', event.target.value)}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.HOST_NAME}
+                                component={Input}
+                                value={fields.host}
+                                placeholder={'Host'}
+                                type={"text"}
+                                onChange={event => onChangeField('host', event.target.value)}
+                            />
                         </div>
                         <div class="col-md-6">
                             <label>Sports </label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.SPORTS_NAME}
-                                    component={Select}
-                                    options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
-                                    value={selectedSport}
-                                    placeholder={'Sports'}
-                                    onChange={value => {
-                                        onChangeField('sports', value.value)
-                                        setSelectedSport(value.label)
-                                    }}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.SPORTS_NAME}
+                                component={Select}
+                                options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
+                                value={selectedSport}
+                                placeholder={'Sports'}
+                                onChange={value => {
+                                    onChangeField('sports', value.value)
+                                    setSelectedSport(value.label)
+                                }}
+                            />
                         </div>
                     </div>
 
                     <div className="row">
                         <div class="col-md-6">
                             <label>League Name</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.LEAGUE_NAME}
-                                    component={Select}
-                                    options={leagues}
-                                    value={selectedLeague}
-                                    placeholder={"League"}
-                                    onChange={value => {
-                                        onChangeField('league', value.value)
-                                        setSelectedLeague(value.label)
-                                    }}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.LEAGUE_NAME}
+                                component={Select}
+                                options={leagues}
+                                value={selectedLeague}
+                                placeholder={"League"}
+                                onChange={value => {
+                                    onChangeField('league', value.value)
+                                    setSelectedLeague(value.label)
+                                }}
+                            />
                         </div>
                         <div class="col-md-6">
                             <label>Platform </label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.PLATFORM_NAME}
-                                    component={Select}
-                                    options={platforms}
-                                    value={selectedPlatform}
-                                    placeholder={'Platform'}
-                                    onChange={value => {
-                                        onChangeField('platform', value.value)
-                                        setSelectedPlatform(value.label)
-                                    }}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.PLATFORM_NAME}
+                                component={Select}
+                                options={platforms}
+                                value={selectedPlatform}
+                                placeholder={'Platform'}
+                                onChange={value => {
+                                    onChangeField('platform', value.value)
+                                    setSelectedPlatform(value.label)
+                                }}
+                            />
                         </div>
                     </div>
 
@@ -297,19 +288,17 @@ const WatchPartyForm = ({
                         </div>
                         <div class="col-md-6">
                             <label>Length</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.CONTENT_LENGTH}
-                                    component={Input}
+                            <Field
+                                name={STRINGS.CONTENT_LENGTH}
+                                component={Input}
 
-                                    placeholder={'Content Length'}
-                                    config={{
-                                        value: fields.contentLength,
-                                        type: 'number',
-                                        readOnly: true
-                                    }}
-                                />
-                            </div>
+                                placeholder={'Content Length'}
+                                config={{
+                                    value: fields.contentLength,
+                                    type: 'number',
+                                    readOnly: true
+                                }}
+                            />
                         </div>
 
                         <div className="btn_group text-center">

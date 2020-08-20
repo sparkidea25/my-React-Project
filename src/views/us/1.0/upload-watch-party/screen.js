@@ -47,29 +47,30 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, upl
     }
 
     return (
-
-        <div class="content-panel">
-            <SnackbarWrapper
-                visible={openSnackBar}
-                onClose={() => setOpenSnackbar(false)}
-                variant={snackbarData.variant}
-                message={snackbarData.message}
-            />
-            <div class="page-title"><h4>Add Watch Party</h4></div>
-
-            <Form onSubmit={handleSubmit(onsubmit)}>
-                <FieldArray
-                    name="WatchParty"
-                    component={UploadForm}
-                    allLeagues={allLeagues}
-                    allPlatforms={allPlatforms}
-                    onFileChange={(file) => {
-                        onFile(file)
-                    }}
-                    uploadImage={uploadImage}
+        <div class="container-fluid">
+            <div class="content-panel">
+                <SnackbarWrapper
+                    visible={openSnackBar}
+                    onClose={() => setOpenSnackbar(false)}
+                    variant={snackbarData.variant}
+                    message={snackbarData.message}
                 />
-                <InputSubmit buttonLabel={'Upload'} />
-            </Form>
+                <div class="page-title"><h4>Add Watch Party</h4></div>
+
+                <Form onSubmit={handleSubmit(onsubmit)}>
+                    <FieldArray
+                        name="WatchParty"
+                        component={UploadForm}
+                        allLeagues={allLeagues}
+                        allPlatforms={allPlatforms}
+                        onFileChange={(file) => {
+                            onFile(file)
+                        }}
+                        uploadImage={uploadImage}
+                    />
+                    <InputSubmit buttonLabel={'Upload'} />
+                </Form>
+            </div>
         </div>
     )
 }
