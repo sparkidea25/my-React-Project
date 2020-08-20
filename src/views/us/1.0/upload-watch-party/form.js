@@ -140,7 +140,7 @@ const UForm = (props) => {
                                                     <Field
                                                         name={`${member}.${STRINGS.START_TIME}`}
                                                         component={KeyboardDateTimePickerr}
-                                                        placeholder={'Start Time'}
+                                                        placeholder={'Start Time(EST.)'}
                                                         minDate={new Date()}
                                                         minTime={new Date()}
                                                         value={startDate}
@@ -156,7 +156,7 @@ const UForm = (props) => {
                                                     <Field
                                                         name={`${member}.${STRINGS.END_TIME}`}
                                                         component={TimePickerInputField}
-                                                        placeholder={'End Time'}
+                                                        placeholder={'End Time(EST.)'}
                                                         defaultValue={endDate}
                                                         minTime={startDate}
                                                         onChangeTime={value => {
