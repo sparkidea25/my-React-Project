@@ -29,7 +29,8 @@ const WatchPartyForm = ({
     addWatchParty,
     getPlatforms,
     getLeagues,
-    history
+    history,
+    uploadImage
 }) => {
     const [fields, setFields] = useState({
         "host": "",
@@ -107,7 +108,7 @@ const WatchPartyForm = ({
         }
     }
 
-    const onSubmit = () => {
+    const onSubmit = (credentials) => {
 
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
@@ -119,7 +120,8 @@ const WatchPartyForm = ({
             "league": fields.league,
             "platform": fields.platform,
             "contentLength": fields.contentLength,
-            "endTime": et
+            "endTime": et,
+            "contentPicture": credentials.contentPicture
         }
 
         addWatchParty(postData, (response) => {
@@ -187,7 +189,7 @@ const WatchPartyForm = ({
                             name={`contentPicture`}
                             component={CustomFileDrop}
                             placeholder={'ContentPicture'}
-
+                            uploadImage={uploadImage}
                         />
                         <div className="col-md-6">
                             <label>Host</label>

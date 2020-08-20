@@ -8,19 +8,21 @@ export const CustomFileDrop = ({
     DragDropCSVFile = 'Drag & drop a CSV file',
     or = 'or',
     browse = 'Browse',
-    acceptFiles = ".jpg,.png",
+    acceptFiles = ".jpeg,.png",
     toChooseaFile = "to choose a file",
     buttonText = 'SUBMIT',
     handleSubmit = () => { },
     onChange,
+    uploadImage
 }) => {
-    // const [displayContents, setDisplayContents] = useState()
-    const handleChangeStatus = ({ meta, file }, status) => {
-        // console.log('gfg', file, meta, status)
 
+    const handleChangeStatus = ({ meta, file }, status) => {
         handleSubmit({ meta, file }, status)
-        input.onChange({ meta, file }, status)
-        // onChange({ meta, file }, status)
+
+        uploadImage({ meta, file }, (response) => {
+            input.onChange(response && response.fileUrl)
+        }, () => { })
+
     }
 
     return (
@@ -37,14 +39,14 @@ export const CustomFileDrop = ({
                             </div>
                         </div>)
                 }}
-                onChange={handleChangeStatus}
+
                 onChangeStatus={handleChangeStatus}
                 onSubmit={handleSubmit}
                 maxFiles={1}
                 maxSizeBytes={25 * 1000000}
-                // submitButtonContent={() => <button className='btn btn-md btn-primary' type="button" onClick={
-                //     handleChangeStatus
-                // }>Browse</button>}
+                submitButtonContent={() => <button className='btn btn-md btn-primary' type="button" onClick={
+                    handleChangeStatus
+                }>Browse</button>}
                 accept={acceptFiles}
                 canCancel={true}
                 canRemove={true}

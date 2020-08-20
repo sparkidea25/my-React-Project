@@ -14,6 +14,7 @@ module.exports = {
     GET_SPORTS: SERVER_URL + API_VERSION + '/sports/getAllSports',
     ADD_WATCH_PARTY: SERVER_URL + API_VERSION + '/watchParty/add',
     FORGOT_PASSWORD: SERVER_URL + API_VERSION + '/admin/forgot-password',
-    RESET_PASSWORD: SERVER_URL + API_VERSION + '/admin/reset-password'
+    RESET_PASSWORD: SERVER_URL + API_VERSION + '/admin/reset-password',
+    UPLOAD_IMAGE: SERVER_URL + API_VERSION + '/uploadFile',
   }
 };
