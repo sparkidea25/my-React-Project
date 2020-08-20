@@ -15,11 +15,13 @@ export const CustomFileDrop = ({
     onChange,
     uploadImage
 }) => {
+    const buttonRef = React.createRef()
 
     const handleChangeStatus = ({ meta, file }, status) => {
         handleSubmit({ meta, file }, status)
 
-        uploadImage({ meta, file }, (response) => {
+
+        uploadImage({ file }, (response) => {
             input.onChange(response && response.fileUrl)
         }, () => { })
 
@@ -28,6 +30,7 @@ export const CustomFileDrop = ({
     return (
         <>
             <Dropzone
+                ref={buttonRef}
                 disabled={disabled}
                 inputContent={(props) => {
                     return (

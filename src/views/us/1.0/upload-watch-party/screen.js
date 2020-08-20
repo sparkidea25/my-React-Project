@@ -8,7 +8,7 @@ const { Form } = require(`../../../../components/atoms/form`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { ROUTES } = require(`../../../../shared/constants`);
 
-const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, uploadImage, handleSubmit = () => { } }) => {
+const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, getLeagues, uploadImage, getPlatforms, handleSubmit = () => { } }) => {
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
@@ -20,32 +20,38 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, upl
     const onsubmit = (credentials) => {
         console.log(credentials)
 
-        credentials.WatchParty.map(party => {
-            party.contentLength = diff_minutes(party.startTime, party.endTime)
-            party.startTime = convertToESTTimeZone(party.startTime);
-            party.endTime = convertToESTTimeZone(party.endTime);
-            party.league = party.league.value
-            party.platform = party.platform.value
-            party.sports = party.sports.value === 'Yes' ? true : false
+        if (credentials && credentials.WatchParty && credentials.WatchParty.length > 0) {
+            credentials.WatchParty.map(party => {
+                party.contentLength = diff_minutes(party.startTime, party.endTime)
+                party.startTime = convertToESTTimeZone(party.startTime);
+                party.endTime = convertToESTTimeZone(party.endTime);
+                party.league = party.league.value
+                party.platform = party.platform.value
+                party.sports = party.sports.value === 'Yes' ? true : false
 
-        })
-        // console.log(credentials.WatchParty, ' credentials.WatchParty')
-        exportWatchParty(credentials.WatchParty, (response) => {
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
-            history.push(ROUTES.WATCH_PARTY)
-        }, (error) => {
-            setSnackBarData({
-                variant: error.status ? 'success' : 'error',
-                message: error.msg
-            });
-            setOpenSnackbar(true)
-        })
+            })
+
+            // console.log(credentials.WatchParty, ' credentials.WatchParty')
+            exportWatchParty(credentials.WatchParty, (response) => {
+                setSnackBarData({
+                    variant: response.status ? 'success' : 'error',
+                    message: response.msg
+                });
+                setOpenSnackbar(true)
+                history.push(ROUTES.WATCH_PARTY)
+            }, (error) => {
+                setSnackBarData({
+                    variant: error.status ? 'success' : 'error',
+                    message: error.msg
+                });
+                setOpenSnackbar(true)
+            })
+        }
     }
-
+    useEffect(() => {
+        getLeagues(() => { }, () => { })
+        getPlatforms(() => { }, () => { })
+    }, [])
     return (
         <div class="container-fluid">
             <div class="content-panel">

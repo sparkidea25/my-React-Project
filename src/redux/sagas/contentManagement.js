@@ -22,8 +22,12 @@ const createFormData = (fileData) => {
 };
 
 function* uploadFile({ data, success, failure }) {
+
     const formData = createFormData(data);
     formData.append("file", formData);
+    for (const entry of formData.entries()) {
+        console.log(entry, 'entrey')
+    }
     try {
         yield put(startLoader());
         const response = yield postRequest({ API: `${api.URL.UPLOAD_IMAGE}`, DATA: formData });
