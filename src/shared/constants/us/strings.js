@@ -16,6 +16,8 @@ export const STRINGS = {
   SPORTS_NAME: 'sports',
   EMAIL: 'Email',
   PASSWORD: 'Password',
+  CONTENT_PICTURE: 'contentPicture',
+  PCITURE_REQUIRED: 'Cover Picture is required.',
   SAME_TIME_VALIDATION: 'Start time and End time cannot be same.',
   PASSWORD_MINLENGTH: 'Password must be of minimum 6 characters.',
   PASSWORD_SUCCESSFUL: 'Your password has been changed successfully.',

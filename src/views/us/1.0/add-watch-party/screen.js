@@ -186,7 +186,7 @@ const WatchPartyForm = ({
                         <div className="col-md-6">
                             <label className="d-none d-md-block">&nbsp;</label>
                             <Field
-                                name={`contentPicture`}
+                                name={STRINGS.CONTENT_PICTURE}
                                 component={CustomFileDrop}
                                 placeholder={'ContentPicture'}
                                 uploadImage={uploadImage}
