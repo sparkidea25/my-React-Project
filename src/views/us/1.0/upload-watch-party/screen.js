@@ -8,7 +8,7 @@ const { Form } = require(`../../../../components/atoms/form`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { ROUTES } = require(`../../../../shared/constants`);
 
-const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, handleSubmit = () => { } }) => {
+const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, uploadImage, handleSubmit = () => { } }) => {
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
@@ -56,6 +56,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, han
                 message={snackbarData.message}
             />
             <div class="page-title"><h4>Add Watch Party</h4></div>
+
             <Form onSubmit={handleSubmit(onsubmit)}>
                 <FieldArray
                     name="WatchParty"
@@ -65,11 +66,11 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, han
                     onFileChange={(file) => {
                         onFile(file)
                     }}
+                    uploadImage={uploadImage}
                 />
                 <InputSubmit buttonLabel={'Upload'} />
             </Form>
         </div>
-
     )
 }
 
