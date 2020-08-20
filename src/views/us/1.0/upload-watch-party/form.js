@@ -67,7 +67,6 @@ const UForm = (props) => {
 
     return (
         <>
-
             <div className="container-fluid">
                 <React.Fragment>
                     {
@@ -92,7 +91,6 @@ const UForm = (props) => {
                                                         component={Input}
                                                         placeholder={'Host'}
                                                         type={"text"}
-
                                                     />
                                                 </div>
                                             </div>
@@ -104,7 +102,6 @@ const UForm = (props) => {
                                                         component={Select}
                                                         options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
                                                         placeholder={'Sports'}
-
                                                     />
                                                 </div>
                                             </div>
@@ -116,7 +113,6 @@ const UForm = (props) => {
                                                         component={Select}
                                                         options={leagues}
                                                         placeholder={"League"}
-
                                                     />
                                                 </div>
                                             </div>
@@ -128,7 +124,6 @@ const UForm = (props) => {
                                                         component={Select}
                                                         options={platforms}
                                                         placeholder={'Platform'}
-
                                                     />
                                                 </div>
                                             </div>
@@ -163,7 +158,6 @@ const UForm = (props) => {
                                                                 let convertedTime = changeEndDate(startDate, value)
                                                                 setEndDate(convertedTime)
                                                             }}
-
                                                         />
                                                     </div>
                                                 </div>
