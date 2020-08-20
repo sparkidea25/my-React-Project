@@ -40,49 +40,49 @@ export const Screen = ({
                             <img src={require(`../../../../assets/img/logo.png`)} alt="SEF" width="325px" className="img-fluid" />
                         </div>
                         <FormWrapper>
-                            <div className="col-md-12">
-                                <div className="form_title text-center">
-                                    <SnackbarWrapper
-                                        visible={openSnackBar}
-                                        onClose={() => setOpenSnackbar(false)}
-                                        variant={snackbarData.variant}
-                                        message={snackbarData.message}
-                                    />
-                                    <i>
-                                        {/* <img src={emailSent ? 
+
+                            <div className="form_title text-center">
+                                <SnackbarWrapper
+                                    visible={openSnackBar}
+                                    onClose={() => setOpenSnackbar(false)}
+                                    variant={snackbarData.variant}
+                                    message={snackbarData.message}
+                                />
+                                <i>
+                                    {/* <img src={emailSent ? 
                                     require(`../../../../assets/email-sent.png`) : require(`../../../../assets/forgot.png`)} alt="" className="img-fluid" width="130px" /> */}
-                                    </i>
-                                    <h3>{emailSent ? LABELS.checkYourMail : LABELS.forgotPassword}</h3>
-                                    {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
-                                </div>
-                                {!emailSent && <><ForgotReduxForm onSubmit={(credentials) => {
-
-                                    sendForgotEmail({
-                                        email: credentials.email,
-                                    }, (response) => {
-                                        setEmailSent(true);
-
-                                    }, (response) => {
-                                        setSnackBarData({
-                                            variant: response.status ? 'success' : 'error',
-                                            message: response.msg
-                                        });
-                                        setOpenSnackbar(true)
-                                    })
-                                }} />
-                                    <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
-                                        <a href="javascript:void(0);" className="forgot_pwd">Log In?</a>
-                                    </div></>
-                                }
-                                {emailSent &&
-                                    <>
-                                        <h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Check your mail!</h3>
-                                        <p style={{ color: 'white' }}>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p>
-                                        <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
-                                            <a href="javascript:void(0);" className="forgot_pwd">Back to Login</a>
-                                        </div></>
-                                }
+                                </i>
+                                <h3>{emailSent ? LABELS.checkYourMail : LABELS.forgotPassword}</h3>
+                                {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
                             </div>
+                            {!emailSent && <><ForgotReduxForm onSubmit={(credentials) => {
+
+                                sendForgotEmail({
+                                    email: credentials.email,
+                                }, (response) => {
+                                    setEmailSent(true);
+
+                                }, (response) => {
+                                    setSnackBarData({
+                                        variant: response.status ? 'success' : 'error',
+                                        message: response.msg
+                                    });
+                                    setOpenSnackbar(true)
+                                })
+                            }} />
+                                <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
+                                    <a href="javascript:void(0);" className="forgot_pwd">Log In?</a>
+                                </div></>
+                            }
+                            {emailSent &&
+                                <>
+                                    <h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Check your mail!</h3>
+                                    <p style={{ color: 'white' }}>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p>
+                                    <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
+                                        <a href="javascript:void(0);" className="forgot_pwd">Back to Login</a>
+                                    </div></>
+                            }
+
 
                         </FormWrapper>
                     </div>

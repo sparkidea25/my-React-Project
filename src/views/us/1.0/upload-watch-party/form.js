@@ -65,8 +65,6 @@ const UForm = (props) => {
         }
     }, [startDate])
 
-
-
     return (
         <>
             <div className="container-fluid">
@@ -76,7 +74,7 @@ const UForm = (props) => {
                             return (
                                 <React.Fragment key={index + ''}>
 
-                                    <fieldset>
+                                    <fieldset className="add_formList">
                                         <div className="form-row">
                                             <div className="col-md-3 col-sm-6">
                                                 <Field
@@ -86,13 +84,14 @@ const UForm = (props) => {
                                                     type={'text'}
                                                 />
                                             </div>
-                                            <Field
-                                                name={`${member}.contentPicture`}
-                                                component={CustomFileDrop}
-                                                placeholder={'ContentPicture'}
+                                            <div className="col-md-3 col-sm-6">
+                                                <Field
+                                                    name={`${member}.contentPicture`}
+                                                    component={CustomFileDrop}
+                                                    placeholder={'ContentPicture'}
 
-                                            />
-
+                                                />
+                                            </div>
                                             <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
                                                     <Field
@@ -138,40 +137,36 @@ const UForm = (props) => {
                                             </div>
                                             <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
-                                                    <div className="col-md-12">
-                                                        <Field
-                                                            name={`${member}.${STRINGS.START_TIME}`}
-                                                            component={KeyboardDateTimePickerr}
-                                                            placeholder={'Start Time'}
-                                                            minDate={new Date()}
-                                                            minTime={new Date()}
-                                                            value={startDate}
-                                                            onChangeDate={(value) => {
-                                                                setStartDate(value)
-                                                            }}
-                                                        />
-                                                    </div>
+                                                    <Field
+                                                        name={`${member}.${STRINGS.START_TIME}`}
+                                                        component={KeyboardDateTimePickerr}
+                                                        placeholder={'Start Time'}
+                                                        minDate={new Date()}
+                                                        minTime={new Date()}
+                                                        value={startDate}
+                                                        onChangeDate={(value) => {
+                                                            setStartDate(value)
+                                                        }}
+                                                    />
                                                 </div>
                                             </div>
 
                                             <div className="col-md-3 col-sm-6">
                                                 <div className="form-group">
-                                                    <div className="col-md-12">
-                                                        <Field
-                                                            name={`${member}.${STRINGS.END_TIME}`}
-                                                            component={TimePickerInputField}
-                                                            placeholder={'End Time'}
-                                                            defaultValue={endDate}
-                                                            minTime={startDate}
-                                                            onChangeTime={value => {
-                                                                let convertedTime = changeEndDate(startDate, value)
-                                                                setEndDate(convertedTime)
-                                                            }}
-                                                        />
-                                                    </div>
+                                                    <Field
+                                                        name={`${member}.${STRINGS.END_TIME}`}
+                                                        component={TimePickerInputField}
+                                                        placeholder={'End Time'}
+                                                        defaultValue={endDate}
+                                                        minTime={startDate}
+                                                        onChangeTime={value => {
+                                                            let convertedTime = changeEndDate(startDate, value)
+                                                            setEndDate(convertedTime)
+                                                        }}
+                                                    />
                                                 </div>
                                             </div>
-                                            <div className="col-md-2 col-sm-4">
+                                            <div className="col-md-3 col-4">
                                                 <div className="form-group">
                                                     <Field
                                                         name={`${member}.${STRINGS.CONTENT_LENGTH}`}

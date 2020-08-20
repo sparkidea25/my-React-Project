@@ -24,16 +24,18 @@ const ForgotForm = ({
                 <p>Enter your email address, We will send you a link to reset your password.</p>
             </div>
             <div className="row">
-                <Field
-                    name={STRINGS.EMAIL_INPUT_NAME}
-                    component={Input}
-                    //label={STRINGS.EMAIL_LABEL}
+                <div className="col-md-12">
+                    <Field
+                        name={STRINGS.EMAIL_INPUT_NAME}
+                        component={Input}
+                        //label={STRINGS.EMAIL_LABEL}
 
-                    config={{
-                        type: "email",
-                        placeholder: STRINGS.EMAIL_PLACEHOLDER
-                    }}
-                />
+                        config={{
+                            type: "email",
+                            placeholder: STRINGS.EMAIL_PLACEHOLDER
+                        }}
+                    />
+                </div>
             </div>
             <div className="btn-full mt-4">
                 <InputSubmit buttonLabel={STRINGS.SEND_EMAIL} />

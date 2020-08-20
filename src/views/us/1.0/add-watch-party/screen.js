@@ -183,12 +183,16 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
-                        <Field
-                            name={`contentPicture`}
-                            component={CustomFileDrop}
-                            placeholder={'ContentPicture'}
+                        <div className="col-md-6">
+                            <Field
+                                name={`contentPicture`}
+                                component={CustomFileDrop}
+                                placeholder={'ContentPicture'}
+                            />
+                        </div>
+                    </div>
 
-                        />
+                    <div className="row">
                         <div className="col-md-6">
                             <label>Host</label>
                             <div className="row">
@@ -202,9 +206,6 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
-                    </div>
-
-                    <div className="row">
                         <div class="col-md-6">
                             <label>Sports </label>
                             <div className="row">
@@ -221,7 +222,9 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
+                    </div>
 
+                    <div className="row">
                         <div class="col-md-6">
                             <label>League Name</label>
                             <div className="row">
@@ -238,9 +241,6 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
-                    </div>
-
-                    <div className="row">
                         <div class="col-md-6">
                             <label>Platform </label>
                             <div className="row">
@@ -257,40 +257,43 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label>Start Time(EST).</label>
-                            <div className="form-group">
-                                <Field
-                                    name={STRINGS.START_TIME}
-                                    component={KeyboardDateTimePickerr}
-                                    placeholder={'Start Time'}
-                                    minDate={new Date()}
-                                    minTime={new Date()}
-                                    value={fields.startTime}
-                                    onChangeDate={(value) => {
-                                        onChangeField('startTime', value)
-                                    }}
-                                />
-                            </div>
-                        </div>
                     </div>
 
                     <div className="row">
                         <div class="col-md-6">
-                            {/* <div className="row"> */}
-                            <label>End Time(EST).</label>
-                            <Field
-                                name={STRINGS.END_TIME}
-                                component={TimePickerInputField}
-                                placeholder={'End Time'}
-                                defaultValue={fields.endTime}
-                                minTime={fields.startTime}
-                                onChangeTime={time => {
-                                    onChangeField('endTime', changeEndDate(fields.startTime, time))
-                                }}
+                            <div className="row">
+                                <div class="col-md-6">
+                                    <label>Start Time(EST).</label>
+                                    <div className="form-group">
+                                        <Field
+                                            name={STRINGS.START_TIME}
+                                            component={KeyboardDateTimePickerr}
+                                            placeholder={'Start Time'}
+                                            minDate={new Date()}
+                                            minTime={new Date()}
+                                            value={fields.startTime}
+                                            onChangeDate={(value) => {
+                                                onChangeField('startTime', value)
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    {/* <div className="row"> */}
+                                    <label>End Time(EST).</label>
+                                    <Field
+                                        name={STRINGS.END_TIME}
+                                        component={TimePickerInputField}
+                                        placeholder={'End Time'}
+                                        defaultValue={fields.endTime}
+                                        minTime={fields.startTime}
+                                        onChangeTime={time => {
+                                            onChangeField('endTime', changeEndDate(fields.startTime, time))
+                                        }}
 
-                            />
-
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label>Length</label>
@@ -308,9 +311,10 @@ const WatchPartyForm = ({
                                 />
                             </div>
                         </div>
-                    </div>
-                    <div className="btn_group text-center">
-                        <InputSubmit buttonLabel={'Add Watch Party'} />
+
+                        <div className="btn_group text-center">
+                            <InputSubmit buttonLabel={'Add Watch Party'} />
+                        </div>
                     </div>
                 </Form>
             </div>

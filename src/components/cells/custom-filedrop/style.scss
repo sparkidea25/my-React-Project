@@ -1,5 +1,5 @@
 @import '../../../theme/base.scss';
-.drag_drop_option {
+.drag_drop_option {    
     i {
         max-width:70px;
         min-width:50px;
@@ -8,6 +8,16 @@
             max-width: 100%;
         }
     }
+}
+.add_formList {
+    .dzu-dropzone {
+        min-width: 100%;
+    }
+    .upload_btn {    
+        min-width:initial;
+        width: 100%;
+        font-size:15px;
+    }    
 }
 .upload_btn {    
     text-align: center;
@@ -21,6 +31,7 @@
     font-weight: $f-medium;
     min-height:40px;
     min-width:230px;    
+    padding:0 15px;
 }
 
 .dropzone-div{
@@ -181,9 +192,9 @@
 .dzu-dropzone {    
     min-width: 350px;
     overflow: hidden;
-    @include align-items(flex-start);    
     border: 0;   
-    min-height: 90px;
+    min-height: 70px;
+    @include align-items(flex-start);    
     .dzu-input {
         display: $none;
     }
@@ -196,24 +207,27 @@
 }
 
 .dzu-previewContainer {
-    padding:20px 40px 20px 20px;
+    padding:10px 40px 10px 12px;
     min-height: initial;
     max-width:100%;
     position: relative;
-    border:1px solid #ccc;
+    border:1px solid #e5e5e5;
     border-radius: 10px;
     @media (max-width:767px){
         width:100%;
     }
     .dzu-previewImage {
-        width:100%;
+        width:20px;
         max-height: initial;
         max-width: initial;
+    }
+    + .dzu-submitButtonContainer {
+        display: none;
     }
     .dzu-previewStatusContainer{    
         position: $absolute;
         right:14px;
-        top:15px;
+        top:10px;
         width: 30px;
         height:30px;
         border-radius: 30px;

@@ -14,14 +14,14 @@ export const Select = ({
   isSearchable = false,
   placeholder
 }) => {
-  widthStyle = widthStyle ? widthStyle : "col-md-12";
+  widthStyle = widthStyle ? widthStyle : "";
   const validationSpan =
     touched && error ? (
       <span className="error_msg text-danger">{error}</span>
     ) : null;
 
   return (
-    <div className={widthStyle}>
+    <>
       {label && <label>{label}</label>}
       <div className="form-group">
         <ReactSelect
@@ -53,6 +53,6 @@ export const Select = ({
           <option value={option}>{option}</option>
         ))}
       </select> */}
-    </div>
+    </>
   );
 };
