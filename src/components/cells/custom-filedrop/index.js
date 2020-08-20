@@ -44,9 +44,9 @@ export const CustomFileDrop = ({
                 onSubmit={handleSubmit}
                 maxFiles={1}
                 maxSizeBytes={25 * 1000000}
-                submitButtonContent={() => <button className='btn btn-md btn-primary' type="button" onClick={
-                    handleChangeStatus
-                }>Browse</button>}
+                // submitButtonContent={() => <button className='btn btn-md btn-primary' type="button" onClick={
+                //     handleChangeStatus
+                // }>Browse</button>}
                 accept={acceptFiles}
                 canCancel={true}
                 canRemove={true}

@@ -33,19 +33,19 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
         }
 
         resetPassword(data, (response) => {
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
+            // setSnackBarData({
+            //     variant: response.status ? 'success' : 'error',
+            //     message: response.msg
+            // });
+            // setOpenSnackbar(true)
             changePasswordIsSet(true)
         }, (response) => {
-            console.log('error', response)
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
+
+            // setSnackBarData({
+            //     variant: response.status ? 'success' : 'error',
+            //     message: response.msg
+            // });
+            // setOpenSnackbar(true)
         })
     }
     return (
