@@ -69,14 +69,16 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                                 <p>{STRINGS.PASSWORD_RESPONSE_MESSAGE}</p>
                             </div>
                             <div className="row">
-                                <Field
-                                    name={STRINGS.PASSWORD_INPUT_NAME}
-                                    component={Input}
-                                    config={{
-                                        type: "password",
-                                        placeholder: STRINGS.PASSWORD_PLACEHOLDER
-                                    }}
-                                />
+                                <div className="col-md-12">
+                                    <Field
+                                        name={STRINGS.PASSWORD_INPUT_NAME}
+                                        component={Input}
+                                        config={{
+                                            type: "password",
+                                            placeholder: STRINGS.PASSWORD_PLACEHOLDER
+                                        }}
+                                    />
+                                </div>
                             </div>
                             <div className="btn-full mt-4">
                                 <InputSubmit buttonLabel={STRINGS.RESET_PASSWORD} />
