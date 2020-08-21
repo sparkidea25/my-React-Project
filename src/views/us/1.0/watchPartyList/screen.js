@@ -216,10 +216,11 @@ export const Screen = ({ listWatchParty, history,
         if (new Date(fields.endTime) < new Date(currTime)) {
             error['endTime'] = VALIDATION_MESSAGES.END_TIME_SHOUDLD_NOT_BE_IN_PAST
         }
+        console.log('same start time', new Date(fields.endTime), new Date(fields.time), diff_minutes(fields.time, fields.endTime))
         if (diff_minutes(fields.time, fields.endTime) == 0) {
             error['endTime'] = VALIDATION_MESSAGES.SAME_TIME_VALIDATION
         }
-        console.log('before start time', new Date(fields.endTime), new Date(fields.time))
+
 
         if (new Date(fields.endTime) < new Date(fields.time)) {
 

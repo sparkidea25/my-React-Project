@@ -32,6 +32,10 @@ const UForm = (props) => {
     }, [allLeagues])
 
     useEffect(() => {
+        fields.push({})
+    }, [])
+
+    useEffect(() => {
         let arr = []
 
         allPlatforms && allPlatforms.map(platform => {
@@ -82,6 +86,7 @@ const UForm = (props) => {
                                                     component={Input}
                                                     placeholder={'Show'}
                                                     type={'text'}
+
                                                 />
                                             </div>
                                             <div className="col-md-3 col-sm-6">
@@ -90,6 +95,7 @@ const UForm = (props) => {
                                                     component={CustomFileDrop}
                                                     placeholder={'ContentPicture'}
                                                     uploadImage={uploadImage}
+
                                                 />
                                             </div>
                                             <div className="col-md-3 col-sm-6">
@@ -201,7 +207,7 @@ const UForm = (props) => {
             </div>
             <div className="row">
                 <div className="col-md-12 text-right">
-                    <button className="btn btn-lg btn-secondary btn-radius" onClick={() => addRow()}><i>+</i> Add New </button>
+                    <button type='button' className="btn btn-lg btn-secondary btn-radius" onClick={() => addRow()}><i>+</i> Add New </button>
                 </div>
             </div>
         </>

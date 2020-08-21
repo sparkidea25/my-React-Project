@@ -73,7 +73,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                                     name={STRINGS.PASSWORD_INPUT_NAME}
                                     component={Input}
                                     config={{
-                                        type: "email",
+                                        type: "password",
                                         placeholder: STRINGS.PASSWORD_PLACEHOLDER
                                     }}
                                 />

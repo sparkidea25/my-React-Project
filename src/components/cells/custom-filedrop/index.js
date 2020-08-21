@@ -6,6 +6,7 @@ export const CustomFileDrop = ({
     input,
     disabled,
     DragDropCSVFile = 'Drag & drop a CSV file',
+    meta: { touched, error },
     or = 'or',
     browse = 'Browse',
     acceptFiles = ".jpeg,.png",
@@ -16,15 +17,22 @@ export const CustomFileDrop = ({
     uploadImage
 }) => {
     const buttonRef = React.createRef()
+    const validationSpan =
+        touched && error ? (
+            <span className="error_msg text-danger">{error}</span>
+        ) : null;
 
     const handleChangeStatus = ({ meta, file }, status) => {
+        console.log({ meta, file })
         handleSubmit({ meta, file }, status)
 
-
-        uploadImage({ file }, (response) => {
-            input.onChange(response && response.fileUrl)
-        }, () => { })
-
+        if (status === 'done') {
+            uploadImage({ file }, (response) => {
+                input.onChange(response && response.fileUrl)
+            }, () => { })
+        } else if (status === 'removed') {
+            input.onChange("")
+        }
     }
 
     return (
@@ -55,6 +63,7 @@ export const CustomFileDrop = ({
                 canRemove={true}
 
             />
+            {validationSpan}
         </>
     )
 }

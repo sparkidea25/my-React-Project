@@ -70,6 +70,9 @@ const validator = values => {
             partyErrors.endTime =
                 VALIDATION_MESSAGES.SELECT_START_TIME_FIRST;
         }
+        if (!party.contentPicture) {
+            partyErrors.contentPicture = VALIDATION_MESSAGES.PCITURE_REQUIRED;
+        }
     })
 
     if (partyArrayErrors.length) {

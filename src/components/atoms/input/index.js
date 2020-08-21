@@ -8,6 +8,7 @@ export const Input = ({
   placeholder,
   widthStyle,
   style,
+  maxLength,
   data,
   ...props
 }) => {
@@ -30,7 +31,7 @@ export const Input = ({
           input.onChange(value);
         }}
         // value={data}
-        maxLength={60}
+        maxLength={maxLength}
         autoComplete='off' />
       {validationSpan}
     </div>

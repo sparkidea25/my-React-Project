@@ -4,7 +4,8 @@ export const diff_minutes = (dt2, dt1) => {
     dt1 = new Date(dt1)
     var diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60;
-    return Math.abs(Math.round(diff));
+    console.log(diff, 'diff')
+    return Math.abs(diff) < 1 ? 0 : Math.abs(Math.round(diff));
 }
 
 export const calculateCurrentTimeInEst = () => {
