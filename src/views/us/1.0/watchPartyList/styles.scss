@@ -103,7 +103,7 @@ input[type="time"]::-webkit-inner-spin-button {
     }
 }
 
-.remove_row {
+.remove_row, .add_row  {
     cursor: pointer;
     padding-top: 9px;
 }
