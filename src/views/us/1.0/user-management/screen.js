@@ -3,8 +3,10 @@ import "./style.scss";
 import { ADMIN_TABLE_HEADINGS } from "../../../../shared/constants";
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
+import { DecisionPopup } from "../../../../components/atoms/decision-popup";
+import { STRINGS } from "../../../../shared/constants/us/strings";
 
-export const Screen = ({ admins, users }) => {
+export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   const [adminsListing, set_adminsListing] = useState([]);
   const [usersListing, set_usersListing] = useState([]);
   const [adminTotalCount, set_adminTotalCount] = useState(0);
@@ -13,22 +15,77 @@ export const Screen = ({ admins, users }) => {
   const [usersTableIndex, set_usersTableIndex] = useState(0);
   const [showLimit, set_showLimit] = useState(5);
 
-  useEffect(() => {
-    set_usersListing(
-      users.slice(
-        usersTableIndex * showLimit,
-        usersTableIndex * showLimit + showLimit
+  const adminListApi = (data, response) => {
+    let postData = Object.keys(data)
+      .map(
+        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
       )
+      .join("&");
+    listAdmins(
+      data,
+      (resp) => {
+        response(resp);
+      },
+      () => {}
     );
-    set_usersTotalCount(users.length);
-  }, [usersTableIndex]);
+  };
+
+  const userListApi = (data, response) => {
+    let postData = Object.keys(data)
+      .map(
+        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
+      )
+      .join("&");
+    listUsers(
+      data,
+      (resp) => {
+        response(resp);
+      },
+      () => {}
+    );
+  };
 
   useEffect(() => {
-    set_usersListing(
-      users.slice(
-        usersTableIndex * showLimit,
-        usersTableIndex * showLimit + showLimit
-      )
+    adminListApi(
+      { skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2 },
+      (response) => {
+        set_adminsListing(response.adminListing);
+        set_adminTotalCount(response.totalCount);
+      }
+    );
+    userListApi(
+      { skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3 },
+      (response) => {
+        set_usersListing(response.userListing);
+        set_usersTotalCount(response.totalCount);
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    adminListApi(
+      {
+        skip: adminsTableIndex * STRINGS.SHOW_LIMIT,
+        limit: adminsTableIndex * STRINGS.SHOW_LIMIT + STRINGS.SHOW_LIMIT,
+        filter: 2,
+      },
+      (response) => {
+        set_adminsListing(response.adminListing);
+      }
+    );
+  }, [adminsTableIndex]);
+
+  useEffect(() => {
+    userListApi(
+      {
+        skip: usersTableIndex * showLimit,
+        limit: usersTableIndex * showLimit + showLimit,
+        filter: 3,
+      },
+      (response) => {
+        set_usersListing(response.userListing);
+        set_usersTotalCount(response.totalCount);
+      }
     );
   }, [usersTableIndex]);
 
@@ -38,13 +95,44 @@ export const Screen = ({ admins, users }) => {
     message: "",
   });
 
+  const [openPopup, set_openPopup] = useState(false);
+  const [userToRemove, set_userToRemove] = useState("");
+
   const removeUser = (username) => {
-      //function for remove user api
-      set_snackBarData({
-          variant: 'success',
-          message: username
-      });
-      set_openSnackbar(true);
+    //function for remove user api
+    removeUserAction(
+      username,
+      (response) => {
+        set_snackBarData({
+          variant: response.status ? "success" : "error",
+          message: response.msg,
+        });
+        set_openSnackbar(true);
+        if (usersTotalCount <= usersTableIndex * showLimit + 1) {
+          set_usersTableIndex(usersTableIndex - 1);
+        } else {
+          userListApi(
+            {
+              skip: usersTableIndex * showLimit,
+              limit: usersTableIndex * showLimit + showLimit,
+              filter: 3,
+            },
+            (response) => {
+              set_usersListing(response.userListing);
+              set_usersTotalCount(response.totalCount);
+            }
+          );
+        }
+      },
+      (error) => {
+        set_snackBarData({
+          variant: error.status ? "error" : "error",
+          message: error.msg,
+        });
+        set_openSnackbar(true);
+      }
+    );
+    set_userToRemove("");
   };
 
   return (
@@ -54,6 +142,23 @@ export const Screen = ({ admins, users }) => {
         onClose={() => set_openSnackbar(false)}
         variant={snackbarData.variant}
         message={snackbarData.message}
+      />
+
+      <DecisionPopup
+        modalVisibility={openPopup}
+        dialogContent={`Click confirm to remove user : ${userToRemove}`}
+        dialogTitle={"Remove User"}
+        confirmButtonTitle={STRINGS.CONFIRM}
+        rejectButtonTitle={STRINGS.CANCEL}
+        toggleDialogModal={() => set_openPopup(!openPopup)}
+        onConfirmation={() => {
+          removeUser(userToRemove);
+          set_openPopup(false);
+        }}
+        onRejection={() => {
+          set_openPopup(false);
+          set_userToRemove("");
+        }}
       />
 
       <div className="content-panel">
@@ -80,26 +185,50 @@ export const Screen = ({ admins, users }) => {
                 </tr>
               </thead>
               <tbody>
-                {admins.length
-                  ? admins.map((admin, ind) => (
-                      <tr key={ind}>
-                        <td>
-                          {ind + 1}. {admin.first_name}
-                        </td>
-                        <td>{admin.last_name}</td>
-                        <td>{admin.username}</td>
-                        <td>{admin.email}</td>
-                        <td>{admin.phone}</td>
-                        <td>{admin.home_town}</td>
-                        <td>{admin.time_zone}</td>
-                        <td>{admin.age}</td>
-                        <td>{admin.date_added}</td>
-                        <td>{admin.last_active}</td>
-                      </tr>
-                    ))
-                  : null}
+                {adminsListing.length ? (
+                  adminsListing.map((admin, ind) => (
+                    <tr key={ind}>
+                      <td>
+                        {adminsTableIndex * showLimit + ind + 1}.{" "}
+                        {admin.first_name}
+                      </td>
+                      <td>{admin.last_name}</td>
+                      <td>{admin.username}</td>
+                      <td>{admin.email}</td>
+                      <td>{admin.phone}</td>
+                      <td>{admin.home_town}</td>
+                      <td>{admin.time_zone}</td>
+                      <td>{admin.age}</td>
+                      <td>{admin.date_added}</td>
+                      <td>{admin.last_active}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      style={{
+                        color: "#4D4D4F",
+                        fontSize: 16,
+                        fontWeight: "600",
+                      }}
+                    >
+                      Sorry, something went wrong.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
+            {adminsListing.length ? (
+              <CustomPagination
+                limit={showLimit}
+                totalPages={adminTotalCount}
+                itemsCount={adminsListing && adminsListing.length}
+                currentPage={adminsTableIndex + 1}
+                onPageChange={(value) => {
+                  set_adminsTableIndex(value.selected);
+                }}
+              />
+            ) : null}
           </div>
         </div>
 
@@ -119,7 +248,7 @@ export const Screen = ({ admins, users }) => {
                 </tr>
               </thead>
               <tbody>
-                {users.length ? (
+                {usersListing.length ? (
                   usersListing.map((user, ind) => (
                     <tr key={ind}>
                       <td>
@@ -138,7 +267,10 @@ export const Screen = ({ admins, users }) => {
                       <td>
                         <button
                           className="btn btn-primary"
-                          onClick={()=>removeUser(user.username)}
+                          onClick={() => {
+                            set_userToRemove(user.username);
+                            set_openPopup(true);
+                          }}
                         >
                           Remove
                         </button>
@@ -147,13 +279,21 @@ export const Screen = ({ admins, users }) => {
                   ))
                 ) : (
                   <tr>
-                    <td>No Users found.</td>
+                    <td
+                      style={{
+                        color: "#4D4D4F",
+                        fontSize: 16,
+                        fontWeight: "600",
+                      }}
+                    >
+                      No Users found.
+                    </td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
-          {users.length ? (
+          {usersListing.length ? (
             <CustomPagination
               limit={showLimit}
               totalPages={usersTotalCount}
