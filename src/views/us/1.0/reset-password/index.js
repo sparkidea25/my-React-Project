@@ -3,7 +3,6 @@ import { Screen } from "./screen";
 const { resetPassword } = require(`../../../../redux/actions`);
 
 const mapStateToProps = (state) => {
-
     return ({
         userToken: state.CommonReducer.userToken
     });

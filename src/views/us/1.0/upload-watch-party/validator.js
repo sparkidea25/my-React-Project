@@ -44,40 +44,46 @@ const validator = values => {
             partyArrayErrors[partyIndex] = partyErrors
         }
         if (party.startTime && party.endTime) {
-            console.log(party.endTime, party.startTime, '<')
-            if (party.endTime < party.startTime) {
+
+            let timediff = diff_minutes(new Date(party.startTime), new Date(party.endTime))
+
+            if (new Date(party.endTime) < new Date(party.startTime)) {
                 partyErrors.endTime = VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD;
-            } else {
-                let timediff = diff_minutes(party.startTime, party.endTime)
-                if (timediff == 0) {
-                    partyErrors.endTime = VALIDATION_MESSAGES.SAME_TIME_VALIDATION;
-                }
+                partyArrayErrors[partyIndex] = partyErrors
+            } else if (timediff == 0) {
+                partyErrors.endTime = VALIDATION_MESSAGES.SAME_TIME_VALIDATION;
+                partyArrayErrors[partyIndex] = partyErrors
             }
         }
         if (party.startTime) {
             let pickedTime = party.startTime
             if (new Date(pickedTime) < new Date(currentTime)) {
                 partyErrors.startTime = VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST;
+                partyArrayErrors[partyIndex] = partyErrors
             }
         }
         if (party.endTime) {
             let pickedTime = party.endTime
             if (new Date(pickedTime) < new Date(currentTime)) {
                 partyErrors.endTime = VALIDATION_MESSAGES.END_TIME_SHOUDLD_NOT_BE_IN_PAST;
+                partyArrayErrors[partyIndex] = partyErrors
             }
         }
         if (!party.startTime && party.endTime) {
             partyErrors.endTime =
                 VALIDATION_MESSAGES.SELECT_START_TIME_FIRST;
+            partyArrayErrors[partyIndex] = partyErrors
         }
         if (!party.contentPicture) {
             partyErrors.contentPicture = VALIDATION_MESSAGES.PCITURE_REQUIRED;
+            partyArrayErrors[partyIndex] = partyErrors
         }
     })
 
     if (partyArrayErrors.length) {
         errors.WatchParty = partyArrayErrors;
     }
+
     return errors
 };
 

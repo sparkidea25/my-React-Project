@@ -13,7 +13,7 @@ const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop
 
 const UForm = (props) => {
 
-    const { fields, name, removeSelected, allPlatforms, allLeagues, onFileChange, uploadImage } = props
+    const { fields, name, allPlatforms, allLeagues, uploadImage } = props
 
     const [leagues, setLeagues] = useState([])
     const [platforms, setPlatforms] = useState([])

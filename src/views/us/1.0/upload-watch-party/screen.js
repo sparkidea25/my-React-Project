@@ -6,7 +6,7 @@ const { UploadForm } = require('./form')
 const { onSubmitFail, convertToESTTimeZone, diff_minutes } = require(`../../../../helpers`);
 const { Form } = require(`../../../../components/atoms/form`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
-const { ROUTES } = require(`../../../../shared/constants`);
+const { ROUTES, PAGE_TITLES } = require(`../../../../shared/constants`);
 
 const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, getLeagues, uploadImage, getPlatforms, handleSubmit = () => { } }) => {
     const [openSnackBar, setOpenSnackbar] = useState(false);
@@ -15,10 +15,8 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
         message: ''
     });
 
-    const [file, onFile] = useState(null)
 
     const onsubmit = (credentials) => {
-        console.log(credentials)
 
         if (credentials && credentials.WatchParty && credentials.WatchParty.length > 0) {
             credentials.WatchParty.map(party => {
@@ -31,7 +29,6 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
 
             })
 
-            // console.log(credentials.WatchParty, ' credentials.WatchParty')
             exportWatchParty(credentials.WatchParty, (response) => {
                 setSnackBarData({
                     variant: response.status ? 'success' : 'error',
@@ -61,7 +58,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
                     variant={snackbarData.variant}
                     message={snackbarData.message}
                 />
-                <div class="page-title"><h4>Add Watch Party</h4></div>
+                <div class="page-title"><h4>{PAGE_TITLES.ADD_WATCH_PARTY}</h4></div>
 
                 <Form onSubmit={handleSubmit(onsubmit)}>
                     <FieldArray
@@ -69,9 +66,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
                         component={UploadForm}
                         allLeagues={allLeagues}
                         allPlatforms={allPlatforms}
-                        onFileChange={(file) => {
-                            onFile(file)
-                        }}
+
                         uploadImage={uploadImage}
                     />
                     <InputSubmit buttonLabel={'Upload'} />

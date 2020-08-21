@@ -13,7 +13,7 @@ const { Input } = require(`../../../../components/atoms/input`);
 const { onSubmitFail } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`);
 const {
-    ROUTES
+    ROUTES, PAGE_TITLES
 } = require(`../../../../shared/constants`);
 
 const ResetScreen = ({ handleSubmit, resetPassword }) => {
@@ -26,6 +26,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
     const parsed = queryString.parse(history.location.search)
 
     const [passwordIsSet, changePasswordIsSet] = useState(false)
+
     const onSubmit = (credentials) => {
         let data = {
             password: credentials.password,
@@ -33,19 +34,15 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
         }
 
         resetPassword(data, (response) => {
-            // setSnackBarData({
-            //     variant: response.status ? 'success' : 'error',
-            //     message: response.msg
-            // });
-            // setOpenSnackbar(true)
-            changePasswordIsSet(true)
-        }, (response) => {
 
-            // setSnackBarData({
-            //     variant: response.status ? 'success' : 'error',
-            //     message: response.msg
-            // });
-            // setOpenSnackbar(true)
+            changePasswordIsSet(true)
+        }, (error) => {
+            setSnackBarData({
+                variant: error.status ? 'success' : 'error',
+                message: error.msg
+            });
+            setOpenSnackbar(true)
+
         })
     }
     return (
@@ -65,7 +62,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                         {!passwordIsSet ? <Form onSubmit={
                             handleSubmit(onSubmit)}>
                             <div className="text-center forgot_info">
-                                <h4>Reset Password</h4>
+                                <h4>{PAGE_TITLES.RESET_PASSWORD}</h4>
                                 <p>{STRINGS.PASSWORD_RESPONSE_MESSAGE}</p>
                             </div>
                             <div className="row">
@@ -83,10 +80,10 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                             </div>
                         </Form>
 
-                            : <><h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Congratulations!</h3>
+                            : <><h3 className="d-block text-center pt-3" style={{ color: 'white' }}>{STRINGS.CONGRATULATIONS}</h3>
                                 <p style={{ color: 'white' }}>{STRINGS.PASSWORD_SUCCESSFUL}</p>
                                 <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
-                                    <a href="javascript:void(0);" className="forgot_pwd">Go to Login</a>
+                                    <a href="javascript:void(0);" className="forgot_pwd">{STRINGS.GO_TO_LOGIN}</a>
                                 </div></>
                         }
 

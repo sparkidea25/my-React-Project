@@ -10,7 +10,8 @@ export const LABELS = {
 
 export const PAGE_TITLES = {
   // dashboard: STRINGS.DASHBOARD_PAGE_TITLE,
-
+  ADD_WATCH_PARTY: 'Add Watch Party',
+  RESET_PASSWORD: 'Reset Password'
 }
 
 export const KEY_CODES = {

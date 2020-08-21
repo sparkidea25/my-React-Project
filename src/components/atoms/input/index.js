@@ -31,7 +31,7 @@ export const Input = ({
           input.onChange(value);
         }}
         // value={data}
-        maxLength={maxLength}
+        maxLength={50}
         autoComplete='off' />
       {validationSpan}
     </div>
