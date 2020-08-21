@@ -68,7 +68,7 @@
     border-color: $primary-color;
     outline: $none ;
   } 
-.previous, .next {
+.previous, .next  {
     &.disabled {
         @include opacity(.5); 
         pointer-events: $none;
@@ -81,4 +81,6 @@
         }
     }
 }
+
+
 

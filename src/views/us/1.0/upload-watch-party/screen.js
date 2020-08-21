@@ -23,7 +23,10 @@ const UploadScreen = ({ allPlatforms, values, history, exportWatchParty, allLeag
     const onsubmit = (credentials) => {
 
         if (credentials && credentials.WatchParty && credentials.WatchParty.length > 0) {
+
             credentials.WatchParty.map(party => {
+                // console.log(party.startTime)
+                // console.log(party.endTime)
                 party.contentLength = diff_minutes(party.startTime, party.endTime)
                 party.startTime = convertToESTTimeZone(party.startTime);
                 party.endTime = convertToESTTimeZone(party.endTime);
@@ -33,20 +36,20 @@ const UploadScreen = ({ allPlatforms, values, history, exportWatchParty, allLeag
 
             })
 
-            // exportWatchParty(credentials.WatchParty, (response) => {
-            //     setSnackBarData({
-            //         variant: response.status ? 'success' : 'error',
-            //         message: response.msg
-            //     });
-            //     setOpenSnackbar(true)
-            //     history.push(ROUTES.WATCH_PARTY)
-            // }, (error) => {
-            //     setSnackBarData({
-            //         variant: error.status ? 'success' : 'error',
-            //         message: error.msg
-            //     });
-            //     setOpenSnackbar(true)
-            // })
+            exportWatchParty(credentials.WatchParty, (response) => {
+                setSnackBarData({
+                    variant: response.status ? 'success' : 'error',
+                    message: response.msg
+                });
+                setOpenSnackbar(true)
+                history.push(ROUTES.WATCH_PARTY)
+            }, (error) => {
+                setSnackBarData({
+                    variant: error.status ? 'success' : 'error',
+                    message: error.msg
+                });
+                setOpenSnackbar(true)
+            })
         }
     }
     useEffect(() => {
