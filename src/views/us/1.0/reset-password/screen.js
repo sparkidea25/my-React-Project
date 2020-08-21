@@ -83,11 +83,13 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                             </div>
                         </Form>
 
-                            : <><h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Congratulations!</h3>
+                            : <div className="form_title text-center">
+                                <h4 className="d-block text-center pt-3" style={{ color: 'white' }}>Congratulations!</h4>
                                 <p style={{ color: 'white' }}>{STRINGS.PASSWORD_SUCCESSFUL}</p>
                                 <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
                                     <a href="javascript:void(0);" className="forgot_pwd">Go to Login</a>
-                                </div></>
+                                </div>
+                            </div>
                         }
 
                     </div>

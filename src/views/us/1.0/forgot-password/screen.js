@@ -52,7 +52,7 @@ export const Screen = ({
                                     {/* <img src={emailSent ? 
                                     require(`../../../../assets/email-sent.png`) : require(`../../../../assets/forgot.png`)} alt="" className="img-fluid" width="130px" /> */}
                                 </i>
-                                <h3>{emailSent ? LABELS.checkYourMail : LABELS.forgotPassword}</h3>
+                                <h4>{emailSent ? LABELS.checkYourMail : LABELS.forgotPassword}</h4>
                                 {emailSent ? <p>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p> : <p>{STRINGS.SHARE_EMAIL_MESSAGE}</p>}
                             </div>
                             {!emailSent && <><ForgotReduxForm onSubmit={(credentials) => {
@@ -76,11 +76,14 @@ export const Screen = ({
                             }
                             {emailSent &&
                                 <>
-                                    <h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Check your mail!</h3>
-                                    <p style={{ color: 'white' }}>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p>
-                                    <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
-                                        <a href="javascript:void(0);" className="forgot_pwd">Back to Login</a>
-                                    </div></>
+                                    <div className="forgot_info text-center">
+                                        <h4 className="d-block text-center pt-3" style={{ color: 'white' }}>Check your mail!</h4>
+                                        <p style={{ color: 'white' }}>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p>
+                                        <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
+                                            <a href="javascript:void(0);" className="forgot_pwd">Back to Login</a>
+                                        </div>
+                                    </div>
+                                </>
                             }
 
 
