@@ -76,11 +76,14 @@ export const Screen = ({
                             }
                             {emailSent &&
                                 <>
-                                    <h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Check your mail!</h3>
-
-                                    <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
-                                        <a href="javascript:void(0);" className="forgot_pwd">Back to Login</a>
-                                    </div></>
+                                    <div className="forgot_info text-center">
+                                        <h4 className="d-block text-center pt-3" style={{ color: 'white' }}>Check your mail!</h4>
+                                        <p style={{ color: 'white' }}>{STRINGS.EMAIL_RESPONSE_MESSAGE}</p>
+                                        <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
+                                            <a href="javascript:void(0);" className="forgot_pwd">Back to Login</a>
+                                        </div>
+                                    </div>
+                                </>
                             }
 
 
