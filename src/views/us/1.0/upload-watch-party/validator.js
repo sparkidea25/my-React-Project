@@ -6,6 +6,7 @@ const validator = values => {
     var errors = {};
     var currentTime = calculateCurrentTimeInEst()
     const partyArrayErrors = [];
+    // console.log(values && values.WatchParty, 'check validations')
     values && values.WatchParty && values.WatchParty.forEach((party, partyIndex) => {
         const partyErrors = {};
 

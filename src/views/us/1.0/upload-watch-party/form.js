@@ -13,14 +13,14 @@ const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop
 
 const UForm = (props) => {
 
-    const { fields, name, allPlatforms, allLeagues, uploadImage } = props
+    const { fields, name, allPlatforms, allLeagues, uploadImage, values } = props
 
     const [leagues, setLeagues] = useState([])
     const [platforms, setPlatforms] = useState([])
 
     const [startDate, setStartDate] = useState(null)
     const [endDate, setEndDate] = useState(null)
-    const [contentLength, setContentLength] = useState(0)
+    const [contentLength, setContentLength] = useState({})
 
     useEffect(() => {
         let arr = []
@@ -47,27 +47,29 @@ const UForm = (props) => {
 
     const addRow = () => {
         fields.push({})
-        setEndDate(null)
-        setContentLength(null)
     }
 
-    useEffect(() => {
-        let min = diff_minutes(startDate, endDate)
-        setContentLength(min)
-    }, [endDate])
-    useEffect(() => {
-        let min = diff_minutes(startDate, endDate)
-        setContentLength(min)
-    }, [startDate])
+    // useEffect(() => {
+    //     let min = diff_minutes(startDate, endDate)
+    //     setContentLength(min)
+    // }, [endDate])
+    // useEffect(() => {
+    //     let min = diff_minutes(startDate, endDate)
+    //     setContentLength(min)
+    // }, [startDate])
 
     const onDeleteRow = (index) => {
         fields.remove(index)
     }
+    // useEffect(() => {
+    //     if (endDate !== null) {
+    //         setEndDate(null)
+    //     }
+    // }, [startDate])
     useEffect(() => {
-        if (endDate !== null) {
-            setEndDate(null)
-        }
-    }, [startDate])
+        console.log(endDate, 'values')
+    }, [endDate])
+
 
     return (
         <>
@@ -149,9 +151,12 @@ const UForm = (props) => {
                                                     placeholder={'Start Time(EST.)'}
                                                     minDate={new Date()}
                                                     minTime={new Date()}
-                                                    value={startDate}
+                                                    value={startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate[`${member}.${STRINGS.START_TIME}`] : null}
                                                     onChangeDate={(value) => {
-                                                        setStartDate(value)
+                                                        if (endDate && endDate[`${member}.${STRINGS.END_TIME}`]) {
+                                                            setEndDate({ ...endDate, [`${member}.${STRINGS.END_TIME}`]: null })
+                                                        }
+                                                        setStartDate({ ...startDate, [`${member}.${STRINGS.START_TIME}`]: value })
                                                     }}
                                                 />
                                             </div>
@@ -163,11 +168,17 @@ const UForm = (props) => {
                                                     name={`${member}.${STRINGS.END_TIME}`}
                                                     component={TimePickerInputField}
                                                     placeholder={'End Time(EST.)'}
-                                                    defaultValue={endDate}
-                                                    minTime={startDate}
+                                                    defaultValue={endDate && endDate[`${member}.${STRINGS.END_TIME}`] ? endDate[`${member}.${STRINGS.END_TIME}`] : null}
+                                                    minTime={startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate[`${member}.${STRINGS.START_TIME}`] : null}
                                                     onChangeTime={value => {
-                                                        let convertedTime = changeEndDate(startDate, value)
-                                                        setEndDate(convertedTime)
+                                                        let convertedTime = changeEndDate(startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate && startDate[`${member}.${STRINGS.START_TIME}`] : new Date(), value)
+
+                                                        setEndDate({ ...endDate, [`${member}.${STRINGS.END_TIME}`]: convertedTime })
+                                                        if (startDate && startDate[`${member}.${STRINGS.START_TIME}`]) {
+
+                                                            let min = diff_minutes(startDate[`${member}.${STRINGS.START_TIME}`], convertedTime)
+                                                            setContentLength({ ...contentLength, [`${member}.${STRINGS.CONTENT_LENGTH}`]: min })
+                                                        }
                                                     }}
                                                 />
                                             </div>
@@ -178,11 +189,10 @@ const UForm = (props) => {
                                                     name={`${member}.${STRINGS.CONTENT_LENGTH}`}
                                                     component={Input}
                                                     placeholder={'Content Length'}
-                                                    value={contentLength}
                                                     config={{
                                                         type: 'number',
                                                         readOnly: true,
-                                                        value: contentLength
+                                                        value: contentLength && contentLength[`${member}.${STRINGS.CONTENT_LENGTH}`] ? contentLength[`${member}.${STRINGS.CONTENT_LENGTH}`] : 0
                                                     }}
                                                 />
                                             </div>
@@ -190,9 +200,9 @@ const UForm = (props) => {
                                         <div className="col-md-2">
                                             <div className="d-flex">
                                                 <button type='button' className="btn add_row btn-transparent" onClick={() => addRow()}><img src={require('../../../../assets/img/icons/add_icon.svg')} width="24px" /></button>
-                                                <div className="remove_row" onClick={() => onDeleteRow(index)}>
+                                                {index > 0 ? <div className="remove_row" onClick={() => onDeleteRow(index)}>
                                                     <img src={require("../../../../assets/img/icons/delete_icon.svg")} alt="" width="20" />
-                                                </div>
+                                                </div> : ''}
                                             </div>
                                         </div>
                                     </div>
@@ -216,4 +226,7 @@ const UForm = (props) => {
         </>
     )
 }
+
+
+
 export const UploadForm = UForm

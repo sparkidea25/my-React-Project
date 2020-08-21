@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FieldArray, reduxForm, Field } from "redux-form";
 import validator from './validator'
+import { connect } from 'react-redux';
 const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
 const { UploadForm } = require('./form')
 const { onSubmitFail, convertToESTTimeZone, diff_minutes } = require(`../../../../helpers`);
@@ -8,13 +9,16 @@ const { Form } = require(`../../../../components/atoms/form`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { ROUTES, PAGE_TITLES } = require(`../../../../shared/constants`);
 
-const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, getLeagues, uploadImage, getPlatforms, handleSubmit = () => { } }) => {
+const UploadScreen = ({ allPlatforms, values, history, exportWatchParty, allLeagues, getLeagues, uploadImage, getPlatforms, handleSubmit = () => { } }) => {
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
         message: ''
     });
 
+    useEffect(() => {
+        console.log(values)
+    }, [values])
 
     const onsubmit = (credentials) => {
 
@@ -29,20 +33,20 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
 
             })
 
-            exportWatchParty(credentials.WatchParty, (response) => {
-                setSnackBarData({
-                    variant: response.status ? 'success' : 'error',
-                    message: response.msg
-                });
-                setOpenSnackbar(true)
-                history.push(ROUTES.WATCH_PARTY)
-            }, (error) => {
-                setSnackBarData({
-                    variant: error.status ? 'success' : 'error',
-                    message: error.msg
-                });
-                setOpenSnackbar(true)
-            })
+            // exportWatchParty(credentials.WatchParty, (response) => {
+            //     setSnackBarData({
+            //         variant: response.status ? 'success' : 'error',
+            //         message: response.msg
+            //     });
+            //     setOpenSnackbar(true)
+            //     history.push(ROUTES.WATCH_PARTY)
+            // }, (error) => {
+            //     setSnackBarData({
+            //         variant: error.status ? 'success' : 'error',
+            //         message: error.msg
+            //     });
+            //     setOpenSnackbar(true)
+            // })
         }
     }
     useEffect(() => {
@@ -66,7 +70,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
                         component={UploadForm}
                         allLeagues={allLeagues}
                         allPlatforms={allPlatforms}
-
+                        values={values}
                         uploadImage={uploadImage}
                     />
                     <InputSubmit buttonLabel={'Upload'} />
@@ -76,11 +80,27 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
     )
 }
 
-export const Screen = reduxForm({
+const ReduxFunction = reduxForm({
     form: "uploadWatchParty",
     fields: ['parties'],
     // onSubmitFail,
     validate: validator,
     enableReinitialize: true
 })(UploadScreen);
+
+const mapStateToProps = (state, ownProps) => {
+    // console.log(state && state.form && state.form.uploadWatchParty && state.form.uploadWatchParty.values && state.form.uploadWatchParty.values.WatchParty)
+
+    return {
+        values: state && state.form && state.form.uploadWatchParty && state.form.uploadWatchParty.values && state.form.uploadWatchParty.values.WatchParty
+    }
+}
+
+const mapDispatchToProps = (state, props) => {
+
+    return {
+
+    }
+}
+export const Screen = connect(mapStateToProps, mapDispatchToProps)(ReduxFunction);
 
