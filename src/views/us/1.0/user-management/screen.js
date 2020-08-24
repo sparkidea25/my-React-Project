@@ -21,6 +21,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
         (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
       )
       .join("&");
+    //for dummy data
     listAdmins(
       data,
       (resp) => {
@@ -36,6 +37,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
         (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
       )
       .join("&");
+      //for dummy data
     listUsers(
       data,
       (resp) => {
@@ -63,6 +65,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   }, []);
 
   useEffect(() => {
+    //for dummy data
     adminListApi(
       {
         skip: adminsTableIndex * STRINGS.SHOW_LIMIT,
@@ -71,11 +74,13 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
       },
       (response) => {
         set_adminsListing(response.adminListing);
+        set_adminTotalCount(response.totalCount);
       }
     );
   }, [adminsTableIndex]);
 
   useEffect(() => {
+    //for dummy data
     userListApi(
       {
         skip: usersTableIndex * showLimit,

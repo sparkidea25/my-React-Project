@@ -11,6 +11,7 @@ import { getRequest } from "../../helpers";
 
 function* listUsers({ payload, success, failure }) {
   try {
+    //for dummy data
     yield put(startLoader());
     // const response = yield getRequest({ API: `` });
     if (payload.filter === 2) {
@@ -39,6 +40,7 @@ function* listUsers({ payload, success, failure }) {
 
 function* removeUser({ payload, success, failure }) {
   try {
+    //for dummy data
     yield put(startLoader());
     success({ status: " ", msg: `${payload} successfully removed` });
     // failure({status: " ", msg: `error removing ${payload}`});
