@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
-import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES } from "../../../../shared/constants";
+import {
+  ADMIN_TABLE_HEADINGS,
+  MESSAGES,
+  PAGE_TITLES,
+} from "../../../../shared/constants";
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
 import { DecisionPopup } from "../../../../components/atoms/decision-popup";
@@ -15,16 +19,14 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   const [usersTableIndex, set_usersTableIndex] = useState(0);
 
   const adminListApi = (data, resp) => {
-
     listAdmins(
       data,
       (response) => {
-
         set_adminsListing(response && response.admins);
         set_adminTotalCount(response && response.totalCount);
-        resp()
+        resp();
       },
-      () => { }
+      () => {}
     );
   };
 
@@ -39,23 +41,21 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
       (resp) => {
         response(resp);
       },
-      () => { }
+      () => {}
     );
   };
 
   useEffect(() => {
-    adminListApi(
-      { skip: 0, limit: STRINGS.SHOW_LIMIT }
-    );
+    adminListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT });
     userListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT }, (response) => {
       set_usersListing(response.users);
       set_usersTotalCount(response.totalRecords);
     });
   }, []);
 
-  useEffect(() => { }, [adminsTableIndex]);
+  useEffect(() => {}, [adminsTableIndex]);
 
-  useEffect(() => { }, [usersTableIndex]);
+  useEffect(() => {}, [usersTableIndex]);
 
   const [openSnackBar, set_openSnackbar] = useState(false);
   const [snackbarData, set_snackBarData] = useState({
@@ -66,30 +66,38 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   const [openPopup, set_openPopup] = useState(false);
   const [userToRemove, set_userToRemove] = useState("");
 
-  const removeUser = (username) => {
+  const removeUser = (user_id) => {
     //function for remove user api
     removeUserAction(
-      username,
+      user_id,
       (response) => {
         set_snackBarData({
           variant: response.status ? "success" : "error",
-          message: response.msg,
+          message: response.msg ? response.msg : "user successfully removed",
         });
         set_openSnackbar(true);
-        if (usersTotalCount <= usersTableIndex * STRINGS.SHOW_LIMIT + 1) {
-          set_usersTableIndex(usersTableIndex - 1);
-        } else {
-          userListApi(
-            {
-              skip: usersTableIndex * STRINGS.SHOW_LIMIT,
-              limit: STRINGS.SHOW_LIMIT,
-            },
-            (response) => {
-              set_usersListing(response.userListing);
-              set_usersTotalCount(response.totalCount);
-            }
-          );
-        }
+        userListApi(
+          {
+            skip:
+              usersTotalCount === 1
+                ? 0
+                : usersTotalCount === usersTableIndex * STRINGS.SHOW_LIMIT + 1
+                ? (usersTableIndex - 1) * STRINGS.SHOW_LIMIT
+                : usersTableIndex * STRINGS.SHOW_LIMIT,
+            limit: STRINGS.SHOW_LIMIT,
+          },
+          (response) => {
+            set_usersTableIndex(
+              usersTotalCount === 1
+                ? 0
+                : usersTotalCount === usersTableIndex * STRINGS.SHOW_LIMIT + 1
+                ? usersTableIndex - 1
+                : usersTableIndex
+            );
+            set_usersListing(response.users);
+            set_usersTotalCount(response.totalRecords);
+          }
+        );
       },
       (error) => {
         set_snackBarData({
@@ -113,7 +121,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
 
       <DecisionPopup
         modalVisibility={openPopup}
-        dialogContent={`Click confirm to remove user : ${userToRemove}`}
+        dialogContent={`Click confirm to remove user `}
         dialogTitle={"Remove User"}
         confirmButtonTitle={STRINGS.CONFIRM}
         rejectButtonTitle={STRINGS.CANCEL}
@@ -152,27 +160,25 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                 </tr>
               </thead>
               <tbody>
-                {adminsListing && adminsListing.length ? (
-                  adminsListing.map((admin, ind) => (
-                    <tr key={ind}>
-                      <td>
-                        {adminsTableIndex * STRINGS.SHOW_LIMIT + ind + 1}.{" "}
-                        {admin.firstName}
-                      </td>
-                      <td>{admin.lastName}</td>
-                      <td>{admin.username}</td>
-                      <td>{admin.email}</td>
-                      <td>{admin.phone}</td>
-                      <td>{admin.hometown}</td>
-                      <td>{admin.timezone}</td>
-                      <td>{admin.age}</td>
-                      <td>{admin.dateadded}</td>
-                      <td>{admin.lastactive}</td>
-                    </tr>
-                  ))
-                ) :
-                  MESSAGES.noAdminsFound
-                }
+                {adminsListing && adminsListing.length
+                  ? adminsListing.map((admin, ind) => (
+                      <tr key={ind}>
+                        <td>
+                          {adminsTableIndex * STRINGS.SHOW_LIMIT + ind + 1}.{" "}
+                          {admin.firstName}
+                        </td>
+                        <td>{admin.lastName}</td>
+                        <td>{admin.username}</td>
+                        <td>{admin.email}</td>
+                        <td>{admin.phone}</td>
+                        <td>{admin.hometown}</td>
+                        <td>{admin.timezone}</td>
+                        <td>{admin.age}</td>
+                        <td>{admin.dateadded}</td>
+                        <td>{admin.lastactive}</td>
+                      </tr>
+                    ))
+                  : MESSAGES.noAdminsFound}
               </tbody>
             </table>
             {adminsListing && adminsListing.length ? (
@@ -191,7 +197,6 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                       set_adminsTableIndex(value && value.selected);
                     }
                   );
-
                 }}
               />
             ) : null}
@@ -234,7 +239,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                         <button
                           className="btn btn-primary"
                           onClick={() => {
-                            set_userToRemove(user.username);
+                            set_userToRemove(user._id);
                             set_openPopup(true);
                           }}
                         >
@@ -244,18 +249,18 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                     </tr>
                   ))
                 ) : (
-                    <tr>
-                      <td
-                        style={{
-                          color: "#4D4D4F",
-                          fontSize: 16,
-                          fontWeight: "600",
-                        }}
-                      >
-                        {MESSAGES.noUsersFound}
-                      </td>
-                    </tr>
-                  )}
+                  <tr>
+                    <td
+                      style={{
+                        color: "#4D4D4F",
+                        fontSize: 16,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {MESSAGES.noUsersFound}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

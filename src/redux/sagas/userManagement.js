@@ -8,14 +8,16 @@ import {
   GET_USERS_LIST,
   REMOVE_USER,
 } from "../actions";
-import { getRequest } from "../../helpers";
+import { getRequest, deleteRequest } from "../../helpers";
 const api = require(`../../shared/api`);
 const { STATUS_CODE } = require(`../../shared/constants`);
 
 function* getAdminList({ payload, success, failure }) {
   try {
     yield put(startLoader());
-    const response = yield getRequest({ API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}` });
+    const response = yield getRequest({
+      API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}`,
+    });
     yield responseChecker(response, success, failure);
   } catch (err) {
     yield put(stopLoader());
@@ -29,7 +31,7 @@ function* listUsers({ payload, success, failure }) {
   try {
     yield put(startLoader());
     const response = yield getRequest({
-      API: `${api.URL.GET_USERS_LIST}?${payload}`
+      API: `${api.URL.GET_USERS_LIST}?${payload}`,
     });
     yield responseChecker(response, success, failure);
   } catch (err) {
@@ -40,27 +42,27 @@ function* listUsers({ payload, success, failure }) {
   }
 }
 
-// function* removeUser({ payload, success, failure }) {
-//   try {
-//     //for dummy data
-//     yield put(startLoader());
-//     success({ status: " ", msg: `${payload} successfully removed` });
-//     // failure({status: " ", msg: `error removing ${payload}`});
-//     USERS = USERS.filter((user) => user.username !== payload);
-//     yield put(stopLoader());
-//   } catch (err) {
-//     failure({
-//       msg: "Sorry, something went wrong.",
-//     });
-//   }
-// }
-
+function* removeUser({ payload, success, failure }) {
+  try {
+    //for dummy data
+    yield put(startLoader());
+    const response = yield deleteRequest({
+      API: `${api.URL.DELETE_USER}/${payload}`,
+    });
+    yield responseChecker(response, success, failure);
+    yield put(stopLoader());
+  } catch (err) {
+    failure({
+      msg: "Sorry, something went wrong.",
+    });
+  }
+}
 
 function* userManagementSaga() {
   yield all([
     takeLatest(GET_ADMINS_LIST, getAdminList),
     takeLatest(GET_USERS_LIST, listUsers),
-    // takeLatest(REMOVE_USER, removeUser),
+    takeLatest(REMOVE_USER, removeUser),
   ]);
 }
 
@@ -88,4 +90,3 @@ function* responseChecker(response, success, failure) {
     }
   }
 }
-
