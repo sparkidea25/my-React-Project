@@ -13,7 +13,6 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   const [usersTotalCount, set_usersTotalCount] = useState(0);
   const [adminsTableIndex, set_adminsTableIndex] = useState(0);
   const [usersTableIndex, set_usersTableIndex] = useState(0);
-  const [showLimit, set_showLimit] = useState(5);
 
   const adminListApi = (data, response) => {
     let postData = Object.keys(data)
@@ -21,12 +20,9 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
         (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
       )
       .join("&");
-    //for dummy data
     listAdmins(
-      data,
-      (resp) => {
-        response(resp);
-      },
+      postData,
+      (resp) => response(resp),
       () => {}
     );
   };
@@ -37,9 +33,8 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
         (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
       )
       .join("&");
-      //for dummy data
     listUsers(
-      data,
+      postData,
       (resp) => {
         response(resp);
       },
@@ -48,51 +43,19 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   };
 
   useEffect(() => {
-    adminListApi(
-      { skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2 },
-      (response) => {
-        set_adminsListing(response.adminListing);
-        set_adminTotalCount(response.totalCount);
-      }
-    );
-    userListApi(
-      { skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3 },
-      (response) => {
-        set_usersListing(response.userListing);
-        set_usersTotalCount(response.totalCount);
-      }
-    );
+    adminListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT }, (response) => {
+      set_adminsListing(response.admins);
+      set_adminTotalCount(response.totalRecords);
+    });
+    userListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT }, (response) => {
+      set_usersListing(response.users);
+      set_usersTotalCount(response.totalRecords);
+    });
   }, []);
 
-  useEffect(() => {
-    //for dummy data
-    adminListApi(
-      {
-        skip: adminsTableIndex * STRINGS.SHOW_LIMIT,
-        limit: adminsTableIndex * STRINGS.SHOW_LIMIT + STRINGS.SHOW_LIMIT,
-        filter: 2,
-      },
-      (response) => {
-        set_adminsListing(response.adminListing);
-        set_adminTotalCount(response.totalCount);
-      }
-    );
-  }, [adminsTableIndex]);
+  useEffect(() => {}, [adminsTableIndex]);
 
-  useEffect(() => {
-    //for dummy data
-    userListApi(
-      {
-        skip: usersTableIndex * showLimit,
-        limit: usersTableIndex * showLimit + showLimit,
-        filter: 3,
-      },
-      (response) => {
-        set_usersListing(response.userListing);
-        set_usersTotalCount(response.totalCount);
-      }
-    );
-  }, [usersTableIndex]);
+  useEffect(() => {}, [usersTableIndex]);
 
   const [openSnackBar, set_openSnackbar] = useState(false);
   const [snackbarData, set_snackBarData] = useState({
@@ -113,14 +76,13 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
           message: response.msg,
         });
         set_openSnackbar(true);
-        if (usersTotalCount <= usersTableIndex * showLimit + 1) {
+        if (usersTotalCount <= usersTableIndex * STRINGS.SHOW_LIMIT + 1) {
           set_usersTableIndex(usersTableIndex - 1);
         } else {
           userListApi(
             {
-              skip: usersTableIndex * showLimit,
-              limit: usersTableIndex * showLimit + showLimit,
-              filter: 3,
+              skip: usersTableIndex * STRINGS.SHOW_LIMIT,
+              limit: STRINGS.SHOW_LIMIT,
             },
             (response) => {
               set_usersListing(response.userListing);
@@ -190,22 +152,22 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                 </tr>
               </thead>
               <tbody>
-                {adminsListing.length ? (
+                {adminsListing && adminsListing.length ? (
                   adminsListing.map((admin, ind) => (
                     <tr key={ind}>
                       <td>
-                        {adminsTableIndex * showLimit + ind + 1}.{" "}
-                        {admin.first_name}
+                        {adminsTableIndex * STRINGS.SHOW_LIMIT + ind + 1}.{" "}
+                        {admin.firstName}
                       </td>
-                      <td>{admin.last_name}</td>
+                      <td>{admin.lastName}</td>
                       <td>{admin.username}</td>
                       <td>{admin.email}</td>
                       <td>{admin.phone}</td>
-                      <td>{admin.home_town}</td>
-                      <td>{admin.time_zone}</td>
+                      <td>{admin.hometown}</td>
+                      <td>{admin.timezone}</td>
                       <td>{admin.age}</td>
-                      <td>{admin.date_added}</td>
-                      <td>{admin.last_active}</td>
+                      <td>{admin.dateadded}</td>
+                      <td>{admin.lastactive}</td>
                     </tr>
                   ))
                 ) : (
@@ -223,13 +185,23 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                 )}
               </tbody>
             </table>
-            {adminsListing.length ? (
+            {adminsListing && adminsListing.length ? (
               <CustomPagination
-                limit={showLimit}
+                limit={STRINGS.SHOW_LIMIT}
                 totalPages={adminTotalCount}
                 itemsCount={adminsListing && adminsListing.length}
                 currentPage={adminsTableIndex + 1}
                 onPageChange={(value) => {
+                  adminListApi(
+                    {
+                      skip: value.selected * STRINGS.SHOW_LIMIT,
+                      limit: STRINGS.SHOW_LIMIT,
+                    },
+                    (response) => {
+                      set_adminsListing(response.userListing);
+                      set_adminTotalCount(response.totalCount);
+                    }
+                  );
                   set_adminsTableIndex(value.selected);
                 }}
               />
@@ -253,22 +225,22 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                 </tr>
               </thead>
               <tbody>
-                {usersListing.length ? (
+                {usersListing && usersListing.length ? (
                   usersListing.map((user, ind) => (
                     <tr key={ind}>
                       <td>
-                        {usersTableIndex * showLimit + ind + 1}.{" "}
-                        {user.first_name}
+                        {usersTableIndex * STRINGS.SHOW_LIMIT + ind + 1}.{" "}
+                        {user.firstName}
                       </td>
-                      <td>{user.last_name}</td>
+                      <td>{user.lastName}</td>
                       <td>{user.username}</td>
                       <td>{user.email}</td>
                       <td>{user.phone}</td>
-                      <td>{user.home_town}</td>
-                      <td>{user.time_zone}</td>
+                      <td>{user.hometown}</td>
+                      <td>{user.timezone}</td>
                       <td>{user.age}</td>
-                      <td>{user.date_added}</td>
-                      <td>{user.last_active}</td>
+                      <td>{user.dateadded}</td>
+                      <td>{user.lastactive}</td>
                       <td>
                         <button
                           className="btn btn-primary"
@@ -298,13 +270,23 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
               </tbody>
             </table>
           </div>
-          {usersListing.length ? (
+          {usersListing && usersListing.length ? (
             <CustomPagination
-              limit={showLimit}
+              limit={STRINGS.SHOW_LIMIT}
               totalPages={usersTotalCount}
               itemsCount={usersListing && usersListing.length}
               currentPage={usersTableIndex + 1}
               onPageChange={(value) => {
+                userListApi(
+                  {
+                    skip: value.selected * STRINGS.SHOW_LIMIT,
+                    limit: STRINGS.SHOW_LIMIT,
+                  },
+                  (response) => {
+                    set_usersListing(response.userListing);
+                    set_usersTotalCount(response.totalCount);
+                  }
+                );
                 set_usersTableIndex(value.selected);
               }}
             />
