@@ -1,13 +1,17 @@
 import { takeLatest, all, put } from "redux-saga/effects";
+
 import {
   startLoader,
   stopLoader,
+  setAuthorization,
   GET_ADMINS_LIST,
   GET_USERS_LIST,
   REMOVE_USER,
 } from "../actions";
-
 import { getRequest } from "../../helpers";
+const api = require(`../../shared/api`);
+const { STATUS_CODE } = require(`../../shared/constants`);
+
 
 function* listUsers({ payload, success, failure }) {
   try {
@@ -17,16 +21,16 @@ function* listUsers({ payload, success, failure }) {
     if (payload.filter === 2) {
       ADMIN
         ? success({
-            adminListing: ADMIN.slice(payload.skip, payload.limit),
-            totalCount: ADMIN.length,
-          })
+          adminListing: ADMIN.slice(payload.skip, payload.limit),
+          totalCount: ADMIN.length,
+        })
         : failure({ msg: "No data found" });
     } else {
       USERS
         ? success({
-            userListing: USERS.slice(payload.skip, payload.limit),
-            totalCount: USERS.length,
-          })
+          userListing: USERS.slice(payload.skip, payload.limit),
+          totalCount: USERS.length,
+        })
         : failure({ msg: "No data found" });
     }
     yield put(stopLoader());
@@ -53,9 +57,47 @@ function* removeUser({ payload, success, failure }) {
   }
 }
 
+function* getAdminList({ payload, success, failure }) {
+  try {
+    console.log(payload, 'data')
+
+    yield put(startLoader());
+    const response = yield getRequest({ API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}` });
+
+    if (window.navigator.onLine === false) {
+      yield put(stopLoader())
+      failure({
+        msg: 'You appear to be offline. Please check your connection.'
+      })
+    } else {
+      if (response.status === STATUS_CODE.unAuthorized) {
+        yield put(setAuthorization(null));
+        yield put(stopLoader());
+        failure(response.data)
+      }
+      if (response.status !== STATUS_CODE.successful) {
+        yield put(setAuthorization(null))
+        yield put(stopLoader());
+        failure(response.data)
+      }
+      else {
+        success(response.data)
+        yield put(stopLoader());
+      }
+    }
+  }
+  catch (error) {
+    yield put(stopLoader());
+
+    failure({
+      msg: 'Sorry, something went wrong.'
+    })
+  }
+}
+
 function* userManagementSaga() {
   yield all([
-    takeLatest(GET_ADMINS_LIST, listUsers),
+    takeLatest(GET_ADMINS_LIST, getAdminList),
     takeLatest(GET_USERS_LIST, listUsers),
     takeLatest(REMOVE_USER, removeUser),
   ]);
@@ -128,64 +170,64 @@ let USERS = [
     date_added: "8-20-2020",
     last_active: "online",
   },
-    {
-      first_name: "Alice",
-      last_name: "Wordsworth",
-      username: "wordsworth",
-      email: "wordsworth@yahoo.com",
-      phone: "+44-8463-6547",
-      home_town: "London",
-      time_zone: "GMT +1",
-      age: 27,
-      date_added: "8-02-2020",
-      last_active: "5 mins ago",
-    },
-    {
-      first_name: "Ragnar",
-      last_name: "Lodbrok",
-      username: "viking001",
-      email: "ragnar@yahoo.com",
-      phone: "+45-9876-4321",
-      home_town: "ragnar",
-      time_zone: "GMT +2",
-      age: 33,
-      date_added: "8-20-2020",
-      last_active: "online",
-    },
-    {
-      first_name: "Alice",
-      last_name: "Wordsworth",
-      username: "wordsworth106",
-      email: "wordsworth@yahoo.com",
-      phone: "+44-8463-6547",
-      home_town: "London",
-      time_zone: "GMT +1",
-      age: 27,
-      date_added: "8-02-2020",
-      last_active: "5 mins ago",
-    },
-    {
-      first_name: "Ragnar",
-      last_name: "Lodbrok",
-      username: "viking101",
-      email: "ragnar@yahoo.com",
-      phone: "+45-9876-4321",
-      home_town: "ragnar",
-      time_zone: "GMT +2",
-      age: 33,
-      date_added: "8-20-2020",
-      last_active: "online",
-    },
-    {
-      first_name: "Alice",
-      last_name: "Wordsworth",
-      username: "wordsworth101",
-      email: "wordsworth@yahoo.com",
-      phone: "+44-8463-6547",
-      home_town: "London",
-      time_zone: "GMT +1",
-      age: 27,
-      date_added: "8-02-2020",
-      last_active: "5 mins ago",
-    },
+  {
+    first_name: "Alice",
+    last_name: "Wordsworth",
+    username: "wordsworth",
+    email: "wordsworth@yahoo.com",
+    phone: "+44-8463-6547",
+    home_town: "London",
+    time_zone: "GMT +1",
+    age: 27,
+    date_added: "8-02-2020",
+    last_active: "5 mins ago",
+  },
+  {
+    first_name: "Ragnar",
+    last_name: "Lodbrok",
+    username: "viking001",
+    email: "ragnar@yahoo.com",
+    phone: "+45-9876-4321",
+    home_town: "ragnar",
+    time_zone: "GMT +2",
+    age: 33,
+    date_added: "8-20-2020",
+    last_active: "online",
+  },
+  {
+    first_name: "Alice",
+    last_name: "Wordsworth",
+    username: "wordsworth106",
+    email: "wordsworth@yahoo.com",
+    phone: "+44-8463-6547",
+    home_town: "London",
+    time_zone: "GMT +1",
+    age: 27,
+    date_added: "8-02-2020",
+    last_active: "5 mins ago",
+  },
+  {
+    first_name: "Ragnar",
+    last_name: "Lodbrok",
+    username: "viking101",
+    email: "ragnar@yahoo.com",
+    phone: "+45-9876-4321",
+    home_town: "ragnar",
+    time_zone: "GMT +2",
+    age: 33,
+    date_added: "8-20-2020",
+    last_active: "online",
+  },
+  {
+    first_name: "Alice",
+    last_name: "Wordsworth",
+    username: "wordsworth101",
+    email: "wordsworth@yahoo.com",
+    phone: "+44-8463-6547",
+    home_town: "London",
+    time_zone: "GMT +1",
+    age: 27,
+    date_added: "8-02-2020",
+    last_active: "5 mins ago",
+  },
 ];

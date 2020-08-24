@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
-import { ADMIN_TABLE_HEADINGS } from "../../../../shared/constants";
+import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES } from "../../../../shared/constants";
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
 import { DecisionPopup } from "../../../../components/atoms/decision-popup";
@@ -15,19 +15,15 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   const [usersTableIndex, set_usersTableIndex] = useState(0);
   const [showLimit, set_showLimit] = useState(5);
 
-  const adminListApi = (data, response) => {
-    let postData = Object.keys(data)
-      .map(
-        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
-      )
-      .join("&");
-    //for dummy data
+  const adminListApi = (data) => {
+
     listAdmins(
       data,
-      (resp) => {
-        response(resp);
+      (response) => {
+        set_adminsListing(response && response.admins);
+        set_adminTotalCount(response && response.totalCount);
       },
-      () => {}
+      () => { }
     );
   };
 
@@ -37,23 +33,19 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
         (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
       )
       .join("&");
-      //for dummy data
+    //for dummy data
     listUsers(
       data,
       (resp) => {
         response(resp);
       },
-      () => {}
+      () => { }
     );
   };
 
   useEffect(() => {
     adminListApi(
-      { skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2 },
-      (response) => {
-        set_adminsListing(response.adminListing);
-        set_adminTotalCount(response.totalCount);
-      }
+      { skip: 0, limit: STRINGS.SHOW_LIMIT }
     );
     userListApi(
       { skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3 },
@@ -65,16 +57,10 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
   }, []);
 
   useEffect(() => {
-    //for dummy data
     adminListApi(
       {
         skip: adminsTableIndex * STRINGS.SHOW_LIMIT,
-        limit: adminsTableIndex * STRINGS.SHOW_LIMIT + STRINGS.SHOW_LIMIT,
-        filter: 2,
-      },
-      (response) => {
-        set_adminsListing(response.adminListing);
-        set_adminTotalCount(response.totalCount);
+        limit: adminsTableIndex * STRINGS.SHOW_LIMIT + STRINGS.SHOW_LIMIT
       }
     );
   }, [adminsTableIndex]);
@@ -93,6 +79,9 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
       }
     );
   }, [usersTableIndex]);
+  useEffect(() => {
+    console.log(adminsListing, 'adminListing')
+  }, [adminsListing])
 
   const [openSnackBar, set_openSnackbar] = useState(false);
   const [snackbarData, set_snackBarData] = useState({
@@ -168,7 +157,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
 
       <div className="content-panel">
         <div className="row  page-title">
-          <h1 className="col-md-3">User Management</h1>
+          <h1 className="col-md-3">{PAGE_TITLES.USER_MANAGEMENT}</h1>
           <div className="col-md-6">
             <button className="btn btn-md btn-primary">Export</button>
           </div>
@@ -176,7 +165,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
 
         <div className="users_list">
           <div className="d-flex table_title">
-            <h3>Admins</h3>
+            <h3>{STRINGS.ADMINS}</h3>
           </div>
           <div className="table-responsive">
             <table className="table">
@@ -190,7 +179,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                 </tr>
               </thead>
               <tbody>
-                {adminsListing.length ? (
+                {adminsListing && adminsListing.length ? (
                   adminsListing.map((admin, ind) => (
                     <tr key={ind}>
                       <td>
@@ -208,28 +197,19 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                       <td>{admin.last_active}</td>
                     </tr>
                   ))
-                ) : (
-                  <tr>
-                    <td
-                      style={{
-                        color: "#4D4D4F",
-                        fontSize: 16,
-                        fontWeight: "600",
-                      }}
-                    >
-                      Sorry, something went wrong.
-                    </td>
-                  </tr>
-                )}
+                ) :
+                  MESSAGES.noAdminsFound
+                }
               </tbody>
             </table>
-            {adminsListing.length ? (
+            {adminsListing && adminsListing.length ? (
               <CustomPagination
                 limit={showLimit}
                 totalPages={adminTotalCount}
                 itemsCount={adminsListing && adminsListing.length}
                 currentPage={adminsTableIndex + 1}
                 onPageChange={(value) => {
+
                   set_adminsTableIndex(value.selected);
                 }}
               />
@@ -283,18 +263,18 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                     </tr>
                   ))
                 ) : (
-                  <tr>
-                    <td
-                      style={{
-                        color: "#4D4D4F",
-                        fontSize: 16,
-                        fontWeight: "600",
-                      }}
-                    >
-                      No Users found.
-                    </td>
-                  </tr>
-                )}
+                    <tr>
+                      <td
+                        style={{
+                          color: "#4D4D4F",
+                          fontSize: 16,
+                          fontWeight: "600",
+                        }}
+                      >
+                        {MESSAGES.noUsersFound}
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
           </div>

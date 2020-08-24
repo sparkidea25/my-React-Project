@@ -1,4 +1,4 @@
-const SERVER_URL = 'https://api.getcollyde.com'; //Live URL
+const SERVER_URL = 'http://f469af23e46a.ngrok.io'; //Live URL
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {
@@ -16,5 +16,6 @@ module.exports = {
     FORGOT_PASSWORD: SERVER_URL + API_VERSION + '/admin/forgot-password',
     RESET_PASSWORD: SERVER_URL + API_VERSION + '/admin/reset-password',
     UPLOAD_IMAGE: SERVER_URL + API_VERSION + '/uploadFile',
+    GET_ADMIN_LIST: SERVER_URL + API_VERSION + '/admin/getAdmins',
   }
 };

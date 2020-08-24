@@ -56,9 +56,11 @@ export const STRINGS = {
   CONFIRM: 'Confirm',
   CANCEL: 'Cancel',
   NAME: 'Name',
-  NO_RECORDS_FOUND: 'No matched records found',
+  NO_ADMINS_FOUND: 'No Admins found',
+  NO_USERS_FOUND: 'No Users found',
   LOG_OUT: 'Log Out',
   SUCCESS: 'success',
+  ADMINS: 'Admins',
   ERROR: 'error',
   SHOW_LIMIT: 5,
   SEND_EMAIL: 'Send Email'

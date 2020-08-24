@@ -11,7 +11,8 @@ export const LABELS = {
 export const PAGE_TITLES = {
   // dashboard: STRINGS.DASHBOARD_PAGE_TITLE,
   ADD_WATCH_PARTY: 'Add Watch Party',
-  RESET_PASSWORD: 'Reset Password'
+  RESET_PASSWORD: 'Reset Password',
+  USER_MANAGEMENT: 'User Management'
 }
 
 export const KEY_CODES = {
@@ -47,7 +48,8 @@ export const VALIDATION_MESSAGES = {
 export const PASSWORD_LENGTH = 6;
 
 export const MESSAGES = {
-  // noRecordsFound: STRINGS.NO_RECORDS_FOUND,
+  noAdminsFound: STRINGS.NO_ADMINS_FOUND,
+  noUsersFound: STRINGS.NO_USERS_FOUND,
 };
 
 export const ALT_TEXTS = {
@@ -237,14 +239,14 @@ export const upcomingPartyTable = [{ name: 'Show' },
 ]
 
 export const ADMIN_TABLE_HEADINGS = [
-  {name: 'First Name'},
-  {name: 'Last Name'},
-  {name: 'Username'},
-  {name: 'Email'},
-  {name:'Phone Number'},
-  {name: 'Home Town'},
-  {name: 'Time Zone'},
-  {name: 'Age'},
-  {name: 'Date Added'},
-  {name: 'Last Active'}
+  { name: 'First Name' },
+  { name: 'Last Name' },
+  { name: 'Username' },
+  { name: 'Email' },
+  { name: 'Phone Number' },
+  { name: 'Home Town' },
+  { name: 'Time Zone' },
+  { name: 'Age' },
+  { name: 'Date Added' },
+  { name: 'Last Active' }
 ]
