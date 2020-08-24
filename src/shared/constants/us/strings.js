@@ -1,5 +1,12 @@
 export const STRINGS = {
   EMAIL_INPUT_NAME: 'email',
+  FIRST_NAME_INPUT: 'firstName',
+  LAST_NAME_INPUT: 'lastName',
+  USERNAME_INPUT: 'username',
+  PHONE_INPUT: 'phone',
+  ADDRESS_INPUT: 'address',
+  TIME_ZONE_INPUT: 'timeZone',
+  AGE_INPUT: 'age',
   EMAIL_REQUIRED: 'Email is required.',
   EMAIL_PLACEHOLDER: 'Email',
   PASSWORD_INPUT_NAME: 'password',
@@ -63,5 +70,12 @@ export const STRINGS = {
   ADMINS: 'Admins',
   ERROR: 'error',
   SHOW_LIMIT: 5,
-  SEND_EMAIL: 'Send Email'
+  SEND_EMAIL: 'Send Email',
+  FIRST_NAME_PLACEHOLDER: 'First Name',
+  LAST_NAME_PLACEHOLDER: 'Last Name',
+  PHONE_PLACEHOLDER: 'Phone No',
+  ADDRESS_PLACEHOLDER: 'HomeTown',
+  TIME_ZONE_PLACEHOLDER: 'Time Zone',
+  USERNAME_PLACEHOLDER: 'User Name',
+  AGE_PLACEHOLDER: 'Age'
 }

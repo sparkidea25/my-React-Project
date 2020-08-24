@@ -8,12 +8,14 @@ import {
     startLoader,
     stopLoader,
     setPlatformType,
+    GET_TIMEZONES,
     LOGOUT_USER,
-    RESET_PASSWORD
+    RESET_PASSWORD,
+    setAllTimeZones
 } from '../actions';
 
 const api = require(`../../shared/api`);
-const { updateAuthToken, postRequestNoAuth, postRequest } = require(`../../helpers`);
+const { updateAuthToken, postRequestNoAuth, postRequest, getRequest } = require(`../../helpers`);
 const { STATUS_CODE } = require(`../../shared/constants`);
 
 function* setUserToken({ userToken }) {
@@ -150,13 +152,51 @@ function* resetPassword({ data, success, failure }) {
     }
 }
 
+function* getTimezones({ data, success, failure }) {
+    try {
+        yield put(startLoader());
+        const response = yield getRequest({ API: `${api.URL.GET_TIME_ZONES}` });
+
+
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                yield put(setAllTimeZones(response.data))
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
 function* AuthSaga() {
     yield all([
         takeLatest(SET_AUTHORIZATION, setUserToken),
         takeLatest(CHECK_LOGIN, checkAdminLogin),
         takeLatest(SEND_FORGOT_EMAIL, sendRecoveryMail),
         takeLatest(LOGOUT_USER, logoutUser),
-        takeLatest(RESET_PASSWORD, resetPassword)
+        takeLatest(RESET_PASSWORD, resetPassword),
+        takeLatest(RESET_PASSWORD, resetPassword),
+        takeLatest(GET_TIMEZONES, getTimezones)
     ]);
 }
 

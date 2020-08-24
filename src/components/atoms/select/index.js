@@ -19,7 +19,7 @@ export const Select = ({
     touched && error ? (
       <span className="error_msg text-danger">{error}</span>
     ) : null;
-
+  console.log(input, 'value')
   return (
     <>
       {label && <label>{label}</label>}
@@ -32,6 +32,7 @@ export const Select = ({
           placeholder={placeholder}
           value={value}
           onChange={(value) => {
+            console.log(value)
             input.onChange(value);
 
             onValueChange(value)

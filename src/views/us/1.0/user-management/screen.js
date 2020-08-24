@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
+import { reduxForm, Field } from "redux-form";
 import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES } from "../../../../shared/constants";
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
 import { DecisionPopup } from "../../../../components/atoms/decision-popup";
 import { STRINGS } from "../../../../shared/constants/us/strings";
+const { Select } = require(`../../../../components/atoms/select`)
+const { Form } = require(`../../../../components/atoms/form`);
+const { Input } = require(`../../../../components/atoms/input`);
 
-export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
+const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZones, TimeZones }) => {
   const [adminsListing, set_adminsListing] = useState([]);
   const [usersListing, set_usersListing] = useState([]);
   const [adminTotalCount, set_adminTotalCount] = useState(0);
   const [usersTotalCount, set_usersTotalCount] = useState(0);
   const [adminsTableIndex, set_adminsTableIndex] = useState(0);
   const [usersTableIndex, set_usersTableIndex] = useState(0);
+  const [rowToEdit, setRowToEdit] = useState(null)
+  const [editmode, setEditMode] = useState(false)
+  const [selectedTimeZone, setSelectedTimeZone] = useState({})
 
   const adminListApi = (data, resp) => {
-
     listAdmins(
       data,
       (response) => {
@@ -51,6 +57,8 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
       set_usersListing(response.users);
       set_usersTotalCount(response.totalRecords);
     });
+
+    getAllTimeZones({}, () => { }, () => { })
   }, []);
 
   useEffect(() => { }, [adminsTableIndex]);
@@ -101,6 +109,25 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
     );
     set_userToRemove("");
   };
+
+  const EditUser = (index) => {
+    setRowToEdit(index)
+    setEditMode(true)
+
+  }
+  useEffect(() => {
+    if (editmode) {
+      let time = TimeZones && TimeZones.filter(obj => {
+        if (obj._id === usersListing[rowToEdit].timezone) {
+          return obj.value
+        }
+      })
+      // console.log(time)
+      setSelectedTimeZone(time)
+    }
+  }, [rowToEdit])
+
+  useEffect()
 
   return (
     <div className="container-fluid">
@@ -156,7 +183,6 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                   adminsListing.map((admin, ind) => (
                     <tr key={ind}>
                       <td>
-                        {adminsTableIndex * STRINGS.SHOW_LIMIT + ind + 1}.{" "}
                         {admin.firstName}
                       </td>
                       <td>{admin.lastName}</td>
@@ -203,61 +229,140 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
             <h3>Users</h3>
           </div>
           <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  {ADMIN_TABLE_HEADINGS.map((head) => (
-                    <th key={head.name} style={{ textDecoration: "none" }}>
-                      {head.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {usersListing && usersListing.length ? (
-                  usersListing.map((user, ind) => (
-                    <tr key={ind}>
-                      <td>
-                        {usersTableIndex * STRINGS.SHOW_LIMIT + ind + 1}.{" "}
-                        {user.firstName}
-                      </td>
-                      <td>{user.lastName}</td>
-                      <td>{user.username}</td>
-                      <td>{user.email}</td>
-                      <td>{user.phone}</td>
-                      <td>{user.hometown}</td>
-                      <td>{user.timezone}</td>
-                      <td>{user.age}</td>
-                      <td>{user.dateadded}</td>
-                      <td>{user.lastactive}</td>
-                      <td>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => {
-                            set_userToRemove(user.username);
-                            set_openPopup(true);
+            <Form>
+              <table className="table">
+                <thead>
+                  <tr>
+                    {ADMIN_TABLE_HEADINGS.map((head) => (
+                      <th key={head.name} style={{ textDecoration: "none" }}>
+                        {head.name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {usersListing && usersListing.length ? (
+                    usersListing.map((user, ind) => {
+
+
+                      return !(ind === rowToEdit && editmode) ? <tr key={ind}>
+                        <td>
+                          {user.firstName}
+                        </td>
+                        <td>{user.lastName}</td>
+                        <td>{user.username}</td>
+                        <td>{user.email}</td>
+                        <td>{user.phone}</td>
+                        <td>{user.hometown}</td>
+                        <td>{user.timezone}</td>
+                        <td>{user.age}</td>
+                        <td>{user.dateadded}</td>
+                        <td>{user.lastactive}</td>
+                        <td>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => EditUser(ind)}>
+                            Edit
+                        </button>
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                              set_userToRemove(user.username);
+                              set_openPopup(true);
+                            }}
+                          >
+                            Remove
+                        </button>
+                        </td>
+                      </tr> :
+                        <tr>
+                          <td><Field
+                            name={STRINGS.FIRST_NAME_INPUT}
+                            component={Input}
+                            // placeholder={STRINGS.FIRST_NAME_PLACEHOLDER}
+                            type={'text'}
+                            config={{ value: user.firstName }}
+
+                          /></td>
+                          <td> <Field
+                            name={STRINGS.LAST_NAME_INPUT}
+                            component={Input}
+                            // placeholder={STRINGS.LAST_NAME_PLACEHOLDER}
+                            type={'text'}
+                            config={{ value: user.firstName }}
+                          /></td>
+                          <td>   <Field
+                            name={STRINGS.USERNAME_INPUT}
+                            component={Input}
+                            // placeholder={STRINGS.USERNAME_PLACEHOLDER}
+                            type={'text'}
+                            value={user.username}
+                          /></td>
+                          <td>
+                            <Field
+                              name={STRINGS.EMAIL_INPUT_NAME}
+                              component={Input}
+                              // placeholder={STRINGS.EMAIL_PLACEHOLDER}
+
+                              config={{ value: user.email, type: 'email' }}
+                            />
+                          </td>
+                          <td>   <Field
+                            name={STRINGS.PHONE_INPUT}
+                            component={Input}
+                            placeholder={STRINGS.PHONE_PLACEHOLDER}
+                            type={'number'}
+
+                          /></td>
+                          <td>     <Field
+                            name={STRINGS.ADDRESS_INPUT}
+                            component={Input}
+                            // placeholder={STRINGS.ADDRESS_PLACEHOLDER}
+                            type={'text'}
+
+                          /></td>
+                          {/* {console.log(time && time.length > 0 && time[0]._id)} */}
+                          <td>      <Field
+                            name={STRINGS.TIME_ZONE_INPUT}
+                            component={Select}
+                            options={TimeZones}
+                            value={selectedTimeZone}
+
+                          /></td>
+                          <td>       <Field
+                            name={STRINGS.AGE_INPUT}
+                            component={Input}
+                            // placeholder={STRINGS.AGE_PLACEHOLDER}
+                            type={'text'}
+
+                          /></td>
+                          <td>{user.dateadded}</td>
+                          <td>{user.lastactive}</td>
+                          <button
+                            className="btn btn-secondary"
+                          >
+                            Update
+                        </button>
+                        </tr>
+                    }
+                    ))
+                    : (
+                      <tr>
+                        <td
+                          style={{
+                            color: "#4D4D4F",
+                            fontSize: 16,
+                            fontWeight: "600",
                           }}
                         >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                    <tr>
-                      <td
-                        style={{
-                          color: "#4D4D4F",
-                          fontSize: 16,
-                          fontWeight: "600",
-                        }}
-                      >
-                        {MESSAGES.noUsersFound}
-                      </td>
-                    </tr>
-                  )}
-              </tbody>
-            </table>
+                          {MESSAGES.noUsersFound}
+                        </td>
+                      </tr>
+                    )}
+                </tbody>
+
+              </table>
+            </Form>
           </div>
           {usersListing && usersListing.length ? (
             <CustomPagination
@@ -285,3 +390,11 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
     </div>
   );
 };
+
+export const Screen = reduxForm({
+  form: "UpdateUserForm",
+  fields: [''],
+  // onSubmitFail,
+  // validate: validator,
+  enableReinitialize: true
+})(User);

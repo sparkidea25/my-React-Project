@@ -3,6 +3,7 @@ export const GET_USERS_LIST = "GET_USERS_LIST";
 export const SET_ADMINS_LIST = "GET_ADMINS_LIST";
 export const SET_USERS_LIST = "GET_USERS_LIST";
 export const REMOVE_USER = "REMOVE_USER";
+export const UPDATE_USER = "UPDATE_USER"
 
 export const listAdmins = (payload, success, failure) => {
   return {
@@ -26,6 +27,14 @@ export const removeUser = (payload, success, failure) => {
   return {
     type: REMOVE_USER,
     payload,
+    success,
+    failure,
+  };
+};
+export const updateUser = (data, success, failure) => {
+  return {
+    type: UPDATE_USER,
+    data,
     success,
     failure,
   };

@@ -17,6 +17,8 @@ module.exports = {
     RESET_PASSWORD: SERVER_URL + API_VERSION + '/admin/reset-password',
     UPLOAD_IMAGE: SERVER_URL + API_VERSION + '/uploadFile',
     GET_USERS_LIST: SERVER_URL + API_VERSION + '/admin/getUsersList',
-    GET_ADMIN_LIST: SERVER_URL + API_VERSION + '/admin/getAdmins'
+    GET_ADMIN_LIST: SERVER_URL + API_VERSION + '/admin/getAdmins',
+    UPDATE_USER: SERVER_URL + API_VERSION + '/admin/updateUser',
+    GET_TIME_ZONES: SERVER_URL + API_VERSION + '/timezone/getAllTimezones',
   }
 };

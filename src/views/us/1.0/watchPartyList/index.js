@@ -15,7 +15,8 @@ const mapStateToProps = (state) => {
         allPlatforms: state.ContentReducer.plaformList,
         allLeagues: state.ContentReducer.leagueList,
         watchPartyListing: state.ContentReducer.watchPartyList && state.ContentReducer.watchPartyList.watchPartyListing,
-        LiveTotalCount: state && state.ContentReducer && state.ContentReducer.watchPartyList && state.ContentReducer.watchPartyList.totalCount
+        LiveTotalCount: state && state.ContentReducer && state.ContentReducer.watchPartyList && state.ContentReducer.watchPartyList.totalCount,
+
     });
 }
 const mapDispatchToProps = (dispatch) => {

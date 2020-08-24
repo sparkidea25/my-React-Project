@@ -5,6 +5,7 @@ import {
     SET_PLATFORM_TYPE,
     STOP_LOADER,
     START_LOADER,
+    SET_TIMEZONES
 } from '../actions';
 
 const { updateAuthToken } = require(`../../helpers/axios`);
@@ -13,6 +14,7 @@ const initialCommonState = {
     userToken: '',
     platformType: null,
     loader: false,
+    TimeZones: []
 };
 
 const CommonReducer = (state = { ...initialCommonState }, action) => {
@@ -42,6 +44,11 @@ const CommonReducer = (state = { ...initialCommonState }, action) => {
             return {
                 ...state,
             }
+        case SET_TIMEZONES:
+            return {
+                ...state,
+                TimeZones: action.data.data
+            }
         case REHYDRATE:
             let common = ((action || {}).payload || {}).CommonReducer || initialCommonState
             updateAuthToken(common.userToken || '');
@@ -49,6 +56,7 @@ const CommonReducer = (state = { ...initialCommonState }, action) => {
                 ...state,
                 userToken: common.userToken,
                 platformType: common.platformType,
+                TimeZones: common.TimeZones,
                 ...(action.payload || {}).common
             };
         default:

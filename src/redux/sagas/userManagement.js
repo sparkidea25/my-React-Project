@@ -7,8 +7,9 @@ import {
   GET_ADMINS_LIST,
   GET_USERS_LIST,
   REMOVE_USER,
+  UPDATE_USER
 } from "../actions";
-import { getRequest } from "../../helpers";
+import { getRequest, putRequest } from "../../helpers";
 const api = require(`../../shared/api`);
 const { STATUS_CODE } = require(`../../shared/constants`);
 
@@ -40,6 +41,19 @@ function* listUsers({ payload, success, failure }) {
   }
 }
 
+function* updateUser({ data, success, failure }) {
+  try {
+    yield put(startLoader());
+    const response = yield putRequest({ API: `${api.URL.UPDATE_USER}`, DATA: data });
+    yield responseChecker(response, success, failure);
+  } catch (err) {
+    yield put(stopLoader());
+    failure({
+      msg: "Sorry, something went wrong.",
+    });
+  }
+}
+
 // function* removeUser({ payload, success, failure }) {
 //   try {
 //     //for dummy data
@@ -60,6 +74,7 @@ function* userManagementSaga() {
   yield all([
     takeLatest(GET_ADMINS_LIST, getAdminList),
     takeLatest(GET_USERS_LIST, listUsers),
+    takeLatest(UPDATE_USER, updateUser),
     // takeLatest(REMOVE_USER, removeUser),
   ]);
 }
