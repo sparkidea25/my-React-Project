@@ -198,11 +198,13 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                       limit: STRINGS.SHOW_LIMIT,
                     },
                     (response) => {
-                      set_adminsListing(response.userListing);
-                      set_adminTotalCount(response.totalCount);
+                      console.log(response);
+                      set_adminsListing(response.admins);
+                      set_adminTotalCount(response.totalRecords);
+                      set_adminsTableIndex(value.selected);
                     }
                   );
-                  set_adminsTableIndex(value.selected);
+                  
                 }}
               />
             ) : null}
@@ -283,11 +285,11 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
                     limit: STRINGS.SHOW_LIMIT,
                   },
                   (response) => {
-                    set_usersListing(response.userListing);
-                    set_usersTotalCount(response.totalCount);
+                    set_usersListing(response.users);
+                    set_usersTotalCount(response.totalRecords);
+                    set_usersTableIndex(value.selected);
                   }
                 );
-                set_usersTableIndex(value.selected);
               }}
             />
           ) : null}
