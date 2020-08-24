@@ -13,7 +13,7 @@ const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop
 
 const UForm = (props) => {
 
-    const { fields, name, allPlatforms, allLeagues, uploadImage, values } = props
+    const { fields, name, allPlatforms, allLeagues, uploadImage } = props
 
     const [leagues, setLeagues] = useState([])
     const [platforms, setPlatforms] = useState([])
@@ -49,23 +49,10 @@ const UForm = (props) => {
         fields.push({})
     }
 
-    // useEffect(() => {
-    //     let min = diff_minutes(startDate, endDate)
-    //     setContentLength(min)
-    // }, [endDate])
-    // useEffect(() => {
-    //     let min = diff_minutes(startDate, endDate)
-    //     setContentLength(min)
-    // }, [startDate])
-
     const onDeleteRow = (index) => {
         fields.remove(index)
     }
-    // useEffect(() => {
-    //     if (endDate !== null) {
-    //         setEndDate(null)
-    //     }
-    // }, [startDate])
+
     useEffect(() => {
         console.log(endDate, 'values')
     }, [endDate])
@@ -217,12 +204,6 @@ const UForm = (props) => {
                         )
                     })}
             </React.Fragment>
-
-            {/* <div className="row">
-                <div className="col-md-12 text-right">
-                    <button type='button' className="btn btn-lg btn-secondary btn-radius" onClick={() => addRow()}><i>+</i> Add New </button>
-                </div>
-            </div> */}
         </>
     )
 }

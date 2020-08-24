@@ -9,24 +9,19 @@ const { Form } = require(`../../../../components/atoms/form`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { ROUTES, PAGE_TITLES } = require(`../../../../shared/constants`);
 
-const UploadScreen = ({ allPlatforms, values, history, exportWatchParty, allLeagues, getLeagues, uploadImage, getPlatforms, handleSubmit = () => { } }) => {
+const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, getLeagues, uploadImage, getPlatforms, handleSubmit = () => { } }) => {
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
         message: ''
     });
 
-    useEffect(() => {
-        console.log(values)
-    }, [values])
-
     const onsubmit = (credentials) => {
 
         if (credentials && credentials.WatchParty && credentials.WatchParty.length > 0) {
 
             credentials.WatchParty.map(party => {
-                // console.log(party.startTime)
-                // console.log(party.endTime)
+
                 party.contentLength = diff_minutes(party.startTime, party.endTime)
                 party.startTime = convertToESTTimeZone(party.startTime);
                 party.endTime = convertToESTTimeZone(party.endTime);
@@ -73,7 +68,7 @@ const UploadScreen = ({ allPlatforms, values, history, exportWatchParty, allLeag
                         component={UploadForm}
                         allLeagues={allLeagues}
                         allPlatforms={allPlatforms}
-                        values={values}
+
                         uploadImage={uploadImage}
                     />
                     <InputSubmit buttonLabel={'Upload'} />
@@ -92,18 +87,13 @@ const ReduxFunction = reduxForm({
 })(UploadScreen);
 
 const mapStateToProps = (state, ownProps) => {
-    // console.log(state && state.form && state.form.uploadWatchParty && state.form.uploadWatchParty.values && state.form.uploadWatchParty.values.WatchParty)
-
     return {
         values: state && state.form && state.form.uploadWatchParty && state.form.uploadWatchParty.values && state.form.uploadWatchParty.values.WatchParty
     }
 }
 
 const mapDispatchToProps = (state, props) => {
-
-    return {
-
-    }
+    return {}
 }
 export const Screen = connect(mapStateToProps, mapDispatchToProps)(ReduxFunction);
 
