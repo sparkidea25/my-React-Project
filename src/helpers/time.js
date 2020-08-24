@@ -4,7 +4,8 @@ export const diff_minutes = (dt2, dt1) => {
     dt1 = new Date(dt1)
     var diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60;
-    return Math.abs(Math.round(diff));
+
+    return Math.abs(diff) < 1 ? 0 : Math.abs(Math.round(diff));
 }
 
 export const calculateCurrentTimeInEst = () => {
@@ -31,7 +32,6 @@ export const convertToESTTimeZone = (date) => {
     var localZone = moment.tz.guess();
     var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
     var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) + 60) * 60000;
-    console.log(estOffset, 'estOffset')
 
     return moment(date.getTime() - zoneOffset + estOffset).toISOString()
 }

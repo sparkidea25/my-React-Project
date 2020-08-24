@@ -13,7 +13,7 @@ const { Input } = require(`../../../../components/atoms/input`);
 const { onSubmitFail } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`);
 const {
-    ROUTES
+    ROUTES, PAGE_TITLES
 } = require(`../../../../shared/constants`);
 
 const ResetScreen = ({ handleSubmit, resetPassword }) => {
@@ -26,6 +26,7 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
     const parsed = queryString.parse(history.location.search)
 
     const [passwordIsSet, changePasswordIsSet] = useState(false)
+
     const onSubmit = (credentials) => {
         let data = {
             password: credentials.password,
@@ -33,18 +34,15 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
         }
 
         resetPassword(data, (response) => {
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
+
             changePasswordIsSet(true)
-        }, (response) => {
+        }, (error) => {
             setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
+                variant: error.status ? 'success' : 'error',
+                message: error.msg
             });
             setOpenSnackbar(true)
+
         })
     }
     return (
@@ -64,29 +62,33 @@ const ResetScreen = ({ handleSubmit, resetPassword }) => {
                         {!passwordIsSet ? <Form onSubmit={
                             handleSubmit(onSubmit)}>
                             <div className="text-center forgot_info">
-                                <h4>Reset Password</h4>
+                                <h4>{PAGE_TITLES.RESET_PASSWORD}</h4>
                                 <p>{STRINGS.PASSWORD_RESPONSE_MESSAGE}</p>
                             </div>
                             <div className="row">
-                                <Field
-                                    name={STRINGS.PASSWORD_INPUT_NAME}
-                                    component={Input}
-                                    config={{
-                                        type: "email",
-                                        placeholder: STRINGS.PASSWORD_PLACEHOLDER
-                                    }}
-                                />
+                                <div className="col-md-12">
+                                    <Field
+                                        name={STRINGS.PASSWORD_INPUT_NAME}
+                                        component={Input}
+                                        config={{
+                                            type: "password",
+                                            placeholder: STRINGS.PASSWORD_PLACEHOLDER
+                                        }}
+                                    />
+                                </div>
                             </div>
                             <div className="btn-full mt-4">
                                 <InputSubmit buttonLabel={STRINGS.RESET_PASSWORD} />
                             </div>
                         </Form>
 
-                            : <><h3 className="d-block text-center pt-3" style={{ color: 'white' }}>Congratulations!</h3>
+                            : <div className="form_title text-center">
+                                <h4 className="d-block text-center pt-3" style={{ color: 'white' }}>Congratulations!</h4>
                                 <p style={{ color: 'white' }}>{STRINGS.PASSWORD_SUCCESSFUL}</p>
                                 <div className="d-block text-center pt-3" onClick={() => { history.push(ROUTES.LOGIN); }}>
                                     <a href="javascript:void(0);" className="forgot_pwd">Go to Login</a>
-                                </div></>
+                                </div>
+                            </div>
                         }
 
                     </div>

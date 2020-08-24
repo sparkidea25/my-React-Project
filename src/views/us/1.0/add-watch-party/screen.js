@@ -17,6 +17,7 @@ const { onSubmitFail, diff_minutes, changeEndDate } = require(`../../../../helpe
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
+const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop`)
 
 moment.tz.setDefault('America/New_York');
 
@@ -28,7 +29,8 @@ const WatchPartyForm = ({
     addWatchParty,
     getPlatforms,
     getLeagues,
-    history
+    history,
+    uploadImage
 }) => {
     const [fields, setFields] = useState({
         "host": "",
@@ -106,7 +108,7 @@ const WatchPartyForm = ({
         }
     }
 
-    const onSubmit = () => {
+    const onSubmit = (credentials) => {
 
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
@@ -118,7 +120,8 @@ const WatchPartyForm = ({
             "league": fields.league,
             "platform": fields.platform,
             "contentLength": fields.contentLength,
-            "endTime": et
+            "endTime": et,
+            "contentPicture": credentials.contentPicture
         }
 
         addWatchParty(postData, (response) => {
@@ -171,139 +174,136 @@ const WatchPartyForm = ({
                     <div className="row">
                         <div className="col-md-6">
                             <label>Name</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.SHOW_NAME}
-                                    component={Input}
-                                    placeholder={'Show'}
-                                    value={fields.show}
-                                    type={'text'}
-                                    onChange={event => onChangeField('show', event.target.value)}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.SHOW_NAME}
+                                component={Input}
+                                placeholder={'Show'}
+                                value={fields.show}
+                                type={'text'}
+                                onChange={event => onChangeField('show', event.target.value)}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label className="d-none d-md-block">&nbsp;</label>
+                            <Field
+                                name={STRINGS.CONTENT_PICTURE}
+                                component={CustomFileDrop}
+                                placeholder={'ContentPicture'}
+                                uploadImage={uploadImage}
+                            />
                         </div>
                         <div className="col-md-6">
                             <label>Host</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.HOST_NAME}
-                                    component={Input}
-                                    value={fields.host}
-                                    placeholder={'Host'}
-                                    type={"text"}
-                                    onChange={event => onChangeField('host', event.target.value)}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.HOST_NAME}
+                                component={Input}
+                                value={fields.host}
+                                placeholder={'Host'}
+                                type={"text"}
+                                onChange={event => onChangeField('host', event.target.value)}
+                            />
                         </div>
-                    </div>
-
-                    <div className="row">
                         <div class="col-md-6">
                             <label>Sports </label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.SPORTS_NAME}
-                                    component={Select}
-                                    options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
-                                    value={selectedSport}
-                                    placeholder={'Sports'}
-                                    onChange={value => {
-                                        onChangeField('sports', value.value)
-                                        setSelectedSport(value.label)
-                                    }}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.SPORTS_NAME}
+                                component={Select}
+                                options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
+                                value={selectedSport}
+                                placeholder={'Sports'}
+                                onChange={value => {
+                                    onChangeField('sports', value.value)
+                                    setSelectedSport(value.label)
+                                }}
+                            />
                         </div>
+                    </div>
 
+                    <div className="row">
                         <div class="col-md-6">
                             <label>League Name</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.LEAGUE_NAME}
-                                    component={Select}
-                                    options={leagues}
-                                    value={selectedLeague}
-                                    placeholder={"League"}
-                                    onChange={value => {
-                                        onChangeField('league', value.value)
-                                        setSelectedLeague(value.label)
-                                    }}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.LEAGUE_NAME}
+                                component={Select}
+                                options={leagues}
+                                value={selectedLeague}
+                                placeholder={"League"}
+                                onChange={value => {
+                                    onChangeField('league', value.value)
+                                    setSelectedLeague(value.label)
+                                }}
+                            />
                         </div>
-                    </div>
-
-                    <div className="row">
                         <div class="col-md-6">
                             <label>Platform </label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.PLATFORM_NAME}
-                                    component={Select}
-                                    options={platforms}
-                                    value={selectedPlatform}
-                                    placeholder={'Platform'}
-                                    onChange={value => {
-                                        onChangeField('platform', value.value)
-                                        setSelectedPlatform(value.label)
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label>Start Time(EST).</label>
-                            <div className="form-group">
-                                <Field
-                                    name={STRINGS.START_TIME}
-                                    component={KeyboardDateTimePickerr}
-                                    placeholder={'Start Time'}
-                                    minDate={new Date()}
-                                    minTime={new Date()}
-                                    value={fields.startTime}
-                                    onChangeDate={(value) => {
-                                        onChangeField('startTime', value)
-                                    }}
-                                />
-                            </div>
+                            <Field
+                                name={STRINGS.PLATFORM_NAME}
+                                component={Select}
+                                options={platforms}
+                                value={selectedPlatform}
+                                placeholder={'Platform'}
+                                onChange={value => {
+                                    onChangeField('platform', value.value)
+                                    setSelectedPlatform(value.label)
+                                }}
+                            />
                         </div>
                     </div>
 
                     <div className="row">
                         <div class="col-md-6">
-                            {/* <div className="row"> */}
-                            <label>End Time(EST).</label>
-                            <Field
-                                name={STRINGS.END_TIME}
-                                component={TimePickerInputField}
-                                placeholder={'End Time'}
-                                defaultValue={fields.endTime}
-                                minTime={fields.startTime}
-                                onChangeTime={time => {
-                                    onChangeField('endTime', changeEndDate(fields.startTime, time))
-                                }}
+                            <div className="row">
+                                <div class="col-md-6">
+                                    <label>Start Time(EST).</label>
+                                    <div className="form-group">
+                                        <Field
+                                            name={STRINGS.START_TIME}
+                                            component={KeyboardDateTimePickerr}
+                                            placeholder={'Start Time'}
+                                            minDate={new Date()}
+                                            minTime={new Date()}
+                                            value={fields.startTime}
+                                            onChangeDate={(value) => {
+                                                onChangeField('startTime', value)
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    {/* <div className="row"> */}
+                                    <label>End Time(EST).</label>
+                                    <Field
+                                        name={STRINGS.END_TIME}
+                                        component={TimePickerInputField}
+                                        placeholder={'End Time'}
+                                        defaultValue={fields.endTime}
+                                        minTime={fields.startTime}
+                                        onChangeTime={time => {
+                                            onChangeField('endTime', changeEndDate(fields.startTime, time))
+                                        }}
 
-                            />
-
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label>Length</label>
-                            <div className="row">
-                                <Field
-                                    name={STRINGS.CONTENT_LENGTH}
-                                    component={Input}
+                            <Field
+                                name={STRINGS.CONTENT_LENGTH}
+                                component={Input}
 
-                                    placeholder={'Content Length'}
-                                    config={{
-                                        value: fields.contentLength,
-                                        type: 'number',
-                                        readOnly: true
-                                    }}
-                                />
-                            </div>
+                                placeholder={'Content Length'}
+                                config={{
+                                    value: fields.contentLength,
+                                    type: 'number',
+                                    readOnly: true
+                                }}
+                            />
                         </div>
-                    </div>
-                    <div className="btn_group text-center">
-                        <InputSubmit buttonLabel={'Add Watch Party'} />
+
+                        <div className="btn_group text-center">
+                            <InputSubmit buttonLabel={'Add Watch Party'} />
+                        </div>
                     </div>
                 </Form>
             </div>

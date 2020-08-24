@@ -115,7 +115,9 @@ function* logoutUser({ token, success, failure }) {
 function* resetPassword({ data, success, failure }) {
     try {
         yield put(startLoader());
-        const response = yield postRequest({ API: `${api.URL.RESET_PASSWORD}`, DATA: data });
+        const response = yield postRequestNoAuth({ API: `${api.URL.RESET_PASSWORD}`, DATA: data });
+
+
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({
@@ -133,7 +135,8 @@ function* resetPassword({ data, success, failure }) {
                 failure(response.data)
             }
             else {
-                success()
+
+                success(response.data)
                 yield put(setAuthorization(null))
                 yield put(stopLoader());
             }
