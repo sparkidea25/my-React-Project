@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import { reduxForm, Field } from "redux-form";
-import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES } from "../../../../shared/constants";
+import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES, VALIDATION_MESSAGES, NAME_REGX, EMAIL_REGX } from "../../../../shared/constants";
 
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
 import { DecisionPopup } from "../../../../components/atoms/decision-popup";
 import { STRINGS } from "../../../../shared/constants/us/strings";
+import validator from "./validator"
 const { Select } = require(`../../../../components/atoms/select`)
 const { Form } = require(`../../../../components/atoms/form`);
 const { Input } = require(`../../../../components/atoms/input`);
+const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
 
-const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZones, TimeZones }) => {
+const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZones, TimeZones, handleSubmit = () => { } }) => {
   const [adminsListing, set_adminsListing] = useState([]);
   const [usersListing, set_usersListing] = useState([]);
   const [adminTotalCount, set_adminTotalCount] = useState(0);
@@ -20,7 +22,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const [usersTableIndex, set_usersTableIndex] = useState(0);
   const [rowToEdit, setRowToEdit] = useState(null)
   const [editmode, setEditMode] = useState(false)
-  const [selectedTimeZone, setSelectedTimeZone] = useState({})
+  const [fields, setFields] = useState({})
+  const [error, setError] = useState({})
 
   const adminListApi = (data, resp) => {
     listAdmins(
@@ -60,7 +63,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   }, []);
 
   useEffect(() => { }, [adminsTableIndex]);
-
   useEffect(() => { }, [usersTableIndex]);
 
   const [openSnackBar, set_openSnackbar] = useState(false);
@@ -73,7 +75,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const [userToRemove, set_userToRemove] = useState("");
 
   const removeUser = (user_id) => {
-    //function for remove user api
     removeUserAction(
       user_id,
       (response) => {
@@ -121,19 +122,108 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     setEditMode(true)
 
   }
+
+  const checkTimezone = (index) => {
+    let ob = TimeZones && TimeZones.filter(obj => {
+      if (obj._id === (usersListing && usersListing[index] && usersListing[index].timezone)) {
+        return obj
+      }
+    })
+    return ob
+  }
+
   useEffect(() => {
     if (editmode) {
-      let time = TimeZones && TimeZones.filter(obj => {
-        if (obj._id === usersListing[rowToEdit].timezone) {
-          return obj.value
-        }
+      let time = checkTimezone(rowToEdit)
+      setFields({
+        ...fields, firstName: usersListing[rowToEdit].firstName,
+        lastName: usersListing[rowToEdit].lastName, username: usersListing[rowToEdit].username, email: usersListing[rowToEdit].email,
+        phone: usersListing[rowToEdit].phone, age: usersListing[rowToEdit].age, address: usersListing[rowToEdit].address, timezone: time && time[0] ? time[0].label : ''
       })
-      // console.log(time)
-      setSelectedTimeZone(time && time[0])
     }
   }, [rowToEdit])
 
+  const onSubmit = () => {
+    let errors = checkValidateFields()
+    console.log(errors)
+    setError(errors)
 
+    if (errors['firstName'] || errors['lastName'] || errors['email'] || errors['age'] || errors['address'] || errors['phone'] || errors['username']) {
+      return
+    }
+    else {
+      console.log(fields.timezone)
+      let timezone = TimeZones && TimeZones.filter(obj => {
+        if (obj.label === (fields.timezone)) {
+          return obj
+        }
+      })
+      console.log('before update', timezone)
+      updateUser({ ...fields, timezone: timezone && timezone[0] && timezone[0]._id, zipcode: '140603', userId: usersListing[rowToEdit]._id },
+        (response) => {
+          console.log(response, 'repsonse')
+          set_snackBarData({
+            variant: response.status ? "success" : "error",
+            message: response.msg
+          });
+          set_openSnackbar(true);
+          editmode(false)
+        }, (response) => {
+          set_snackBarData({
+            variant: response.status ? "success" : "error",
+            message: response.msg
+          });
+          set_openSnackbar(true);
+        })
+
+    }
+  }
+  const checkValidateFields = () => {
+    let error = {}
+
+    if (!fields.firstName || (fields.firstName === '')) {
+      error['firstName'] = VALIDATION_MESSAGES.FIRST_NAME_REQUIRED
+    }
+    if (!NAME_REGX.test(fields.firstName)) {
+      error['firstName'] = VALIDATION_MESSAGES.NAME_VALIDATION
+    }
+
+    if (!fields.lastName || (fields.lastName === '')) {
+      error['lastName'] = VALIDATION_MESSAGES.LAST_NAME_REQUIRED
+    }
+    if (!(NAME_REGX.test(fields.lastName))) {
+      error['lastName'] = VALIDATION_MESSAGES.NAME_VALIDATION
+    }
+
+    if (!fields.username || (fields.username === '')) {
+      error['username'] = VALIDATION_MESSAGES.USER_NAME_REQUIRED
+    }
+    if (!fields.email || (fields.email === '')) {
+      error['email'] = VALIDATION_MESSAGES.EMAIL_REQUIRED
+    }
+    if (fields.email && (!EMAIL_REGX.test(fields.email))) {
+      error['email'] = VALIDATION_MESSAGES.EMAIL_INVALID
+    }
+    if (!fields.phone || (fields.phone === '')) {
+      error['phone'] = VALIDATION_MESSAGES.PHONE_REQUIRED
+    }
+    if (!fields.address || (fields.address === '')) {
+      error['address'] = VALIDATION_MESSAGES.ADDRESS_REQUIRED
+    }
+    if (!fields.age || (fields.age === '')) {
+      error['address'] = VALIDATION_MESSAGES.AGE_REQUIRED
+    }
+
+    setError(error)
+    return error
+  }
+
+  const updateFields = (type, value) => {
+    if (error[type]) {
+      setError({ ...error, [type]: null })
+    }
+    setFields({ ...fields, [type]: value })
+  }
 
   return (
     <div className="container-fluid">
@@ -186,8 +276,10 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
               </thead>
               <tbody>
                 {adminsListing && adminsListing.length ? (
-                  adminsListing.map((admin, ind) => (
-                    <tr key={ind}>
+                  adminsListing.map((admin, ind) => {
+                    let time = checkTimezone(ind)
+
+                    return <tr key={ind}>
                       <td>
                         {admin.firstName}
                       </td>
@@ -196,12 +288,12 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{admin.email}</td>
                       <td>{admin.phone}</td>
                       <td>{admin.hometown}</td>
-                      <td>{admin.timezone}</td>
+                      <td>{time && time[0] && time[0].label}</td>
                       <td>{admin.age}</td>
                       <td>{admin.dateadded}</td>
                       <td>{admin.lastactive}</td>
                     </tr>
-                  ))
+                  })
                 ) :
                   MESSAGES.noAdminsFound
                 }
@@ -234,141 +326,139 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
             <h3>Users</h3>
           </div>
           <div className="table-responsive">
-            <Form>
-              <table className="table">
-                <thead>
-                  <tr>
-                    {ADMIN_TABLE_HEADINGS.map((head) => (
-                      <th key={head.name} style={{ textDecoration: "none" }}>
-                        {head.name}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {usersListing && usersListing.length ? (
-                    usersListing.map((user, ind) => {
+            <table className="table">
+              <thead>
+                <tr>
+                  {ADMIN_TABLE_HEADINGS.map((head) => (
+                    <th key={head.name} style={{ textDecoration: "none" }}>
+                      {head.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {usersListing && usersListing.length ? (
+                  usersListing.map((user, ind) => {
+                    let time = checkTimezone(ind)
 
-
-                      return !(ind === rowToEdit && editmode) ? <tr key={ind}>
-                        <td>
-                          {user.firstName}
-                        </td>
-                        <td>{user.lastName}</td>
-                        <td>{user.username}</td>
-                        <td>{user.email}</td>
-                        <td>{user.phone}</td>
-                        <td>{user.hometown}</td>
-                        <td>{user.timezone}</td>
-                        <td>{user.age}</td>
-                        <td>{user.dateadded}</td>
-                        <td>{user.lastactive}</td>
-                        <td>
-                          <button
-                            className="btn btn-secondary"
-                            onClick={() => EditUser(ind)}>
-                            Edit
-                        </button>
-                          <button
-                            className="btn btn-primary"
-                            onClick={() => {
-                              set_userToRemove(user._id);
-                              set_openPopup(true);
-                            }}
-                          >
-                            Remove
-                        </button>
-                        </td>
-                      </tr> :
-                        <tr>
-                          <td><Field
-                            name={STRINGS.FIRST_NAME_INPUT}
-                            component={Input}
-                            // placeholder={STRINGS.FIRST_NAME_PLACEHOLDER}
-                            type={'text'}
-                            config={{ value: user.firstName }}
-
-                          /></td>
-                          <td> <Field
-                            name={STRINGS.LAST_NAME_INPUT}
-                            component={Input}
-                            // placeholder={STRINGS.LAST_NAME_PLACEHOLDER}
-                            type={'text'}
-                            config={{ value: user.firstName }}
-                          /></td>
-                          <td>   <Field
-                            name={STRINGS.USERNAME_INPUT}
-                            component={Input}
-                            // placeholder={STRINGS.USERNAME_PLACEHOLDER}
-                            type={'text'}
-                            value={user.username}
-                          /></td>
-                          <td>
-                            <Field
-                              name={STRINGS.EMAIL_INPUT_NAME}
-                              component={Input}
-                              // placeholder={STRINGS.EMAIL_PLACEHOLDER}
-
-                              config={{ value: user.email, type: 'email' }}
-                            />
-                          </td>
-                          <td>   <Field
-                            name={STRINGS.PHONE_INPUT}
-                            component={Input}
-                            placeholder={STRINGS.PHONE_PLACEHOLDER}
-                            type={'number'}
-
-                          /></td>
-                          <td>     <Field
-                            name={STRINGS.ADDRESS_INPUT}
-                            component={Input}
-                            // placeholder={STRINGS.ADDRESS_PLACEHOLDER}
-                            type={'text'}
-
-                          /></td>
-                          {/* {console.log(time && time.length > 0 && time[0]._id)} */}
-                          <td>      <Field
-                            name={STRINGS.TIME_ZONE_INPUT}
-                            component={Select}
-                            options={TimeZones}
-                            config={{ value: selectedTimeZone }}
-                            onValueChange={value => setSelectedTimeZone(value)}
-
-                          /></td>
-                          <td>       <Field
-                            name={STRINGS.AGE_INPUT}
-                            component={Input}
-                            // placeholder={STRINGS.AGE_PLACEHOLDER}
-                            type={'text'}
-
-                          /></td>
-                          <td>{user.dateadded}</td>
-                          <td>{user.lastactive}</td>
-                          <button
-                            className="btn btn-secondary"
-                          >
-                            Update
-                        </button>
-                        </tr>
-                    }
-                    ))
-                    : (
-                      <tr>
-                        <td
-                          style={{
-                            color: "#4D4D4F",
-                            fontSize: 16,
-                            fontWeight: "600",
+                    return !(ind === rowToEdit && editmode) ? <tr key={ind}>
+                      <td>
+                        {user.firstName}
+                      </td>
+                      <td>{user.lastName}</td>
+                      <td>{user.username}</td>
+                      <td>{user.email}</td>
+                      <td>{user.phone}</td>
+                      <td>{user.hometown}</td>
+                      <td>{time && time[0] && time[0].label}</td>
+                      <td>{user.age}</td>
+                      <td>{user.dateadded}</td>
+                      <td>{user.lastactive}</td>
+                      <td>
+                        <button className="btn btn-secondary" onClick={() => EditUser(ind)}>Edit</button>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => {
+                            set_userToRemove(user._id);
+                            set_openPopup(true);
                           }}
                         >
-                          {MESSAGES.noUsersFound}
+                          Remove
+                        </button>
+                      </td>
+                    </tr> :
+                      <tr>
+                        <td><input name={STRINGS.FIRST_NAME_INPUT}
+                          type={'text'}
+                          value={fields.firstName}
+                          onChange={(e) => updateFields(STRINGS.FIRST_NAME_INPUT, e.target.value)}
+                        />
+                          {error && error.firstName ? (
+                            <span className="error_msg text-danger">{error.firstName}</span>
+                          ) : null}
                         </td>
-                      </tr>
-                    )}
-                </tbody>
+                        <td>
+                          <input name={STRINGS.LAST_NAME_INPUT}
+                            type={'text'}
+                            value={fields.lastName}
+                            onChange={(e) => updateFields(STRINGS.LAST_NAME_INPUT, e.target.value)}
+                          />
+                          {error && error.lastName ? (
+                            <span className="error_msg text-danger">{error.lastName}</span>
+                          ) : null}
+                        </td>
+                        <td>   <input name={STRINGS.USERNAME_INPUT}
+                          type={'text'}
+                          value={fields.username}
+                          onChange={(e) => updateFields(STRINGS.USERNAME_INPUT, e.target.value)}
+                        />  {error && error.username ? (
+                          <span className="error_msg text-danger">{error.username}</span>
+                        ) : null}</td>
+                        <td>
+                          <input name={STRINGS.EMAIL_INPUT_NAME}
+                            type={'email'}
+                            value={fields.email}
+                            onChange={(e) => updateFields(STRINGS.EMAIL_INPUT_NAME, e.target.value)}
+                          />
+                          {error && error.email ? (
+                            <span className="error_msg text-danger">{error.email}</span>
+                          ) : null}
+                        </td>
+                        <td>   <input name={STRINGS.PHONE_INPUT}
+                          type={'number'}
+                          value={fields.phone}
+                          onChange={(e) => updateFields(STRINGS.PHONE_INPUT, e.target.value)}
+                        />   {error && error.phone ? (
+                          <span className="error_msg text-danger">{error.phone}</span>
+                        ) : null}  </td>
+                        <td>  <input name={STRINGS.ADDRESS_INPUT}
+                          type={'text'}
+                          value={fields.address}
+                          onChange={(e) => updateFields(STRINGS.ADDRESS_INPUT, e.target.value)}
+                        />  {error && error.address ? (
+                          <span className="error_msg text-danger">{error.address}</span>
+                        ) : null} </td>
 
-              </table>
-            </Form>
+                        <td>    <select name={STRINGS.TIME_ZONE_INPUT}
+                          value={fields.timezone}
+                          onChange={(e) => updateFields(STRINGS.TIME_ZONE_INPUT, e.target.value)}
+                        >  {TimeZones.map(sport => {
+                          return <option>{sport && sport.label}</option>
+                        })}</select>
+
+                        </td>
+                        <td>   <input name={STRINGS.AGE_INPUT}
+                          type={'number'}
+                          value={fields.age}
+                          onChange={(e) => updateFields(STRINGS.AGE_INPUT, e.target.value)}
+                        />
+                          {error && error.age ? (
+                            <span className="error_msg text-danger">{error.age}</span>
+                          ) : null}
+                        </td>
+                        <td>{user.dateadded}</td>
+                        <td>{user.lastactive}</td>
+                        <td>  <button onClick={onSubmit} >Update</button></td>
+                      </tr>
+                  }
+                  ))
+                  : (
+                    <tr>
+                      <td
+                        style={{
+                          color: "#4D4D4F",
+                          fontSize: 16,
+                          fontWeight: "600",
+                        }}
+                      >
+                        {MESSAGES.noUsersFound}
+                      </td>
+                    </tr>
+                  )}
+              </tbody>
+
+            </table>
+
           </div>
           {usersListing && usersListing.length ? (
             <CustomPagination
@@ -393,14 +483,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
           ) : null}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
-export const Screen = reduxForm({
-  form: "UpdateUserForm",
-  fields: [''],
-  // onSubmitFail,
-  // validate: validator,
-  enableReinitialize: true
-})(User);
+export const Screen = User

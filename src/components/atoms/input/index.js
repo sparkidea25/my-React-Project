@@ -10,6 +10,7 @@ export const Input = ({
   style,
   maxLength,
   data,
+
   ...props
 }) => {
   widthStyle = widthStyle ? widthStyle : "";
@@ -29,6 +30,7 @@ export const Input = ({
         {...config}
         onChange={(value) => {
           input.onChange(value);
+
         }}
         // value={data}
         maxLength={50}

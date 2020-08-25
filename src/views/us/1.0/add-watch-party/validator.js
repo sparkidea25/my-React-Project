@@ -90,9 +90,9 @@ const validator = values => {
         }
     }
 
-    if (!values[STRINGS.CONTENT_PICTURE]) {
-        errors[STRINGS.CONTENT_PICTURE] = VALIDATION_MESSAGES.PCITURE_REQUIRED;
-    }
+    // if (!values[STRINGS.CONTENT_PICTURE]) {
+    //     errors[STRINGS.CONTENT_PICTURE] = VALIDATION_MESSAGES.PCITURE_REQUIRED;
+    // }
 
     return errors;
 };

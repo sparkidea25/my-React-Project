@@ -78,7 +78,7 @@ const UForm = (props) => {
 
                                             />
                                         </div>
-                                        <div className="col-md-3 col-sm-6">
+                                        {/* <div className="col-md-3 col-sm-6">
                                             <Field
                                                 name={`${member}.contentPicture`}
                                                 component={CustomFileDrop}
@@ -86,7 +86,7 @@ const UForm = (props) => {
                                                 uploadImage={uploadImage}
 
                                             />
-                                        </div>
+                                        </div> */}
                                         <div className="col-md-3 col-sm-6">
                                             <div className="form-group">
                                                 <Field

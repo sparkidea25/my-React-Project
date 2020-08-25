@@ -183,7 +183,7 @@ const WatchPartyForm = ({
                                 onChange={event => onChangeField('show', event.target.value)}
                             />
                         </div>
-                        <div className="col-md-6">
+                        {/* <div className="col-md-6">
                             <label className="d-none d-md-block">&nbsp;</label>
                             <Field
                                 name={STRINGS.CONTENT_PICTURE}
@@ -191,7 +191,7 @@ const WatchPartyForm = ({
                                 placeholder={'ContentPicture'}
                                 uploadImage={uploadImage}
                             />
-                        </div>
+                        </div> */}
                         <div className="col-md-6">
                             <label>Host</label>
                             <Field

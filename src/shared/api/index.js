@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://32d2b55b7e9a.ngrok.io'; //Live URL
+const SERVER_URL = 'http://b35ae9604a5f.ngrok.io'; //Live URL
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {
@@ -18,8 +18,9 @@ module.exports = {
     UPLOAD_IMAGE: SERVER_URL + API_VERSION + '/uploadFile',
     GET_USERS_LIST: SERVER_URL + API_VERSION + '/admin/getUsersList',
     GET_ADMIN_LIST: SERVER_URL + API_VERSION + '/admin/getAdmins',
-    UPDATE_USER: SERVER_URL + API_VERSION + '/admin/updateUser',
+    UPDATE_USER: SERVER_URL + API_VERSION + '/user/updateProfile',
     GET_TIME_ZONES: SERVER_URL + API_VERSION + '/timezone/getAllTimezones',
     DELETE_USER: SERVER_URL + API_VERSION + '/admin/deleteUser',
+
   }
 };

@@ -75,10 +75,10 @@ const validator = values => {
                 VALIDATION_MESSAGES.SELECT_START_TIME_FIRST;
             partyArrayErrors[partyIndex] = partyErrors
         }
-        if (!party.contentPicture) {
-            partyErrors.contentPicture = VALIDATION_MESSAGES.PCITURE_REQUIRED;
-            partyArrayErrors[partyIndex] = partyErrors
-        }
+        // if (!party.contentPicture) {
+        //     partyErrors.contentPicture = VALIDATION_MESSAGES.PCITURE_REQUIRED;
+        //     partyArrayErrors[partyIndex] = partyErrors
+        // }
     })
 
     if (partyArrayErrors.length) {
