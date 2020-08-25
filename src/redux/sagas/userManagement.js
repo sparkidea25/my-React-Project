@@ -9,14 +9,20 @@ import {
   REMOVE_USER,
   UPDATE_USER
 } from "../actions";
+<<<<<<< HEAD
 import { getRequest, putRequest } from "../../helpers";
+=======
+import { getRequest, deleteRequest } from "../../helpers";
+>>>>>>> ce3c9bf8f307419326c9e1b705710122a30322b1
 const api = require(`../../shared/api`);
 const { STATUS_CODE } = require(`../../shared/constants`);
 
 function* getAdminList({ payload, success, failure }) {
   try {
     yield put(startLoader());
-    const response = yield getRequest({ API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}` });
+    const response = yield getRequest({
+      API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}`,
+    });
     yield responseChecker(response, success, failure);
   } catch (err) {
     yield put(stopLoader());
@@ -30,7 +36,7 @@ function* listUsers({ payload, success, failure }) {
   try {
     yield put(startLoader());
     const response = yield getRequest({
-      API: `${api.URL.GET_USERS_LIST}?${payload}`
+      API: `${api.URL.GET_USERS_LIST}?${payload}`,
     });
     yield responseChecker(response, success, failure);
   } catch (err) {
@@ -41,10 +47,20 @@ function* listUsers({ payload, success, failure }) {
   }
 }
 
+<<<<<<< HEAD
 function* updateUser({ data, success, failure }) {
   try {
     yield put(startLoader());
     const response = yield putRequest({ API: `${api.URL.UPDATE_USER}`, DATA: data });
+=======
+function* removeUser({ payload, success, failure }) {
+  try {
+    //for dummy data
+    yield put(startLoader());
+    const response = yield deleteRequest({
+      API: `${api.URL.DELETE_USER}/${payload}`,
+    });
+>>>>>>> ce3c9bf8f307419326c9e1b705710122a30322b1
     yield responseChecker(response, success, failure);
   } catch (err) {
     yield put(stopLoader());
@@ -53,6 +69,7 @@ function* updateUser({ data, success, failure }) {
     });
   }
 }
+<<<<<<< HEAD
 
 // function* removeUser({ payload, success, failure }) {
 //   try {
@@ -69,13 +86,19 @@ function* updateUser({ data, success, failure }) {
 //   }
 // }
 
+=======
+>>>>>>> ce3c9bf8f307419326c9e1b705710122a30322b1
 
 function* userManagementSaga() {
   yield all([
     takeLatest(GET_ADMINS_LIST, getAdminList),
     takeLatest(GET_USERS_LIST, listUsers),
+<<<<<<< HEAD
     takeLatest(UPDATE_USER, updateUser),
     // takeLatest(REMOVE_USER, removeUser),
+=======
+    takeLatest(REMOVE_USER, removeUser),
+>>>>>>> ce3c9bf8f307419326c9e1b705710122a30322b1
   ]);
 }
 
@@ -103,4 +126,3 @@ function* responseChecker(response, success, failure) {
     }
   }
 }
-

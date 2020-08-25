@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style.scss";
 import { reduxForm, Field } from "redux-form";
 import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES } from "../../../../shared/constants";
+
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
 import { DecisionPopup } from "../../../../components/atoms/decision-popup";
@@ -25,10 +26,9 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     listAdmins(
       data,
       (response) => {
-
         set_adminsListing(response && response.admins);
-        set_adminTotalCount(response && response.totalCount);
-        resp()
+        set_adminTotalCount(response && response.totalRecords);
+        resp();
       },
       () => { }
     );
@@ -50,9 +50,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   };
 
   useEffect(() => {
-    adminListApi(
-      { skip: 0, limit: STRINGS.SHOW_LIMIT }
-    );
+    adminListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT });
     userListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT }, (response) => {
       set_usersListing(response.users);
       set_usersTotalCount(response.totalRecords);
@@ -74,30 +72,38 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const [openPopup, set_openPopup] = useState(false);
   const [userToRemove, set_userToRemove] = useState("");
 
-  const removeUser = (username) => {
+  const removeUser = (user_id) => {
     //function for remove user api
     removeUserAction(
-      username,
+      user_id,
       (response) => {
         set_snackBarData({
           variant: response.status ? "success" : "error",
-          message: response.msg,
+          message: response.msg ? response.msg : "user successfully removed",
         });
         set_openSnackbar(true);
-        if (usersTotalCount <= usersTableIndex * STRINGS.SHOW_LIMIT + 1) {
-          set_usersTableIndex(usersTableIndex - 1);
-        } else {
-          userListApi(
-            {
-              skip: usersTableIndex * STRINGS.SHOW_LIMIT,
-              limit: STRINGS.SHOW_LIMIT,
-            },
-            (response) => {
-              set_usersListing(response.userListing);
-              set_usersTotalCount(response.totalCount);
-            }
-          );
-        }
+        userListApi(
+          {
+            skip:
+              usersTotalCount === 1
+                ? 0
+                : usersTotalCount === usersTableIndex * STRINGS.SHOW_LIMIT + 1
+                  ? (usersTableIndex - 1) * STRINGS.SHOW_LIMIT
+                  : usersTableIndex * STRINGS.SHOW_LIMIT,
+            limit: STRINGS.SHOW_LIMIT,
+          },
+          (response) => {
+            set_usersTableIndex(
+              usersTotalCount === 1
+                ? 0
+                : usersTotalCount === usersTableIndex * STRINGS.SHOW_LIMIT + 1
+                  ? usersTableIndex - 1
+                  : usersTableIndex
+            );
+            set_usersListing(response.users);
+            set_usersTotalCount(response.totalRecords);
+          }
+        );
       },
       (error) => {
         set_snackBarData({
@@ -140,7 +146,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
 
       <DecisionPopup
         modalVisibility={openPopup}
-        dialogContent={`Click confirm to remove user : ${userToRemove}`}
+        dialogContent={`Click confirm to remove user `}
         dialogTitle={"Remove User"}
         confirmButtonTitle={STRINGS.CONFIRM}
         rejectButtonTitle={STRINGS.CANCEL}
@@ -217,7 +223,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       set_adminsTableIndex(value && value.selected);
                     }
                   );
-
                 }}
               />
             ) : null}
@@ -267,7 +272,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                           <button
                             className="btn btn-primary"
                             onClick={() => {
-                              set_userToRemove(user.username);
+                              set_userToRemove(user._id);
                               set_openPopup(true);
                             }}
                           >

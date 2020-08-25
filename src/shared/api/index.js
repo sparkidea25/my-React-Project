@@ -20,5 +20,6 @@ module.exports = {
     GET_ADMIN_LIST: SERVER_URL + API_VERSION + '/admin/getAdmins',
     UPDATE_USER: SERVER_URL + API_VERSION + '/admin/updateUser',
     GET_TIME_ZONES: SERVER_URL + API_VERSION + '/timezone/getAllTimezones',
+    DELETE_USER: SERVER_URL + API_VERSION + '/admin/deleteUser',
   }
 };
