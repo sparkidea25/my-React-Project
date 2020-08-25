@@ -2,7 +2,7 @@ import React from "react";
 import ReactSelect from "react-select";
 
 export const Select = ({
-  value,
+  defaultValue,
   label,
   config,
   meta: { touched, error },
@@ -19,18 +19,21 @@ export const Select = ({
     touched && error ? (
       <span className="error_msg text-danger">{error}</span>
     ) : null;
-  console.log(input, 'value')
+
+
+
   return (
     <>
       {label && <label>{label}</label>}
       <div className="form-group">
         <ReactSelect
           {...input}
+          {...config}
           options={options}
           // onChange={onValueChange}
           isSearchable={isSearchable}
-          placeholder={placeholder}
-          value={value}
+          // placeholder={placeholder}
+
           onChange={(value) => {
             console.log(value)
             input.onChange(value);

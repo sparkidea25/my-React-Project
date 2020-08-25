@@ -123,11 +123,11 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
         }
       })
       // console.log(time)
-      setSelectedTimeZone(time)
+      setSelectedTimeZone(time && time[0])
     }
   }, [rowToEdit])
 
-  useEffect()
+
 
   return (
     <div className="container-fluid">
@@ -326,7 +326,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                             name={STRINGS.TIME_ZONE_INPUT}
                             component={Select}
                             options={TimeZones}
-                            value={selectedTimeZone}
+                            config={{ value: selectedTimeZone }}
+                            onValueChange={value => setSelectedTimeZone(value)}
 
                           /></td>
                           <td>       <Field
