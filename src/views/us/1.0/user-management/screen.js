@@ -23,7 +23,7 @@ export const Screen = ({ listAdmins, listUsers, removeUserAction }) => {
       data,
       (response) => {
         set_adminsListing(response && response.admins);
-        set_adminTotalCount(response && response.totalCount);
+        set_adminTotalCount(response && response.totalRecords);
         resp();
       },
       () => {}

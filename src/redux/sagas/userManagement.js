@@ -50,8 +50,8 @@ function* removeUser({ payload, success, failure }) {
       API: `${api.URL.DELETE_USER}/${payload}`,
     });
     yield responseChecker(response, success, failure);
-    yield put(stopLoader());
   } catch (err) {
+    yield put(stopLoader());
     failure({
       msg: "Sorry, something went wrong.",
     });
