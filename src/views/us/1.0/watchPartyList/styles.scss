@@ -12,17 +12,18 @@
   thead {
     border:0;
     th {
-        word-break: keep-all;
-        text-decoration: underline;
-        font-size: $f16+2;
-        color:$black-color;
-        font-weight: 500;
-        border:0!important;
-        line-height: 20px;
-        white-space: nowrap;
         padding: .5rem;
+        font-size: $f16+1;
+        line-height: 20px;
+        border:0!important;
+        color:$black-color;
+        white-space: nowrap;
+        position: $relative;
+        word-break: keep-all;
+        font-weight: $f-medium;
+        text-decoration: underline;
         @media (max-width:767px){
-            font-size: 16px;
+            font-size: $f16;
         }
     }
   }

@@ -17,3 +17,17 @@ select {
         border-color: rgb(118, 118, 118);
     }
 }
+.sorting {
+    @include flexbox;
+    width:16px;
+    position: $absolute;
+    right: 0;
+    top: 7px;
+    span {
+        cursor: pointer;
+        margin:0 2px; 
+        img {
+            max-width: 5.5px;
+        }
+    }
+}

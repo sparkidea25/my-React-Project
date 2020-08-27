@@ -269,6 +269,11 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                   {ADMIN_TABLE_HEADINGS.map((head) => (
                     <th key={head.name} style={{ textDecoration: "none" }}>
                       {head.name}
+
+                      <div className="sorting">
+                        <span><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                        <span><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span>
+                      </div>
                     </th>
                   ))}
                 </tr>
