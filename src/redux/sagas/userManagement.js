@@ -18,7 +18,7 @@ function* getAdminList({ payload, success, failure }) {
   try {
     yield put(startLoader());
     const response = yield getRequest({
-      API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}&sortKey=firstName&sortOrder=1`,
+      API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}&sortKey=${payload.sortKey}&sortOrder=${payload.sortOrder}`,
     });
     yield responseChecker(response, success, failure);
   } catch (err) {
@@ -33,7 +33,7 @@ function* listUsers({ payload, success, failure }) {
   try {
     yield put(startLoader());
     const response = yield getRequest({
-      API: `${api.URL.GET_USERS_LIST}?${payload}&sortKey=firstName&sortOrder=1`,
+      API: `${api.URL.GET_USERS_LIST}?${payload}`,
     });
     yield responseChecker(response, success, failure);
   } catch (err) {

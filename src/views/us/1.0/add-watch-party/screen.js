@@ -183,15 +183,6 @@ const WatchPartyForm = ({
                                 onChange={event => onChangeField('show', event.target.value)}
                             />
                         </div>
-                        {/* <div className="col-md-6">
-                            <label className="d-none d-md-block">&nbsp;</label>
-                            <Field
-                                name={STRINGS.CONTENT_PICTURE}
-                                component={CustomFileDrop}
-                                placeholder={'ContentPicture'}
-                                uploadImage={uploadImage}
-                            />
-                        </div> */}
                         <div className="col-md-6">
                             <label>Host</label>
                             <Field
@@ -203,7 +194,7 @@ const WatchPartyForm = ({
                                 onChange={event => onChangeField('host', event.target.value)}
                             />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label>Sports </label>
                             <Field
                                 name={STRINGS.SPORTS_NAME}

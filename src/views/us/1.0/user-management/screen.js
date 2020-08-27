@@ -49,7 +49,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   };
 
   useEffect(() => {
-    adminListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT });
+    adminListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, sortKey: 'firstName', sortOrder: 1 });
     userListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT }, (response) => {
       set_usersListing(response.users);
       set_usersTotalCount(response.totalRecords);
@@ -210,7 +210,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     // if (!fields.address || (fields.address === '')) {
     //   error['address'] = VALIDATION_MESSAGES.ADDRESS_REQUIRED
     // }
-    if (fields.age && (fields.age < 13)) {
+    console.log(fields.age)
+    if (fields.age < 13 || fields.age === 0) {
       error['age'] = VALIDATION_MESSAGES.AGE_VALIDATION
     }
 
@@ -223,6 +224,18 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
       setError({ ...error, [type]: null })
     }
     setFields({ ...fields, [type]: value })
+  }
+
+  const sortAscending = (sortkey, type, order) => {
+    let key = (sortkey === 'First Name') ? 'firstName' : (sortkey === 'Date Added') ? 'createdAt' : 'email'
+    if (type === 'user') {
+      userListApi({ skip: usersTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, sortKey: key, sortOrder: order }, (response) => {
+        set_usersListing(response.users);
+        set_usersTotalCount(response.totalRecords);
+      });
+    } else {
+      adminListApi({ skip: adminsTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, sortKey: key, sortOrder: order });
+    }
   }
 
   return (
@@ -271,8 +284,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       {head.name}
 
                       <div className="sorting">
-                        <span><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                        <span><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span>
+                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span onClick={() => sortAscending(head.name, 'admin', -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                          <span onClick={() => sortAscending(head.name, 'admin', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
                       </div>
                     </th>
                   ))}
@@ -314,6 +327,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                     {
                       skip: value.selected * STRINGS.SHOW_LIMIT,
                       limit: STRINGS.SHOW_LIMIT,
+                      sortKey: 'firstName', sortOrder: 1
                     },
                     (response) => {
                       set_adminsTableIndex(value && value.selected);
@@ -336,6 +350,10 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                   {ADMIN_TABLE_HEADINGS.map((head) => (
                     <th key={head.name} style={{ textDecoration: "none" }}>
                       {head.name}
+                      <div className="sorting">
+                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span onClick={() => sortAscending(head.name, 'user', -1)}><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                          <span onClick={() => sortAscending(head.name, 'user', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
+                      </div>
                     </th>
                   ))}
                 </tr>
