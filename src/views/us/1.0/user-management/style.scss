@@ -4,3 +4,16 @@
     min-height: 180px;
     margin-top: 15px;
 }
+select {
+    min-height:27px;
+}
+.phone_key {
+    @include flexbox;
+    input[type="text"] {
+        max-width: 40px;
+        margin-right:5px;
+        border-width: 1px;
+        border-style: inset;
+        border-color: rgb(118, 118, 118);
+    }
+}

@@ -354,16 +354,18 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{moment(user.createdAt).format('DD/MM/YYYY')}</td>
                       <td>{user.lastactive}</td>
                       <td>
-                        <button className="btn btn-secondary" onClick={() => EditUser(ind)}>Edit</button>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => {
-                            set_userToRemove(user._id);
-                            set_openPopup(true);
-                          }}
-                        >
-                          Remove
+                        <div className="d-flex">
+                          <button className="btn mr-1 btn-sm btn-secondary" onClick={() => EditUser(ind)}>Edit</button>
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => {
+                              set_userToRemove(user._id);
+                              set_openPopup(true);
+                            }}
+                          >
+                            Remove
                         </button>
+                        </div>
                       </td>
                     </tr> :
                       <tr>
@@ -403,24 +405,30 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                             <span className="error_msg text-danger">{error.email}</span>
                           ) : null}
                         </td>
-                        <td>  <input name={'phoneKey'}
-                          type={'text'}
-                          value={'+1'}
-                          disabled={true}
-                        />  <input name={STRINGS.PHONE_INPUT}
-                          type={'tel'}
-                          value={fields.phone}
-                          onChange={(e) => updateFields(STRINGS.PHONE_INPUT, e.target.value)}
-                          />   {error && error.phone ? (
-                            <span className="error_msg text-danger">{error.phone}</span>
-                          ) : null}  </td>
+                        <td>
+                          <div className="phone_key">
+                            <input name={'phoneKey'}
+                              type={'text'}
+                              value={'+1'}
+                              disabled={true}
+                            />
+                            <input name={STRINGS.PHONE_INPUT}
+                              type={'tel'}
+                              value={fields.phone}
+                              onChange={(e) => updateFields(STRINGS.PHONE_INPUT, e.target.value)}
+                            />   {error && error.phone ? (
+                              <span className="error_msg text-danger">{error.phone}</span>
+                            ) : null} </div>
+                        </td>
+
                         <td>  <input name={STRINGS.ADDRESS_INPUT}
                           type={'text'}
                           value={fields.address}
                           onChange={(e) => updateFields(STRINGS.ADDRESS_INPUT, e.target.value)}
                         />  {error && error.address ? (
                           <span className="error_msg text-danger">{error.address}</span>
-                        ) : null} </td>
+                        ) : null}
+                        </td>
 
                         <td>   <select name={STRINGS.TIME_ZONE_INPUT}
                           value={fields.timezone}
@@ -446,7 +454,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                         </td>
                         <td>{moment(user.createdAt).format('DD/MM/YYYY')}</td>
                         <td>{user.lastactive}</td>
-                        <td>  <button className="btn btn-secondary" onClick={onSubmit} >Update</button></td>
+                        <td>  <button className="btn btn-sm btn-secondary" onClick={onSubmit} >Update</button></td>
                       </tr>
                   }
                   ))
