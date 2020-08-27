@@ -286,10 +286,10 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{admin.username}</td>
                       <td>{admin.email}</td>
                       <td>{admin.phone}</td>
-                      <td>{admin.hometown}</td>
+                      <td>{admin.address}</td>
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{admin.age}</td>
-                      <td>{admin.dateadded}</td>
+                      <td>{moment(admin.createdAt).format('DD/MM/YYYY')}</td>
                       <td>{admin.lastactive}</td>
                     </tr>
                   })
