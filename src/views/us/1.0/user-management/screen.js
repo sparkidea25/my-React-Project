@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
-import { reduxForm, Field } from "redux-form";
 import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES, VALIDATION_MESSAGES, NAME_REGX, EMAIL_REGX } from "../../../../shared/constants";
 
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
 import { DecisionPopup } from "../../../../components/atoms/decision-popup";
 import { STRINGS } from "../../../../shared/constants/us/strings";
-import validator from "./validator"
-const { Select } = require(`../../../../components/atoms/select`)
-const { Form } = require(`../../../../components/atoms/form`);
-const { Input } = require(`../../../../components/atoms/input`);
-const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
+import moment from 'moment'
+const { getPhoneValid } = require('../../../../helpers/phoneValidator')
 
 const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZones, TimeZones, handleSubmit = () => { } }) => {
   const [adminsListing, set_adminsListing] = useState([]);
@@ -65,10 +61,10 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   useEffect(() => { }, [adminsTableIndex]);
   useEffect(() => { }, [usersTableIndex]);
 
-  const [openSnackBar, set_openSnackbar] = useState(false);
-  const [snackbarData, set_snackBarData] = useState({
-    variant: "",
-    message: "",
+  const [openSnackBar, setOpenSnackbar] = useState(false);
+  const [snackbarData, setSnackBarData] = useState({
+    variant: '',
+    message: ''
   });
 
   const [openPopup, set_openPopup] = useState(false);
@@ -78,11 +74,11 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     removeUserAction(
       user_id,
       (response) => {
-        set_snackBarData({
-          variant: response.status ? "success" : "error",
-          message: response.msg ? response.msg : "user successfully removed",
+        setSnackBarData({
+          variant: response.status ? 'success' : 'error',
+          message: response.msg
         });
-        set_openSnackbar(true);
+        setOpenSnackbar(true)
         userListApi(
           {
             skip:
@@ -107,11 +103,11 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
         );
       },
       (error) => {
-        set_snackBarData({
-          variant: error.status ? "error" : "error",
-          message: error.msg,
+        setSnackBarData({
+          variant: error.status ? 'success' : 'error',
+          message: error.msg
         });
-        set_openSnackbar(true);
+        setOpenSnackbar(true)
       }
     );
     set_userToRemove("");
@@ -158,22 +154,26 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
           return obj
         }
       })
-      console.log('before update', timezone)
+
       updateUser({ ...fields, timezone: timezone && timezone[0] && timezone[0]._id, zipcode: '140603', userId: usersListing[rowToEdit]._id },
         (response) => {
-          console.log(response, 'repsonse')
-          set_snackBarData({
-            variant: response.status ? "success" : "error",
+
+          setEditMode(false)
+          setSnackBarData({
+            variant: response.status ? 'success' : 'error',
             message: response.msg
           });
-          set_openSnackbar(true);
-          editmode(false)
+          setOpenSnackbar(true)
+          userListApi({ skip: usersTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT }, (response) => {
+            set_usersListing(response.users);
+            set_usersTotalCount(response.totalRecords);
+          });
         }, (response) => {
-          set_snackBarData({
-            variant: response.status ? "success" : "error",
+          setSnackBarData({
+            variant: response.status ? 'success' : 'error',
             message: response.msg
           });
-          set_openSnackbar(true);
+          setOpenSnackbar(true)
         })
 
     }
@@ -181,37 +181,37 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const checkValidateFields = () => {
     let error = {}
 
-    if (!fields.firstName || (fields.firstName === '')) {
-      error['firstName'] = VALIDATION_MESSAGES.FIRST_NAME_REQUIRED
-    }
+    // if (!fields.firstName || (fields.firstName === '')) {
+    //   error['firstName'] = VALIDATION_MESSAGES.FIRST_NAME_REQUIRED
+    // }
     if (!NAME_REGX.test(fields.firstName)) {
       error['firstName'] = VALIDATION_MESSAGES.NAME_VALIDATION
     }
 
-    if (!fields.lastName || (fields.lastName === '')) {
-      error['lastName'] = VALIDATION_MESSAGES.LAST_NAME_REQUIRED
-    }
+    // if (!fields.lastName || (fields.lastName === '')) {
+    //   error['lastName'] = VALIDATION_MESSAGES.LAST_NAME_REQUIRED
+    // }
     if (!(NAME_REGX.test(fields.lastName))) {
       error['lastName'] = VALIDATION_MESSAGES.NAME_VALIDATION
     }
 
-    if (!fields.username || (fields.username === '')) {
-      error['username'] = VALIDATION_MESSAGES.USER_NAME_REQUIRED
-    }
-    if (!fields.email || (fields.email === '')) {
-      error['email'] = VALIDATION_MESSAGES.EMAIL_REQUIRED
-    }
+    // if (!fields.username || (fields.username === '')) {
+    //   error['username'] = VALIDATION_MESSAGES.USER_NAME_REQUIRED
+    // }
+    // if (!fields.email || (fields.email === '')) {
+    //   error['email'] = VALIDATION_MESSAGES.EMAIL_REQUIRED
+    // }
     if (fields.email && (!EMAIL_REGX.test(fields.email))) {
       error['email'] = VALIDATION_MESSAGES.EMAIL_INVALID
     }
-    if (!fields.phone || (fields.phone === '')) {
-      error['phone'] = VALIDATION_MESSAGES.PHONE_REQUIRED
+    if (fields.phone && getPhoneValid(fields.phone) === 'invalid') {
+      error['phone'] = VALIDATION_MESSAGES.PHONE_VALIDATION
     }
-    if (!fields.address || (fields.address === '')) {
-      error['address'] = VALIDATION_MESSAGES.ADDRESS_REQUIRED
-    }
-    if (!fields.age || (fields.age === '')) {
-      error['address'] = VALIDATION_MESSAGES.AGE_REQUIRED
+    // if (!fields.address || (fields.address === '')) {
+    //   error['address'] = VALIDATION_MESSAGES.ADDRESS_REQUIRED
+    // }
+    if (fields.age && (fields.age < 13)) {
+      error['age'] = VALIDATION_MESSAGES.AGE_VALIDATION
     }
 
     setError(error)
@@ -227,13 +227,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
 
   return (
     <div className="container-fluid">
-      <SnackbarWrapper
-        visible={openSnackBar}
-        onClose={() => set_openSnackbar(false)}
-        variant={snackbarData.variant}
-        message={snackbarData.message}
-      />
-
       <DecisionPopup
         modalVisibility={openPopup}
         dialogContent={`Click confirm to remove user `}
@@ -252,6 +245,12 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
       />
 
       <div className="content-panel">
+        <SnackbarWrapper
+          visible={openSnackBar}
+          onClose={() => setOpenSnackbar(false)}
+          variant={snackbarData.variant}
+          message={snackbarData.message}
+        />
         <div className="row  page-title">
           <h1 className="col-md-3">{PAGE_TITLES.USER_MANAGEMENT}</h1>
           <div className="col-md-6">
@@ -348,11 +347,11 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{user.lastName}</td>
                       <td>{user.username}</td>
                       <td>{user.email}</td>
-                      <td>{user.phone}</td>
-                      <td>{user.hometown}</td>
+                      <td>{user.phone ? '+1' : ''} {user.phone}</td>
+                      <td>{user.address}</td>
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{user.age}</td>
-                      <td>{user.dateadded}</td>
+                      <td>{moment(user.createdAt).format('DD/MM/YYYY')}</td>
                       <td>{user.lastactive}</td>
                       <td>
                         <button className="btn btn-secondary" onClick={() => EditUser(ind)}>Edit</button>
@@ -404,13 +403,17 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                             <span className="error_msg text-danger">{error.email}</span>
                           ) : null}
                         </td>
-                        <td>   <input name={STRINGS.PHONE_INPUT}
-                          type={'number'}
+                        <td>  <input name={'phoneKey'}
+                          type={'text'}
+                          value={'+1'}
+                          disabled={true}
+                        />  <input name={STRINGS.PHONE_INPUT}
+                          type={'tel'}
                           value={fields.phone}
                           onChange={(e) => updateFields(STRINGS.PHONE_INPUT, e.target.value)}
-                        />   {error && error.phone ? (
-                          <span className="error_msg text-danger">{error.phone}</span>
-                        ) : null}  </td>
+                          />   {error && error.phone ? (
+                            <span className="error_msg text-danger">{error.phone}</span>
+                          ) : null}  </td>
                         <td>  <input name={STRINGS.ADDRESS_INPUT}
                           type={'text'}
                           value={fields.address}
@@ -419,12 +422,17 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                           <span className="error_msg text-danger">{error.address}</span>
                         ) : null} </td>
 
-                        <td>    <select name={STRINGS.TIME_ZONE_INPUT}
+                        <td>   <select name={STRINGS.TIME_ZONE_INPUT}
                           value={fields.timezone}
                           onChange={(e) => updateFields(STRINGS.TIME_ZONE_INPUT, e.target.value)}
-                        >  {TimeZones.map(sport => {
-                          return <option>{sport && sport.label}</option>
-                        })}</select>
+                        >
+                          <>
+                            {!fields.timezone ? <option>Choose Timezone</option> : null}
+                            {TimeZones.map(sport => {
+                              return <option>{sport && sport.label}</option>
+                            })}
+                          </>
+                        </select>
 
                         </td>
                         <td>   <input name={STRINGS.AGE_INPUT}
@@ -436,9 +444,9 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                             <span className="error_msg text-danger">{error.age}</span>
                           ) : null}
                         </td>
-                        <td>{user.dateadded}</td>
+                        <td>{moment(user.createdAt).format('DD/MM/YYYY')}</td>
                         <td>{user.lastactive}</td>
-                        <td>  <button onClick={onSubmit} >Update</button></td>
+                        <td>  <button className="btn btn-secondary" onClick={onSubmit} >Update</button></td>
                       </tr>
                   }
                   ))
@@ -467,6 +475,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
               itemsCount={usersListing && usersListing.length}
               currentPage={usersTableIndex + 1}
               onPageChange={(value) => {
+                setEditMode(false)
+                setFields({})
                 userListApi(
                   {
                     skip: value.selected * STRINGS.SHOW_LIMIT,
