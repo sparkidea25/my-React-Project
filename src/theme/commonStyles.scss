@@ -12,14 +12,14 @@ body,
 html {
   margin:0;
   height: 100%; 
-  font-weight: 400;
+  font-weight: $f-regular;;
   font-size: $f16;
 }
 iframe {border:0;}
 img {border:0; outline: 0!important;}
 h1,h2,h3,h4,h5,h6 {
   color:$base-color;
-  font-weight:700;
+  font-weight: $f-bold;
   margin: 0px;
 }
 h1 {
@@ -53,9 +53,9 @@ h6{
   font-size: 1rem;
 }
 a {
-  font-size: 15px;
-  line-height: 1.7;
   color: $primary-color;
+  font-size: $f12+3;
+  line-height: 1.7;
   margin: 0px;
   transition: all 0.4s;
   -webkit-transition: all 0.4s;
@@ -78,7 +78,7 @@ p {
 ul,li {
   padding:0;
   margin: 0;
-  list-style-type: none;
+  list-style-type: $none;
 }
 .shadow {
     box-shadow: 0 0.1rem .7rem .1rem rgba(0, 0, 0, .15) !important;
@@ -86,18 +86,22 @@ ul,li {
 button {
   outline: none !important;
   border-color: 0;
-  cursor: pointer;
   border:0;
+  cursor: pointer;
 }
 input, textarea {
-  outline: none; 
+  outline: $none; 
 }
 label {
-  font-weight: 500;
+  font-weight: $f-medium;
   margin-bottom: 0;
 }
-.btn {line-height: normal;}
-.btn-sm {min-width: 80px;}
+.btn {line-height: normal;
+&:focus {
+  box-shadow: none!important;
+}
+}
+.btn-sm {min-width: 70px; word-break: keep-all;}
 .btn-md {
   display: $inline-block;
   padding: 8px 10px;
@@ -106,13 +110,13 @@ label {
   min-width: 130px;
   text-align: center; 
   height:40px;  
-  border-radius: 7px;
+  @include border-radius (7px);
 }
 .btn-lg {
   display: $inline-block;
   padding: 10px 15px;
   font-size: $f16;
-  font-weight: 500;
+  font-weight: $f-medium;
   min-width: 156px;
   text-align: center; 
 } 
@@ -126,8 +130,8 @@ label {
     border: 1px solid $secondary-color;
   }
   i{
-    color:#fff;
-    font-weight: 700;
+    color:$white-color;
+    font-weight: $f-bold;
     margin-right: 5px;
     font-style: normal;
   }
@@ -163,16 +167,18 @@ label {
     background: $teal-color;
   }
   i{
-    color:#fff;
-    font-weight: 700;
+    color:$white-color;
+    font-weight: $f-bold;
     margin-right: 5px;
     font-style: normal;
   }
 }
-.btn-radius {border-radius:25px;}
+.btn-radius {
+  @include border-radius (25px);
+}
 textarea {
-  outline: none;
-  border: none;
+  outline: $none;
+  border: $none;
   &.form-control {
     min-height: 140px;
     padding: .675rem .75rem;
@@ -183,7 +189,7 @@ textarea {
   color: $inputTxt-color;
   border-color: $grey-color2;
   line-height: 1;
-  display: block;
+  display: $block;
   width: 100%;
   min-height: 50px;
   background: $white-color;
@@ -234,7 +240,7 @@ textarea:-ms-input-placeholder {
   border-color: $grey-color2;
   border-width:1px;
   border-style: solid;
-  border-radius: 4px;
+  @include border-radius (4px);
   padding: 10px;
   color:$black-color;
 }

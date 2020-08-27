@@ -170,7 +170,7 @@ const UForm = (props) => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-3 col-4">
+                                        <div className="col-md-2 col-3">
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.CONTENT_LENGTH}`}
@@ -184,7 +184,7 @@ const UForm = (props) => {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-2">
+                                        <div className="col-md-1">
                                             <div className="d-flex">
                                                 <button type='button' className="btn add_row btn-transparent" onClick={() => addRow()}><img src={require('../../../../assets/img/icons/add_icon.svg')} width="24px" /></button>
                                                 {index > 0 ? <div className="remove_row" onClick={() => onDeleteRow(index)}>

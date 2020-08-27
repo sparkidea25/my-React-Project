@@ -361,8 +361,6 @@ export const Screen = ({ listWatchParty, history,
                                                         </div>
                                                     </td>
                                                     <td><div className="input_field">
-
-
                                                         <>
                                                             <FieldDatePickerr
                                                                 value={(fields.date)}
@@ -376,7 +374,6 @@ export const Screen = ({ listWatchParty, history,
 
                                                     </div></td>
                                                     <td><div className="input_field">
-
 
                                                         <TimePickerInput
                                                             value={fields.time}
@@ -394,8 +391,6 @@ export const Screen = ({ listWatchParty, history,
 
                                                     </div></td>
                                                     <td><div className="input_field">
-
-
                                                         <TimePickerInput
                                                             value={fields.endTime}
                                                             minTime={new Date()}
@@ -407,8 +402,6 @@ export const Screen = ({ listWatchParty, history,
                                                         {error && error.endTime ? (
                                                             <span className="error_msg text-danger">{error.endTime}</span>
                                                         ) : null}
-
-
 
                                                     </div></td>
                                                     <td><div className="input_field">
