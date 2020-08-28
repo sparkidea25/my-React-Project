@@ -20,8 +20,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const [editmode, setEditMode] = useState(false)
   const [fields, setFields] = useState({})
   const [error, setError] = useState({})
-  const [adminArrow, setAdminArrow] = useState('')
-  const [userArrow, setUserArrow] = useState('')
+  const [adminArrow, setAdminArrow] = useState('asc')
+  const [userArrow, setUserArrow] = useState('asc')
 
   const adminListApi = (data, resp) => {
     listAdmins(
