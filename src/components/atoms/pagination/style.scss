@@ -47,21 +47,21 @@
     border: 1px solid $secondary-color;
     color:$black-color;
     padding: 5px 10px;
-    margin:0 7px;    
+    margin:0 5px;    
     outline: $none; 
     min-width: 36px;
     min-height: 36px;
-    @include flexbox; 
     font-size:$f14;
-    @include border-radius(50px);
+    @include flexbox;
     @include align-items (center);
     @include justify-content(center);  
+    @include border-radius(50px);
     cursor: pointer;
     text-align: center;
-     @media (max-width:767px){
+    @media (max-width:767px){
         margin-right: 3px;
         margin-left: 3px;
-     }
+    }
   }
   .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus{
     background-color: $primary-color ;
