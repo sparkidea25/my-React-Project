@@ -22,6 +22,7 @@
         word-break: keep-all;
         font-weight: $f-medium;
         text-decoration: underline;
+        padding-right:20px;
         @media (max-width:767px){
             font-size: $f16;
         }
@@ -30,10 +31,11 @@
   tbody {
     td {
         font-size: $f14;
-         color:$black-color;
+        color:$black-color;
         border:0;
         padding: .5rem;
         min-width: 106px;
+        word-break: normal;
     }
   }
 }
@@ -54,11 +56,11 @@
         height:26px;
         font-size: $f14;
         color:$black-color;
-        border:1px solid #d4d7d9;
-        @include border-radius(8px);
         line-height: 1;
         padding:2px 10px;
         box-sizing: border-box;
+        @include border-radius(8px);
+        border:1px solid $grey-color7;
     }
     select {
         max-width: inherit;

@@ -28,6 +28,12 @@ select {
         margin:0 2px; 
         img {
             max-width: 5.5px;
+            opacity: .2;
+        }
+        &.active, &:hover {
+            img {
+                opacity: 1;
+            }
         }
     }
 }
