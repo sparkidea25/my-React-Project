@@ -218,7 +218,9 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     if (fields.age < 13 || fields.age === 0) {
       error['age'] = VALIDATION_MESSAGES.AGE_VALIDATION
     }
-
+    if (fields.age > 150) {
+      error['age'] = VALIDATION_MESSAGES.MAX_AGE_VALIDATION
+    }
     setError(error)
     return error
   }
@@ -309,7 +311,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{admin.lastName}</td>
                       <td>{admin.username}</td>
                       <td>{admin.email}</td>
-                      <td>{admin.phone}</td>
+                      <td>{admin.phone ? '+1 ' : ''}{admin.phone}</td>
                       <td>{admin.address}</td>
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{admin.age}</td>

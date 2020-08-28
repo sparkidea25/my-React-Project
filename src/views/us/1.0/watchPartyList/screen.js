@@ -53,6 +53,8 @@ export const Screen = ({ listWatchParty, history,
     const [pastListing, setPastListing] = useState([])
     const [LiveTotalCount, setLiveTotalCount] = useState(0)
     const [PastTotalCount, setPastTotalCount] = useState(0)
+    const [liveArrow, setLiveArrow] = useState('asc')
+    const [pastArrow, setPastArrow] = useState('asc')
 
     const postWatchPartyApi = (data, response) => {
         let postData = Object.keys(data)
@@ -144,6 +146,7 @@ export const Screen = ({ listWatchParty, history,
 
     const updateWatchParty = (index) => {
         let obj = checkValidateFields()
+        setLiveArrow('asc')
         setError(obj)
 
         if (obj['show'] || obj['host'] || obj['time'] || obj['endTime']) {
@@ -265,6 +268,8 @@ export const Screen = ({ listWatchParty, history,
     }, [fields.time])
 
     const sortAscending = (sortkey, type, order) => {
+        if (type === 2) { order === 1 ? setLiveArrow('asc') : setLiveArrow('des') }
+        if (type === 3) { order === 1 ? setPastArrow('asc') : setPastArrow('des') }
         let key = (sortkey === 'Show') ? 'contentName' : (sortkey === 'Time (EST)') ? 'startTime' : ''
         if (type === 2) {
             postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortKey: key, sortOrder: order }, (response) => {
@@ -308,8 +313,8 @@ export const Screen = ({ listWatchParty, history,
                                 {upcomingPartyTable && upcomingPartyTable.map(party => {
                                     return <th>{party && party.name}
                                         <div className="sorting">
-                                            {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span onClick={() => sortAscending(party.name, 2, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                                                <span onClick={() => sortAscending(party.name, 2, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
+                                            {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span className={liveArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(party.name, 2, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                                                <span className={liveArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(party.name, 2, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
                                         </div>
                                     </th>
                                 })}
@@ -522,7 +527,7 @@ export const Screen = ({ listWatchParty, history,
                         itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
                         currentPage={liveTableIndex + 1}
                         onPageChange={(value) => {
-
+                            setLiveArrow('asc')
                             postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
                                 setUpcomingAndLiveListing(response && response.watchPartyListing)
                                 setLiveTotalCount(response && response.totalCount)
@@ -544,8 +549,8 @@ export const Screen = ({ listWatchParty, history,
                                     {pastPartyTable && pastPartyTable.map(party => {
                                         return <th>{party && party.name}
                                             <div className="sorting">
-                                                {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span onClick={() => sortAscending(party.name, 3, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                                                    <span onClick={() => sortAscending(party.name, 3, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
+                                                {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span className={pastArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(party.name, 3, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                                                    <span className={pastArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(party.name, 3, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
                                             </div>
                                         </th>
                                     })}
@@ -609,7 +614,7 @@ export const Screen = ({ listWatchParty, history,
                         itemsCount={pastListing && pastListing.length}
                         currentPage={PastTableIndex + 1}
                         onPageChange={(value) => {
-
+                            setPastArrow('asc')
                             pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3, sortkey: "startTime", sortOrder: 1 }, (response) => {
                                 setPastListing(response && response.watchPartyListing)
                             })

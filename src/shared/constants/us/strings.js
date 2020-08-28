@@ -56,6 +56,7 @@ export const STRINGS = {
   TIMEZONE_REQUIRED: 'Timezone is required.',
   AGE_REQUIRED: 'Age is required.',
   AGE_VALIDATION: 'Age should be minimum 13 years',
+  MAX_AGE_VALIDATION: 'User age must be less than 150',
   PHONE_VALIDATION: 'Phone no is not valid.',
   HOST_REQUIRED: 'Host is required.',
   SPORTS_REQUIRED: 'Sport is required.',
