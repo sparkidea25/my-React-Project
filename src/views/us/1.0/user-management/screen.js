@@ -450,9 +450,9 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                               type={'number'}
                               value={fields.phone}
                               onChange={(e) => updateFields(STRINGS.PHONE_INPUT, e.target.value)}
-                            />   {error && error.phone ? (
+                            /> </div>  {error && error.phone ? (
                               <span className="error_msg text-danger">{error.phone}</span>
-                            ) : null} </div>
+                            ) : null}
                         </td>
 
                         <td>  <input name={STRINGS.ADDRESS_INPUT}
