@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-
 import { reduxForm, Field } from "redux-form";
 import "./style.scss";
-
 import validator from "./validator";
 import moment from "moment-timezone"
 
@@ -15,9 +13,8 @@ const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-t
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
 const { onSubmitFail, diff_minutes, changeEndDate } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
-const { ROUTES } = require(`../../../../shared/constants`);
+const { ROUTES, PAGE_TITLES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
-const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop`)
 
 moment.tz.setDefault('America/New_York');
 
@@ -30,7 +27,6 @@ const WatchPartyForm = ({
     getPlatforms,
     getLeagues,
     history,
-    uploadImage
 }) => {
     const [fields, setFields] = useState({
         "host": "",
@@ -43,10 +39,6 @@ const WatchPartyForm = ({
         'show': "",
     })
 
-    const [validateFields, setValidateFields] = useState({
-        "startTime": false,
-        "endTime": false
-    })
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
@@ -71,16 +63,6 @@ const WatchPartyForm = ({
         setPlatforms(arr)
     }, [allPlatforms])
 
-    // const copyDate = (date, time) => {
-    //     time = time ? new Date(time) : new Date()
-    //     date = date ? new Date(date) : new Date()
-    //     time.setDate(date.getDate());
-    //     time.setMonth(date.getMonth());
-    //     time.setYear(date.getFullYear());
-
-    //     return time;
-    // }
-
     useEffect(() => {
         let arr = []
         allLeagues && allLeagues.map(platform => {
@@ -97,19 +79,11 @@ const WatchPartyForm = ({
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) + 60) * 60000;
-        console.log(estOffset, 'estOffset')
 
         return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
 
-    const validateTime = (field, message) => {
-        if (validateFields[field] === true) {
-            return message
-        }
-    }
-
     const onSubmit = (credentials) => {
-
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
         let postData = {
@@ -167,7 +141,7 @@ const WatchPartyForm = ({
             />
             <div class="content-panel">
                 <div class="page-title">
-                    <h1>Add New Watch Party</h1>
+                    <h1>{PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
                 </div>
                 <Form onSubmit={
                     handleSubmit(onSubmit)} class="add_watch_form">
@@ -261,7 +235,6 @@ const WatchPartyForm = ({
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    {/* <div className="row"> */}
                                     <label>End Time(EST).</label>
                                     <Field
                                         name={STRINGS.END_TIME}
@@ -272,7 +245,6 @@ const WatchPartyForm = ({
                                         onChangeTime={time => {
                                             onChangeField('endTime', changeEndDate(fields.startTime, time))
                                         }}
-
                                     />
                                 </div>
                             </div>
@@ -282,7 +254,6 @@ const WatchPartyForm = ({
                             <Field
                                 name={STRINGS.CONTENT_LENGTH}
                                 component={Input}
-
                                 placeholder={'Content Length'}
                                 config={{
                                     value: fields.contentLength,
@@ -293,12 +264,11 @@ const WatchPartyForm = ({
                         </div>
 
                         <div className="btn_group text-center">
-                            <InputSubmit buttonLabel={'Add Watch Party'} />
+                            <InputSubmit buttonLabel={PAGE_TITLES.ADD_WATCH_PARTY} />
                         </div>
                     </div>
                 </Form>
             </div>
-
         </div>
     );
 };

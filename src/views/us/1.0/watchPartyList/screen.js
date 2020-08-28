@@ -67,13 +67,12 @@ export const Screen = ({ listWatchParty, history,
         listPastWatchParty(postData, (resp) => { response(resp) }, () => { })
     }
     useEffect(() => {
-
-        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
 
             setUpcomingAndLiveListing(response && response.watchPartyListing)
             setLiveTotalCount(response && response.totalCount)
         })
-        pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
+        pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3, sortkey: "startTime", sortOrder: 1 }, (response) => {
 
             setPastListing(response && response.watchPartyListing)
             setPastTotalCount(response && response.totalCount)
@@ -174,8 +173,9 @@ export const Screen = ({ listWatchParty, history,
                     message: response.msg
                 });
                 setOpenSnackbar(true)
-                postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+                postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
                     setUpcomingAndLiveListing(response && response.watchPartyListing)
+                    setLiveTotalCount(response && response.totalCount)
                 })
             }, (error) => {
                 setSnackBarData({
@@ -264,6 +264,20 @@ export const Screen = ({ listWatchParty, history,
         updateFields('endTime', copyDate(fields.date, fields.endTime))
     }, [fields.time])
 
+    const sortAscending = (sortkey, type, order) => {
+        let key = (sortkey === 'Show') ? 'contentName' : (sortkey === 'Time (EST)') ? 'startTime' : ''
+        if (type === 2) {
+            postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortKey: key, sortOrder: order }, (response) => {
+                setUpcomingAndLiveListing(response && response.watchPartyListing)
+                setLiveTotalCount(response && response.totalCount)
+            })
+        } else {
+            pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3, sortKey: key, sortOrder: order }, (response) => {
+                setPastListing(response && response.watchPartyListing)
+                setPastTotalCount(response && response.totalCount)
+            })
+        }
+    }
 
     return (
         <div className="container-fluid">
@@ -292,7 +306,12 @@ export const Screen = ({ listWatchParty, history,
                         <table className="table">
                             <thead>
                                 {upcomingPartyTable && upcomingPartyTable.map(party => {
-                                    return <th>{party && party.name}</th>
+                                    return <th>{party && party.name}
+                                        <div className="sorting">
+                                            {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span onClick={() => sortAscending(party.name, 2, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                                                <span onClick={() => sortAscending(party.name, 2, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
+                                        </div>
+                                    </th>
                                 })}
                             </thead>
                             <tbody>
@@ -504,8 +523,9 @@ export const Screen = ({ listWatchParty, history,
                         currentPage={liveTableIndex + 1}
                         onPageChange={(value) => {
 
-                            postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2 }, (response) => {
+                            postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
                                 setUpcomingAndLiveListing(response && response.watchPartyListing)
+                                setLiveTotalCount(response && response.totalCount)
                             })
                             setLiveTableIndex(value && value.selected)
                             setEditMode(false)
@@ -522,7 +542,12 @@ export const Screen = ({ listWatchParty, history,
                             <thead>
                                 <tr>
                                     {pastPartyTable && pastPartyTable.map(party => {
-                                        return <th>{party && party.name}</th>
+                                        return <th>{party && party.name}
+                                            <div className="sorting">
+                                                {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span onClick={() => sortAscending(party.name, 3, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                                                    <span onClick={() => sortAscending(party.name, 3, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
+                                            </div>
+                                        </th>
                                     })}
                                 </tr>
                             </thead>
@@ -550,12 +575,23 @@ export const Screen = ({ listWatchParty, history,
                                                 </td>
                                                 <td>
                                                     <div className="input_field">
-                                                        {moment(pastParty && pastParty.startTime).format('MMM').toUpperCase()}
+                                                        {convertToClientTimeZone(pastParty && pastParty.startTime, 'MMM', pastParty && pastParty.contentName)}
+
                                                     </div>
                                                 </td>
-                                                <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('Do').split('th')[0]}</div></td>
-                                                <td><div className="input_field">{moment(pastParty && pastParty.startTime).format('LT')}</div></td>
-                                                <td><div className="input_field">{moment(pastParty && pastParty.endTime).format('LT')}</div></td>
+                                                <td><div className="input_field">
+                                                    {convertToClientTimeZone(pastParty && pastParty.startTime, 'Do', pastParty && pastParty.contentName)}
+                                                    {/* {moment(pastParty && pastParty.startTime).format('Do').split('th')[0]} */}
+                                                </div>
+                                                </td>
+                                                <td><div className="input_field">
+                                                    {convertToClientTimeZone(pastParty && pastParty.startTime, 'LT', pastParty && pastParty.contentName)}
+                                                    {/* {moment(pastParty && pastParty.startTime).format('LT')} */}
+                                                </div></td>
+                                                <td><div className="input_field">
+                                                    {convertToClientTimeZone(pastParty && pastParty.endTime, 'LT', pastParty && pastParty.contentName)}
+                                                    {/* {moment(pastParty && pastParty.endTime).format('LT')} */}
+                                                </div></td>
                                                 <td><div className="input_field">{pastParty.contentLength}</div></td>
                                                 <td><div className="input_field">{pastParty.joined}</div></td>
                                                 <td><div className="input_field">{pastParty.interested}</div></td>
@@ -574,7 +610,7 @@ export const Screen = ({ listWatchParty, history,
                         currentPage={PastTableIndex + 1}
                         onPageChange={(value) => {
 
-                            pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3 }, (response) => {
+                            pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3, sortkey: "startTime", sortOrder: 1 }, (response) => {
                                 setPastListing(response && response.watchPartyListing)
                             })
                             setPastTableIndex(value && value.selected)

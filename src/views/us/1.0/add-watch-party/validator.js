@@ -66,14 +66,11 @@ const validator = values => {
         errors[STRINGS.END_TIME] =
             VALIDATION_MESSAGES.SELECT_START_TIME_FIRST;
     }
-    // var localZone = moment.tz.guess();
+
     let currTime
-    // = new Date();
-    // var zoneOffset = moment.tz(new Date(), localZone).utcOffset();
-    // var estOffset = moment.tz(new Date(), 'America/New_York').utcOffset();
 
     currTime = calculateCurrentTimeInEst()
-    // currTime.setHours((currTime.getHours() - (zoneOffset / 60) + (estOffset / 60)), (currTime.getMinutes() - (zoneOffset % 60) + (estOffset % 60)), 0)
+
     if (values[STRINGS.START_TIME]) {
         let pickedTime = values[STRINGS.START_TIME]
 
@@ -89,10 +86,6 @@ const validator = values => {
                 VALIDATION_MESSAGES.END_TIME_SHOUDLD_NOT_BE_IN_PAST;
         }
     }
-
-    // if (!values[STRINGS.CONTENT_PICTURE]) {
-    //     errors[STRINGS.CONTENT_PICTURE] = VALIDATION_MESSAGES.PCITURE_REQUIRED;
-    // }
 
     return errors;
 };

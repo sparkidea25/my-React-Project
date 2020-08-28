@@ -6,13 +6,13 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const { PreviewSlider } = require('../../../../components/atoms/preview-slider')
+const { PAGE_TITLES } = require(`../../../../shared/constants`);
 
 export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeagues, getSports, allLeagues }) => {
     const buttonRef = React.createRef()
     const [partyData, setPartyData] = useState([])
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [previewIndex, setPreviewIndex] = useState(1);
-    const [uploadMsg, setuploadMsg] = useState(false)
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
         message: ''
@@ -26,22 +26,18 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
     }, [allPlatforms])
     const handleOnFileLoad = (data) => {
-        console.log('check ipload', buttonRef.current.state.file)
         let arr = []
         for (let i = 1; i < data.length; i++) {
             let obj
             data[0].data.map((head, index) => {
                 obj = { ...obj, [head]: data[i].data[index] }
             })
-
             arr.push(obj)
         }
-
         setPartyData(arr)
     }
 
     const handleOpenDialog = (e) => {
-
         if (buttonRef.current) {
             buttonRef.current.open(e)
         }
@@ -76,8 +72,6 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
             });
             setOpenSnackbar(true)
         }
-
-
     }, [partyData])
 
     return (
@@ -91,7 +85,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                 />
                 <div class="content-panel">
                     <div class="page-title">
-                        <h1>Content Management</h1>
+                        <h1>{PAGE_TITLES.CONTENT_MANGEMENT}</h1>
                     </div>
                     <div class="row sec_row">
 
@@ -103,10 +97,8 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
                                     <CSVReader
                                         ref={buttonRef}
                                         onFileLoad={handleOnFileLoad}
-
                                         noClick
                                         noDrag
-
                                     >
                                         {({ file }) => (
                                             < button
@@ -133,7 +125,7 @@ export const Screen = ({ exportWatchParty, allPlatforms, getPlatforms, getLeague
 
                                                 platform = allPlatforms && allPlatforms.filter(obj => { return party && party.platform && party.platform.trim() === obj._id.trim() })
                                                 league = allLeagues && allLeagues.filter(obj => { return party && party.league && party.league.trim() === obj._id.trim() })
-                                                // console.log(platform, league)
+
                                                 return <>
                                                     <div class="event_posts" key={index}>
                                                         <div class="date_time">

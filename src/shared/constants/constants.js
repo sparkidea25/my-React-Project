@@ -12,7 +12,9 @@ export const PAGE_TITLES = {
   // dashboard: STRINGS.DASHBOARD_PAGE_TITLE,
   ADD_WATCH_PARTY: 'Add Watch Party',
   RESET_PASSWORD: 'Reset Password',
-  USER_MANAGEMENT: 'User Management'
+  USER_MANAGEMENT: 'User Management',
+  ADD_NEW_WATCH_PARTY: 'Add New Watch Party',
+  CONTENT_MANGEMENT: 'Content Management'
 }
 
 export const KEY_CODES = {

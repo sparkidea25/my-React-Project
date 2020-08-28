@@ -141,7 +141,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
 
   const onSubmit = () => {
     let errors = checkValidateFields()
-    console.log(errors)
+
     setError(errors)
 
     if (errors['firstName'] || errors['lastName'] || errors['email'] || errors['age'] || errors['address'] || errors['phone'] || errors['username']) {
@@ -242,7 +242,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     <div className="container-fluid">
       <DecisionPopup
         modalVisibility={openPopup}
-        dialogContent={`Click confirm to remove user `}
+        dialogContent={`Are you sure you want to remove this user?`}
         dialogTitle={"Remove User"}
         confirmButtonTitle={STRINGS.CONFIRM}
         rejectButtonTitle={STRINGS.CANCEL}
@@ -422,6 +422,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                           <input name={STRINGS.EMAIL_INPUT_NAME}
                             type={'email'}
                             value={fields.email}
+                            disabled={true}
                             onChange={(e) => updateFields(STRINGS.EMAIL_INPUT_NAME, e.target.value)}
                           />
                           {error && error.email ? (
@@ -436,7 +437,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                               disabled={true}
                             />
                             <input name={STRINGS.PHONE_INPUT}
-                              type={'tel'}
+                              type={'number'}
                               value={fields.phone}
                               onChange={(e) => updateFields(STRINGS.PHONE_INPUT, e.target.value)}
                             />   {error && error.phone ? (
