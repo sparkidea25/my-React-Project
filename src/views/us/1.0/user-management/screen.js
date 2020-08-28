@@ -20,6 +20,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const [editmode, setEditMode] = useState(false)
   const [fields, setFields] = useState({})
   const [error, setError] = useState({})
+  const [adminArrow, setAdminArrow] = useState('')
+  const [userArrow, setUserArrow] = useState('')
 
   const adminListApi = (data, resp) => {
     listAdmins(
@@ -116,8 +118,14 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const EditUser = (index) => {
     setRowToEdit(index)
     setEditMode(true)
-
+    let time = checkTimezone(index)
+    setFields({
+      ...fields, firstName: usersListing[index].firstName,
+      lastName: usersListing[index].lastName, username: usersListing[index].username, email: usersListing[index].email,
+      phone: usersListing[index].phone, age: usersListing[index].age, address: usersListing[index].address, timezone: time && time[0] ? time[0].label : ''
+    })
   }
+
 
   const checkTimezone = (index) => {
     let ob = TimeZones && TimeZones.filter(obj => {
@@ -128,16 +136,11 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     return ob
   }
 
+
+
   useEffect(() => {
-    if (editmode) {
-      let time = checkTimezone(rowToEdit)
-      setFields({
-        ...fields, firstName: usersListing[rowToEdit].firstName,
-        lastName: usersListing[rowToEdit].lastName, username: usersListing[rowToEdit].username, email: usersListing[rowToEdit].email,
-        phone: usersListing[rowToEdit].phone, age: usersListing[rowToEdit].age, address: usersListing[rowToEdit].address, timezone: time && time[0] ? time[0].label : ''
-      })
-    }
-  }, [rowToEdit])
+    console.log(fields)
+  }, [fields])
 
   const onSubmit = () => {
     let errors = checkValidateFields()
@@ -227,6 +230,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   }
 
   const sortAscending = (sortkey, type, order) => {
+    if (type === 'admin') { order === 1 ? setAdminArrow('asc') : setAdminArrow('des') }
+    if (type === 'user') { order === 1 ? setUserArrow('asc') : setUserArrow('des') }
     let key = (sortkey === 'First Name') ? 'firstName' : (sortkey === 'Date Added') ? 'createdAt' : 'email'
     if (type === 'user') {
       userListApi({ skip: usersTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, sortKey: key, sortOrder: order }, (response) => {
@@ -284,8 +289,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       {head.name}
 
                       <div className="sorting">
-                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span onClick={() => sortAscending(head.name, 'admin', -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                          <span onClick={() => sortAscending(head.name, 'admin', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
+                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span className={adminArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(head.name, 'admin', -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                          <span className={adminArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(head.name, 'admin', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
                       </div>
                     </th>
                   ))}
@@ -351,8 +356,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                     <th key={head.name} style={{ textDecoration: "none" }}>
                       {head.name}
                       <div className="sorting">
-                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span onClick={() => sortAscending(head.name, 'user', -1)}><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                          <span onClick={() => sortAscending(head.name, 'user', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
+                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span className={userArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(head.name, 'user', -1)}><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                          <span className={userArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(head.name, 'user', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
                       </div>
                     </th>
                   ))}
@@ -436,6 +441,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                               value={'+1'}
                               disabled={true}
                             />
+                            {console.log(fields.phone, 'phone')}
                             <input name={STRINGS.PHONE_INPUT}
                               type={'number'}
                               value={fields.phone}
