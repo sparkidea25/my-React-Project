@@ -81,6 +81,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
           message: response.msg
         });
         setOpenSnackbar(true)
+        setUserArrow('asc')
         userListApi(
           {
             skip:
@@ -157,7 +158,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
           return obj
         }
       })
-
+      setUserArrow('asc')
       updateUser({ ...fields, timezone: timezone && timezone[0] && timezone[0]._id, zipcode: '140603', userId: usersListing[rowToEdit]._id },
         (response) => {
 
@@ -336,6 +337,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                     },
                     (response) => {
                       set_adminsTableIndex(value && value.selected);
+                      setAdminArrow('asc')
                     }
                   );
                 }}
@@ -524,6 +526,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                     set_usersListing(response.users);
                     set_usersTotalCount(response.totalRecords);
                     set_usersTableIndex(value.selected);
+                    setUserArrow('asc')
                   }
                 );
               }}
