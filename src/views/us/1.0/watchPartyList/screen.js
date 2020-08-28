@@ -268,15 +268,16 @@ export const Screen = ({ listWatchParty, history,
     }, [fields.time])
 
     const sortAscending = (sortkey, type, order) => {
-        if (type === 2) { order === 1 ? setLiveArrow('asc') : setLiveArrow('des') }
-        if (type === 3) { order === 1 ? setPastArrow('asc') : setPastArrow('des') }
         let key = (sortkey === 'Show') ? 'contentName' : (sortkey === 'Time (EST)') ? 'startTime' : ''
-        if (type === 2) {
+        if (type === 2 && !editMode) {
+            order === 1 ? setLiveArrow('asc') : setLiveArrow('des')
             postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortKey: key, sortOrder: order }, (response) => {
                 setUpcomingAndLiveListing(response && response.watchPartyListing)
                 setLiveTotalCount(response && response.totalCount)
             })
-        } else {
+        }
+        if (type === 3) {
+            order === 1 ? setPastArrow('asc') : setPastArrow('des')
             pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3, sortKey: key, sortOrder: order }, (response) => {
                 setPastListing(response && response.watchPartyListing)
                 setPastTotalCount(response && response.totalCount)
@@ -352,8 +353,6 @@ export const Screen = ({ listWatchParty, history,
                                                     </div></td>
                                                     <td>
                                                         <div className="input_field">
-
-
                                                             <select value={fields.sports} onChange={(e) => updateFields('sports', e.target.value)}>
                                                                 {SPORTS_OPTIONS.map(sport => {
                                                                     return <option>{sport && sport.value}</option>
@@ -389,9 +388,7 @@ export const Screen = ({ listWatchParty, history,
                                                             <FieldDatePickerr
                                                                 value={(fields.date)}
                                                                 onChangeDate={(value) => {
-
                                                                     updateFields('date', value)
-
                                                                 }}
 
                                                             /></>

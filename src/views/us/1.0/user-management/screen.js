@@ -137,12 +137,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     return ob
   }
 
-
-
-  useEffect(() => {
-    console.log(fields)
-  }, [fields])
-
   const onSubmit = () => {
     let errors = checkValidateFields()
 
@@ -152,7 +146,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
       return
     }
     else {
-      console.log(fields.timezone)
+
       let timezone = TimeZones && TimeZones.filter(obj => {
         if (obj.label === (fields.timezone)) {
           return obj
@@ -233,17 +227,21 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   }
 
   const sortAscending = (sortkey, type, order) => {
+
     if (type === 'admin') { order === 1 ? setAdminArrow('asc') : setAdminArrow('des') }
-    if (type === 'user') { order === 1 ? setUserArrow('asc') : setUserArrow('des') }
+
     let key = (sortkey === 'First Name') ? 'firstName' : (sortkey === 'Date Added') ? 'createdAt' : 'email'
-    if (type === 'user') {
+    if (type === 'user' && !editmode) {
+      if (type === 'user') { order === 1 ? setUserArrow('asc') : setUserArrow('des') }
       userListApi({ skip: usersTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, sortKey: key, sortOrder: order }, (response) => {
         set_usersListing(response.users);
         set_usersTotalCount(response.totalRecords);
       });
-    } else {
+    }
+    if (type === 'admin') {
       adminListApi({ skip: adminsTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, sortKey: key, sortOrder: order });
     }
+
   }
 
   return (
@@ -445,7 +443,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                               value={'+1'}
                               disabled={true}
                             />
-                            {console.log(fields.phone, 'phone')}
+
                             <input name={STRINGS.PHONE_INPUT}
                               type={'number'}
                               value={fields.phone}
