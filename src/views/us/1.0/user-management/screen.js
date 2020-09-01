@@ -179,35 +179,21 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const checkValidateFields = () => {
     let error = {}
 
-    // if (!fields.firstName || (fields.firstName === '')) {
-    //   error['firstName'] = VALIDATION_MESSAGES.FIRST_NAME_REQUIRED
-    // }
     if (!NAME_REGX.test(fields.firstName)) {
       error['firstName'] = VALIDATION_MESSAGES.NAME_VALIDATION
     }
 
-    // if (!fields.lastName || (fields.lastName === '')) {
-    //   error['lastName'] = VALIDATION_MESSAGES.LAST_NAME_REQUIRED
-    // }
     if (!(NAME_REGX.test(fields.lastName))) {
       error['lastName'] = VALIDATION_MESSAGES.NAME_VALIDATION
     }
 
-    // if (!fields.username || (fields.username === '')) {
-    //   error['username'] = VALIDATION_MESSAGES.USER_NAME_REQUIRED
-    // }
-    // if (!fields.email || (fields.email === '')) {
-    //   error['email'] = VALIDATION_MESSAGES.EMAIL_REQUIRED
-    // }
     if (fields.email && (!EMAIL_REGX.test(fields.email))) {
       error['email'] = VALIDATION_MESSAGES.EMAIL_INVALID
     }
     if (fields.phone && getPhoneValid(fields.phone) === 'invalid') {
       error['phone'] = VALIDATION_MESSAGES.PHONE_VALIDATION
     }
-    // if (!fields.address || (fields.address === '')) {
-    //   error['address'] = VALIDATION_MESSAGES.ADDRESS_REQUIRED
-    // }
+
     console.log(fields.age)
     if (fields.age < 13 || fields.age === 0) {
       error['age'] = VALIDATION_MESSAGES.AGE_VALIDATION

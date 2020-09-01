@@ -9,7 +9,6 @@ const { TimePickerInputField } = require(`../../../../components/atoms/field-tim
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`);
 const { diff_minutes, changeEndDate } = require(`../../../../helpers`);
-const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop`)
 
 const UForm = (props) => {
 
@@ -37,7 +36,6 @@ const UForm = (props) => {
 
     useEffect(() => {
         let arr = []
-
         allPlatforms && allPlatforms.map(platform => {
             let obj = { value: platform._id, label: platform.name }
             arr.push(obj)
@@ -54,7 +52,7 @@ const UForm = (props) => {
     }
 
     useEffect(() => {
-        console.log(endDate, 'values')
+
     }, [endDate])
 
 
@@ -70,6 +68,7 @@ const UForm = (props) => {
                                 <fieldset className="add_formList">
                                     <div className="form-row">
                                         <div className="col-md-3 col-sm-6">
+                                            <label>{STRINGS.SHOW}</label>
                                             <Field
                                                 name={`${member}.contentName`}
                                                 component={Input}
@@ -78,16 +77,8 @@ const UForm = (props) => {
 
                                             />
                                         </div>
-                                        {/* <div className="col-md-3 col-sm-6">
-                                            <Field
-                                                name={`${member}.contentPicture`}
-                                                component={CustomFileDrop}
-                                                placeholder={'ContentPicture'}
-                                                uploadImage={uploadImage}
-
-                                            />
-                                        </div> */}
                                         <div className="col-md-3 col-sm-6">
+                                            <label>{STRINGS.HOST}</label>
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.HOST_NAME}`}
@@ -99,6 +90,7 @@ const UForm = (props) => {
                                         </div>
 
                                         <div className="col-md-3 col-sm-6">
+                                            <label>{STRINGS.SPORTS} </label>
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.SPORTS_NAME}`}
@@ -110,6 +102,7 @@ const UForm = (props) => {
                                         </div>
 
                                         <div className="col-md-3 col-sm-6">
+                                            <label>{STRINGS.LEAGUE}</label>
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.LEAGUE_NAME}`}
@@ -121,6 +114,7 @@ const UForm = (props) => {
                                         </div>
 
                                         <div className="col-md-3 col-sm-6">
+                                            <label>{STRINGS.PLATFORM} </label>
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.PLATFORM_NAME}`}
@@ -131,6 +125,7 @@ const UForm = (props) => {
                                             </div>
                                         </div>
                                         <div className="col-md-3 col-sm-6">
+                                            <label>{STRINGS.START}</label>
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.START_TIME}`}
@@ -150,6 +145,7 @@ const UForm = (props) => {
                                         </div>
 
                                         <div className="col-md-3 col-sm-6">
+                                            <label>{STRINGS.END}</label>
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.END_TIME}`}
@@ -171,6 +167,7 @@ const UForm = (props) => {
                                             </div>
                                         </div>
                                         <div className="col-md-2 col-3">
+                                            <label>{STRINGS.CONTENT}</label>
                                             <div className="form-group">
                                                 <Field
                                                     name={`${member}.${STRINGS.CONTENT_LENGTH}`}
@@ -179,7 +176,7 @@ const UForm = (props) => {
                                                     config={{
                                                         type: 'number',
                                                         readOnly: true,
-                                                        value: contentLength && contentLength[`${member}.${STRINGS.CONTENT_LENGTH}`] ? contentLength[`${member}.${STRINGS.CONTENT_LENGTH}`] : 0
+                                                        value: contentLength && contentLength[`${member}.${STRINGS.CONTENT_LENGTH}`] ? contentLength[`${member}.${STRINGS.CONTENT_LENGTH}`] : null
                                                     }}
                                                 />
                                             </div>

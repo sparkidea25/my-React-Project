@@ -7,7 +7,7 @@ const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-w
 const {
     Input,
 } = require(`../../../../components/atoms/input`);
-const { SPORTS_OPTIONS, MONTH_OPTIONS, DAY_OPTIONS, NAME_REGX, VALIDATION_MESSAGES, upcomingPartyTable, pastPartyTable } = require('../../../../shared/constants/constants')
+const { SPORTS_OPTIONS, PAGE_TITLES, NAME_REGX, LABELS, VALIDATION_MESSAGES, upcomingPartyTable, pastPartyTable } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
 const { diff_minutes } = require('../../../../helpers')
@@ -23,10 +23,6 @@ const copyDate = (date, time) => {
 
 const convertToClientTimeZone = (date, format, type) => {
     if (date) {
-        var localZone = moment.tz.guess();
-        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
-        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime() + 60) * 60000;
-
         var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
         if (type) {
             return moment(toEST).format(format)
@@ -203,9 +199,15 @@ export const Screen = ({ listWatchParty, history,
 
             error['show'] = VALIDATION_MESSAGES.SHOW_NAME_REQUIRED
         }
+        if (!NAME_REGX.test(fields.show)) {
+            error['show'] = VALIDATION_MESSAGES.NAME_VALIDATION
+        }
         if (fields.host === '') {
 
             error['host'] = VALIDATION_MESSAGES.HOST_REQUIRED
+        }
+        if (!NAME_REGX.test(fields.host)) {
+            error['host'] = VALIDATION_MESSAGES.NAME_VALIDATION
         }
         var localZone = moment.tz.guess();
         let currTime = new Date();
@@ -258,7 +260,6 @@ export const Screen = ({ listWatchParty, history,
     useEffect(() => {
     }, [fields])
 
-
     useEffect(() => {
         updateFields('time', copyDate(fields.date, fields.time))
     }, [fields.date])
@@ -295,7 +296,7 @@ export const Screen = ({ listWatchParty, history,
             />
             <div className="content-panel">
                 <div className="row align-items-center page-title">
-                    <h1 class="col-md-6">Content Management</h1>
+                    <h1 class="col-md-6">{PAGE_TITLES.CONTENT_MANGEMENT}</h1>
                     <div class="col-md-6">
                         <div class="form-row group-btn justify-content-end">
                             <button class="btn btn-md btn-primary" onClick={(() => history.push(ROUTES.UPLOAD_WATCH_PARTY))}>Upload New</button>
@@ -306,7 +307,7 @@ export const Screen = ({ listWatchParty, history,
 
                 <div className="managment_list">
                     <div class="d-flex table_title">
-                        <h3>Live & Upcoming</h3>
+                        <h3>{LABELS.LIVE_UPCOMING}</h3>
                     </div>
                     <div className="table-responsive">
                         <table className="table">
@@ -537,7 +538,7 @@ export const Screen = ({ listWatchParty, history,
                 </div>
                 <div className="managment_list">
                     <div class="d-flex table_title">
-                        <h3>Past</h3>
+                        <h3>{LABELS.PAST}</h3>
                     </div>
                     <div className="table-responsive">
                         <table className="table">
@@ -583,16 +584,13 @@ export const Screen = ({ listWatchParty, history,
                                                 </td>
                                                 <td><div className="input_field">
                                                     {convertToClientTimeZone(pastParty && pastParty.startTime, 'Do', pastParty && pastParty.contentName)}
-                                                    {/* {moment(pastParty && pastParty.startTime).format('Do').split('th')[0]} */}
                                                 </div>
                                                 </td>
                                                 <td><div className="input_field">
                                                     {convertToClientTimeZone(pastParty && pastParty.startTime, 'LT', pastParty && pastParty.contentName)}
-                                                    {/* {moment(pastParty && pastParty.startTime).format('LT')} */}
                                                 </div></td>
                                                 <td><div className="input_field">
                                                     {convertToClientTimeZone(pastParty && pastParty.endTime, 'LT', pastParty && pastParty.contentName)}
-                                                    {/* {moment(pastParty && pastParty.endTime).format('LT')} */}
                                                 </div></td>
                                                 <td><div className="input_field">{pastParty.contentLength}</div></td>
                                                 <td><div className="input_field">{pastParty.joined}</div></td>

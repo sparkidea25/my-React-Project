@@ -147,7 +147,7 @@ const WatchPartyForm = ({
                     handleSubmit(onSubmit)} class="add_watch_form">
                     <div className="row">
                         <div className="col-md-6">
-                            <label>Name</label>
+                            <label>{STRINGS.SHOW}</label>
                             <Field
                                 name={STRINGS.SHOW_NAME}
                                 component={Input}
@@ -158,7 +158,7 @@ const WatchPartyForm = ({
                             />
                         </div>
                         <div className="col-md-6">
-                            <label>Host</label>
+                            <label>{STRINGS.HOST}</label>
                             <Field
                                 name={STRINGS.HOST_NAME}
                                 component={Input}
@@ -169,7 +169,7 @@ const WatchPartyForm = ({
                             />
                         </div>
                         <div class="col-md-12">
-                            <label>Sports </label>
+                            <label>{STRINGS.SPORTS} </label>
                             <Field
                                 name={STRINGS.SPORTS_NAME}
                                 component={Select}
@@ -186,7 +186,7 @@ const WatchPartyForm = ({
 
                     <div className="row">
                         <div class="col-md-6">
-                            <label>League Name</label>
+                            <label>{STRINGS.LEAGUE}</label>
                             <Field
                                 name={STRINGS.LEAGUE_NAME}
                                 component={Select}
@@ -200,7 +200,7 @@ const WatchPartyForm = ({
                             />
                         </div>
                         <div class="col-md-6">
-                            <label>Platform </label>
+                            <label>{STRINGS.PLATFORM} </label>
                             <Field
                                 name={STRINGS.PLATFORM_NAME}
                                 component={Select}
@@ -219,7 +219,7 @@ const WatchPartyForm = ({
                         <div class="col-md-6">
                             <div className="row">
                                 <div class="col-md-6">
-                                    <label>Start Time(EST).</label>
+                                    <label>{STRINGS.START}</label>
                                     <div className="form-group">
                                         <Field
                                             name={STRINGS.START_TIME}
@@ -235,7 +235,7 @@ const WatchPartyForm = ({
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>End Time(EST).</label>
+                                    <label>{STRINGS.END}</label>
                                     <Field
                                         name={STRINGS.END_TIME}
                                         component={TimePickerInputField}
@@ -250,15 +250,16 @@ const WatchPartyForm = ({
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label>Length</label>
+                            <label>{STRINGS.CONTENT}</label>
                             <Field
                                 name={STRINGS.CONTENT_LENGTH}
                                 component={Input}
                                 placeholder={'Content Length'}
                                 config={{
-                                    value: fields.contentLength,
+
                                     type: 'number',
-                                    readOnly: true
+                                    readOnly: true,
+                                    value: fields.contentLength ? fields.contentLength : null
                                 }}
                             />
                         </div>

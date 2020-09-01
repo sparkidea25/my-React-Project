@@ -6,6 +6,8 @@ export const EMAIL_REGX = /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))
 export const NAME_REGX = /^[A-Z.a-z ]+$/;
 export const LABELS = {
   // login: STRINGS.LOGIN,
+  LIVE_UPCOMING: 'Live & Upcoming',
+  PAST: 'Past'
 };
 
 export const PAGE_TITLES = {

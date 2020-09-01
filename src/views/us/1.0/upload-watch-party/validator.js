@@ -6,7 +6,7 @@ const validator = values => {
     var errors = {};
     var currentTime = calculateCurrentTimeInEst()
     const partyArrayErrors = [];
-    // console.log(values && values.WatchParty, 'check validations')
+
     values && values.WatchParty && values.WatchParty.forEach((party, partyIndex) => {
         const partyErrors = {};
 
@@ -75,10 +75,7 @@ const validator = values => {
                 VALIDATION_MESSAGES.SELECT_START_TIME_FIRST;
             partyArrayErrors[partyIndex] = partyErrors
         }
-        // if (!party.contentPicture) {
-        //     partyErrors.contentPicture = VALIDATION_MESSAGES.PCITURE_REQUIRED;
-        //     partyArrayErrors[partyIndex] = partyErrors
-        // }
+
     })
 
     if (partyArrayErrors.length) {
