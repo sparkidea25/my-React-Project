@@ -3,7 +3,7 @@ import { STRINGS } from "./us/strings";
 export const SUB_ADMIN_PLATFORM = 7;
 
 export const EMAIL_REGX = /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-export const NAME_REGX = /^[A-Z.a-z ]+$/;
+export const NAME_REGX = /^[A-Z.&a-z ]+$/;
 export const LABELS = {
   // login: STRINGS.LOGIN,
   LIVE_UPCOMING: 'Live & Upcoming',

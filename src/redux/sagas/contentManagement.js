@@ -243,7 +243,7 @@ function* getSports({ success, failure }) {
 function* getPlatforms({ success, failure }) {
     try {
         yield put(startLoader());
-        const response = yield getRequest({ API: `${api.URL.GET_PLATFORMS}` });
+        const response = yield getRequest({ API: `${api.URL.GET_PLATFORMS}?skip=0&limit=50` });
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({

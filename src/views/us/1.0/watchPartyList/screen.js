@@ -459,7 +459,7 @@ export const Screen = ({ listWatchParty, history,
                                                     </td>
                                                     <td>
                                                         <div className="input_field">
-                                                            {party.host}
+                                                            {party.host ? party.host : 'N/A'}
                                                         </div>
                                                     </td>
                                                     <td>
