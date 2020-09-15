@@ -95,5 +95,6 @@ export const STRINGS = {
   LEAGUE: 'League',
   START: 'Start Time(EST).',
   END: 'End Time(EST).',
-  CONTENT: 'Content Length'
+  CONTENT: 'Content Length',
+  WATCH_PARTY_VIDEO: 'Watch Party Video'
 }

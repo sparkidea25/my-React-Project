@@ -46,5 +46,11 @@
     height: 16px;
   }
   .MuiFormGroup-row{
-    flex-direction: column!important;
+    //flex-direction: column!important;
   }
+  .radio-group .MuiFormGroup-root{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  

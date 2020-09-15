@@ -1,5 +1,6 @@
 const SERVER_URL = 'https://api.getcollyde.com'; //Live URL
 // https://api.getcollyde.com
+//const SERVER_URL = 'http://4430a5edcb8f.ngrok.io'
 const API_VERSION = process.env.REACT_API_VERSION || '/v1'
 
 module.exports = {
@@ -22,6 +23,6 @@ module.exports = {
     UPDATE_USER: SERVER_URL + API_VERSION + '/user/updateProfile',
     GET_TIME_ZONES: SERVER_URL + API_VERSION + '/timezone/getAllTimezones',
     DELETE_USER: SERVER_URL + API_VERSION + '/admin/deleteUser',
-
+    GET_WATCH_PARTY_VIDEOS: SERVER_URL + API_VERSION + '/video/getVideos'
   }
 };

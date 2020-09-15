@@ -15,7 +15,8 @@ const { onSubmitFail, diff_minutes, changeEndDate } = require(`../../../../helpe
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES, PAGE_TITLES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
-
+const { RadioButtons } = require(`../../../../components/atoms/radio-button`)
+const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop`)
 moment.tz.setDefault('America/New_York');
 
 const WatchPartyForm = ({
@@ -27,6 +28,10 @@ const WatchPartyForm = ({
     getPlatforms,
     getLeagues,
     history,
+    userToken,
+    getWatchPartyVideos,
+    allWatchPartyVideosList,
+    uploadFile = () => { }
 }) => {
     const [fields, setFields] = useState({
         "host": "",
@@ -37,8 +42,9 @@ const WatchPartyForm = ({
         "contentLength": "",
         "endTime": null,
         'show': "",
+        "video": ""
     })
-
+    const [selectedWatchPartyVideoOption, setSelectedWatchPartyVideoOption] = React.useState('Select Video')
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
@@ -50,9 +56,11 @@ const WatchPartyForm = ({
     const [selectedLeague, setSelectedLeague] = useState('')
     const [selectedPlatform, setSelectedPlatform] = useState('')
     const [selectedSport, setSelectedSport] = useState('')
-
+    const [watchPartyVideos, setWatchPartyVideos] = useState([])
     const [platforms, setPlatforms] = useState([])
+    const [selectedVideo, setSelectedVideo] = useState('')
     const [leagues, setLeagues] = useState([])
+    const [isCustom, updateIsCustom] = useState(false)
     useEffect(() => {
         let arr = []
 
@@ -75,6 +83,15 @@ const WatchPartyForm = ({
 
     }, [fields])
 
+    useEffect(() => {
+        let arr = []
+        allWatchPartyVideosList && allWatchPartyVideosList.map(platform => {
+            let obj = { _id: platform._id, label: platform.name, videoUrl: platform.videoUrl }
+            arr.push(obj)
+        })
+        setWatchPartyVideos(arr)
+    }, [allWatchPartyVideosList])
+
     const convertToServerTimeZone = (date) => {
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
@@ -95,7 +112,9 @@ const WatchPartyForm = ({
             "platform": fields.platform,
             "contentLength": fields.contentLength,
             "endTime": et,
-            "contentPicture": credentials.contentPicture
+            "contentPicture": credentials.contentPicture,
+            "videoUrl": fields.video,
+            "isCustom": isCustom
         }
 
         addWatchParty(postData, (response) => {
@@ -129,8 +148,23 @@ const WatchPartyForm = ({
     useEffect(() => {
         getLeagues(() => { }, () => { })
         getPlatforms(() => { }, () => { })
+        getWatchPartyVideos(userToken, () => { }, () => { })
     }, [])
+    console.log('videopsss fiueldddd', fields.video, isCustom)
 
+    const uploadVideoFile = (file) => {
+        uploadFile(
+            file,
+            (url) => {
+                console.log('done uploadfileee', url)
+                onChangeField('video', url)
+                updateIsCustom(true)
+            },
+            (err) => {
+                console.log('err', err)
+            }
+        )
+    }
     return (
         <div class="container">
             <SnackbarWrapper
@@ -263,8 +297,41 @@ const WatchPartyForm = ({
                                 }}
                             />
                         </div>
-
-                        <div className="btn_group text-center">
+                        <div class="col-md-12">
+                            <label>{STRINGS.WATCH_PARTY_VIDEO}</label>
+                            <div>
+                                <RadioButtons
+                                    handleValueChange={(value) => {
+                                        setSelectedWatchPartyVideoOption(value)
+                                    }}
+                                    selectedValue={selectedWatchPartyVideoOption}
+                                    component={RadioButtons}
+                                    radioGroupItems={[{ label: 'Select Video', value: 'Select Video' }, { label: 'Add Video', value: 'Add Video' }]}
+                                />
+                            </div>
+                            <div>
+                                {selectedWatchPartyVideoOption == 'Select Video' ?
+                                    <Field
+                                        name='video'
+                                        component={Select}
+                                        options={watchPartyVideos}
+                                        value={selectedVideo}
+                                        placeholder={'Watch Party Video'}
+                                        onChange={value => {
+                                            console.log('video on change', value.videoUrl)
+                                            onChangeField('video', value.videoUrl)
+                                            setSelectedVideo(value.videoUrl)
+                                        }}
+                                    />
+                                    : <Field
+                                        name='video'
+                                        component={CustomFileDrop}
+                                        acceptFiles={'.webm,.MPG,.MP2,.MPEG,.MPE,.MPV,.mp4,.m4p,.m4v'}
+                                        uploadVideoFile={uploadVideoFile}
+                                    />}
+                            </div>
+                        </div>
+                        <div className="btn_group text-center col-md-12">
                             <InputSubmit buttonLabel={PAGE_TITLES.ADD_WATCH_PARTY} />
                         </div>
                     </div>

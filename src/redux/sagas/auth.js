@@ -20,6 +20,7 @@ const { STATUS_CODE } = require(`../../shared/constants`);
 
 function* setUserToken({ userToken }) {
     try {
+        console.log('userToken', userToken)
         yield updateAuthToken(userToken);
     }
     catch (error) {

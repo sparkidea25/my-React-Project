@@ -11,6 +11,9 @@ export const SET_WATCH_PARTY_LISTING = "SET_WATCH_PARTY_LISTING"
 export const GET_LIST_WATCH_PARTY = "GET_LIST_WATCH_PARTY"
 export const ADD_WATCH_PARTY = "ADD_WATCH_PARTY"
 export const UPLOAD_IMAGE = "UPLOAD_IMAGE"
+export const GET_WATCH_PARTY_VIDEO = "GET_WATCH_PARTY_VIDEO"
+export const SET_WATCH_PARTY_VIDEOS = "SET_WATCH_PARTY_VIDEOS"
+
 
 export const exportWatchParty = (data, success, failure) => {
     return {
@@ -53,6 +56,12 @@ export const getLeagues = (success, failure) => {
         failure
     }
 }
+export const setWatchPartyVideoList = (data) => {
+    return {
+        type: SET_WATCH_PARTY_VIDEOS,
+        data
+    }
+}
 export const getPlatforms = (success, failure) => {
     return {
         type: GET_PLATFORMS,
@@ -70,6 +79,14 @@ export const setLeagues = (data) => {
     return {
         type: SET_LEAGUES,
         data
+    }
+}
+export const getWatchPartyVideos = (token, success, failure) => {
+    return {
+        type: GET_WATCH_PARTY_VIDEO,
+        token,
+        success,
+        failure
     }
 }
 export const setWatchListParty = (data) => {
@@ -100,7 +117,6 @@ export const addWatchParty = (data, success, failure) => {
 export const uploadImage = (data, success, failure) => {
     return {
         type: UPLOAD_IMAGE,
-        data,
-        success, failure
+        data, success, failure
     }
 }
