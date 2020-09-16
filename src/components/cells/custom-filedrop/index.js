@@ -29,6 +29,7 @@ export const CustomFileDrop = ({
     const handleChangeStatus = ({ meta, file }, status) => {
         console.log('video download status', { meta, file }, status)
         // handleSubmit({ meta, file }, status)
+        console.log('meta', meta)
         updateFilename(file.name)
         if (status === 'done') {
             console.log('file', file.name)
@@ -39,7 +40,6 @@ export const CustomFileDrop = ({
         <>
             <Dropzone
                 ref={buttonRef}
-                key={Math.random() + ''}
                 disabled={disabled}
                 inputContent={(props) => {
                     return (
@@ -53,7 +53,7 @@ export const CustomFileDrop = ({
                 }}
 
                 onChangeStatus={handleChangeStatus}
-                // onSubmit={handleSubmit}
+                onSubmit={handleSubmit}
                 maxFiles={1}
                 maxSizeBytes={25 * 1000000}
                 // submitButtonContent={() => <button className='btn btn-md btn-primary' type="button" onClick={
@@ -65,7 +65,6 @@ export const CustomFileDrop = ({
                 accept={acceptFiles}
                 canCancel={true}
                 canRemove={true}
-
             />
             {validationSpan}
         </>

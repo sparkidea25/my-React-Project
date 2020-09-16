@@ -86,7 +86,7 @@ const WatchPartyForm = ({
     useEffect(() => {
         let arr = []
         allWatchPartyVideosList && allWatchPartyVideosList.map(platform => {
-            let obj = { _id: platform._id, label: platform.name, videoUrl: platform.videoUrl }
+            let obj = { label: platform.name, value: platform.videoUrl }
             arr.push(obj)
         })
         setWatchPartyVideos(arr)
@@ -150,7 +150,7 @@ const WatchPartyForm = ({
         getPlatforms(() => { }, () => { })
         getWatchPartyVideos(userToken, () => { }, () => { })
     }, [])
-    console.log('videopsss fiueldddd', fields.video, isCustom)
+    console.log('videopsss sssssssssssss selectedVideo', fields.video, selectedVideo)
 
     const uploadVideoFile = (file) => {
         uploadFile(
@@ -312,15 +312,15 @@ const WatchPartyForm = ({
                             <div>
                                 {selectedWatchPartyVideoOption == 'Select Video' ?
                                     <Field
-                                        name='video'
+                                        name={'video name'}
                                         component={Select}
                                         options={watchPartyVideos}
                                         value={selectedVideo}
                                         placeholder={'Watch Party Video'}
                                         onChange={value => {
-                                            console.log('video on change', value.videoUrl)
-                                            onChangeField('video', value.videoUrl)
-                                            setSelectedVideo(value.videoUrl)
+                                            console.log('video on change', value.value, value.label)
+                                            onChangeField('video', value.value)
+                                            setSelectedVideo(value.label)
                                         }}
                                     />
                                     : <Field
@@ -331,7 +331,7 @@ const WatchPartyForm = ({
                                     />}
                             </div>
                         </div>
-                        <div className="btn_group text-center col-md-12">
+                        <div className="btn_group text-center col-md-12" style={{ textAlign: 'left' }}>
                             <InputSubmit buttonLabel={PAGE_TITLES.ADD_WATCH_PARTY} />
                         </div>
                     </div>

@@ -40,17 +40,16 @@ function* uploadFile({ data, success, failure }) {
             if (response.status === STATUS_CODE.unAuthorized) {
                 yield put(setAuthorization(null));
                 yield put(stopLoader());
-                //failure(response.data)
+                failure(response.data)
             }
             if (response.status !== STATUS_CODE.successful) {
                 yield put(setAuthorization(null))
                 yield put(stopLoader());
-                //  failure(response.data)
+                failure(response.data)
             }
             else {
                 success(response.data.fileUrl)
                 yield put(stopLoader());
-                console.log('data upload', response.data.fileUrl)
             }
         }
     }
