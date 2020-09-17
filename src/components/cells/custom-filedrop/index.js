@@ -16,8 +16,7 @@ export const CustomFileDrop = ({
     buttonText = 'SUBMIT',
     handleSubmit = () => { },
     onChange,
-    uploadVideoFile = () => { },
-    userToken = ''
+    updateVideoData = () => { },
 }) => {
     const buttonRef = React.createRef()
     const [filename, updateFilename] = React.useState()
@@ -32,8 +31,7 @@ export const CustomFileDrop = ({
         console.log('meta', meta)
         updateFilename(file.name)
         if (status === 'done') {
-            console.log('file', file.name)
-            uploadVideoFile(file, file.name)
+            updateVideoData(file, file.name)
         }
     }
     return (
@@ -59,9 +57,9 @@ export const CustomFileDrop = ({
                 // submitButtonContent={() => <button className='btn btn-md btn-primary' type="button" onClick={
                 //     handleChangeStatus
                 // }>Browse</button>}
-                PreviewComponent={() => {
-                    return <div class="dzu-dropzone"><div class="dzu-previewContainer"><span class="dzu-previewFileName">{filename}</span><div class="dzu-previewStatusContainer"><span class="dzu-previewButton" style={{ backgroundImage: `url(${CLOSE_ICON})` }}></span></div></div><div class="dzu-submitButtonContainer"><button class="dzu-submitButton">Submit</button></div></div>
-                }}
+                // PreviewComponent={() => {
+                //     return <div class="dzu-dropzone"><div class="dzu-previewContainer"><span class="dzu-previewFileName">{filename}</span><div class="dzu-previewStatusContainer"><span class="dzu-previewButton" style={{ backgroundImage: `url(${CLOSE_ICON})` }} onClick={() => console.log('cancel', Dropzone)}></span></div></div><div class="dzu-submitButtonContainer"><button class="dzu-submitButton">Submit</button></div></div>
+                // }}
                 accept={acceptFiles}
                 canCancel={true}
                 canRemove={true}

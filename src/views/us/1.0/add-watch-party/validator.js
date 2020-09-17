@@ -9,11 +9,16 @@ const validator = values => {
     if (!values[STRINGS.SHOW_NAME]) {
         errors[STRINGS.SHOW_NAME] =
             VALIDATION_MESSAGES.SHOW_NAME_REQUIRED;
-    } else if (
-        !NAME_REGX.test(
-            values[STRINGS.SHOW_NAME]
-        )) {
-        errors[STRINGS.SHOW_NAME] = VALIDATION_MESSAGES.NAME_VALIDATION;
+    }
+    //  else if (
+    //     !NAME_REGX.test(
+    //         values[STRINGS.SHOW_NAME]
+    //     )) {
+    //     errors[STRINGS.SHOW_NAME] = VALIDATION_MESSAGES.NAME_VALIDATION;
+    else if (values) {
+        if (!values[STRINGS.SHOW_NAME].trim())
+            errors[STRINGS.SHOW_NAME] =
+                VALIDATION_MESSAGES.SHOW_NAME_REQUIRED;
     }
     if (
         values[STRINGS.HOST_NAME] && !NAME_REGX.test(

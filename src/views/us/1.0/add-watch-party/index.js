@@ -4,7 +4,6 @@ import { Screen } from "./screen";
 const { addWatchParty, getPlatforms, getLeagues, uploadImage, getWatchPartyVideos, updateWatchParty } = require(`../../../../redux/actions`);
 
 const mapStateToProps = (state) => {
-    console.log('form va;uess', state && state.form && state.form.watchparty && state.form.watchparty.values)
     return ({
         allPlatforms: state.ContentReducer.plaformList,
         allLeagues: state.ContentReducer.leagueList,

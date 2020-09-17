@@ -46,7 +46,8 @@ const WatchPartyForm = ({
         "contentLength": "",
         "endTime": null,
         "show": "",
-        "video": ""
+        "video": "",
+        "videoName": ""
     })
     let editMode = history && history.location && history.location.editMode
     const [selectedWatchPartyVideoOption, setSelectedWatchPartyVideoOption] = React.useState('Select Video')
@@ -67,6 +68,7 @@ const WatchPartyForm = ({
     const [selectedVideo, setSelectedVideo] = useState('')
     const [leagues, setLeagues] = useState([])
     const [isCustom, updateIsCustom] = useState(false)
+    const [videoFileData, updateVideoFileData] = useState()
     const [showRemoveVideoOption, updateRemoveVideoOption] = useState(false)
     useEffect(() => {
         if (history && history.location && history.location.state && history.location.state.party && editMode) {
@@ -83,33 +85,35 @@ const WatchPartyForm = ({
                 sports: party.sports === true ? 'Yes' : 'No',
                 league: party && party.leagueInfo && party.leagueInfo._id,
                 platform: party && party.platformInfo && party.platformInfo._id,
-                //month: moment(party && party.startTime).format('MMM').toUpperCase(),
-                // date: convertTimeForEdit(party && party.startTime),
-                // year: moment(party && party.startTime).format('YYYY'),
-                //time: convertTimeForEdit(party && party.startTime, party && party.contentName),
-
                 endTime: new Date(convertTimeForEdit(party && party.endTime)),
                 startTime: new Date(convertTimeForEdit(party && party.startTime)),
-                //joined: party && party.joined,
-                //interested: party && party.interested,
                 contentLength: party && party.contentLength,
-                videoName: party && party.videoInfo.name
+                videoName: party && party.videoInfo.name,
+                video: party && party.videoInfo.url
             })
-            // setSelectedLeague(fields.league)
-            //setSelectedSport(fields.sports)
-            // console.log('showwwww name', fields.show)
         }
     }, [])
     const updateWatchParty = (index) => {
-        //  let obj = checkValidateFields()
-        // setLiveArrow('asc')
-        // setError(obj)
-
-        // if (obj['show'] || obj['host'] || obj['time'] || obj['endTime']) {
-        //     return
-        // }
-        //else {
-
+        if (!!videoFileData) {
+            uploadFile(
+                videoFileData,
+                (url) => {
+                    console.log('done uploadfileee', url)
+                    onChangeField('video', url)
+                    updateIsCustom(true)
+                    updateRemoveVideoOption(false)
+                    edit_WatchParty()
+                },
+                (err) => {
+                    console.log('err', err)
+                }
+            )
+        }
+        else {
+            edit_WatchParty()
+        }
+    }
+    const edit_WatchParty = (index) => {
         let st = convertToServerTimeZone(new Date(fields.startTime))
         let et = convertToServerTimeZone(new Date(fields.endTime))
 
@@ -125,7 +129,7 @@ const WatchPartyForm = ({
             "contentLength": fields.contentLength,
             "videoUrl": fields.video,
             "isCustom": isCustom,
-            "videoName": setvideoName
+            "videoName": fields.videoName
         }
         console.log('editttt=>>>>>>>>>>>>>>>>>>>>>>>>>>>', postData)
 
@@ -137,10 +141,6 @@ const WatchPartyForm = ({
             });
             setOpenSnackbar(true)
             history.push(ROUTES.WATCH_PARTY)
-            // postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
-            //     setUpcomingAndLiveListing(response && response.watchPartyListing)
-            //     setLiveTotalCount(response && response.totalCount)
-            // })
         }, (error) => {
             setSnackBarData({
                 variant: error.status ? 'success' : 'error',
@@ -148,7 +148,6 @@ const WatchPartyForm = ({
             });
             setOpenSnackbar(true)
         })
-        //setEditMode(false)
 
     }
     useEffect(() => {
@@ -193,6 +192,27 @@ const WatchPartyForm = ({
     const onSubmit = (credentials) => {
         //   history && history.location && history.location.editMode ? updateWatchParty() :
         console.log('addd=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        if (!!videoFileData) {
+            uploadFile(
+                videoFileData,
+                (url) => {
+                    console.log('done uploadfileee', url)
+                    onChangeField('video', url)
+                    updateIsCustom(true)
+                    updateRemoveVideoOption(false)
+                    add_WatchParty(credentials)
+                },
+                (err) => {
+                    console.log('err', err)
+                }
+            )
+        }
+        else {
+            add_WatchParty(credentials)
+        }
+    }
+    const add_WatchParty = (credentials) => {
+
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
         let postData = {
@@ -207,7 +227,7 @@ const WatchPartyForm = ({
             "contentPicture": credentials.contentPicture,
             "videoUrl": fields.video,
             "isCustom": isCustom,
-            "videoName": setvideoName
+            "videoName": fields.videoName
         }
 
         addWatchParty(postData, (response) => {
@@ -252,22 +272,27 @@ const WatchPartyForm = ({
         initialParty = { ...fields }
     }, [fields])
 
-    const uploadVideoFile = (file, name) => {
-        console.log('videooo name', name)
-        uploadFile(
-            file,
-            (url) => {
-                console.log('done uploadfileee', url)
-                onChangeField('video', url)
-                updateIsCustom(true)
-                updateVideoName(name)
-            },
-            (err) => {
-                console.log('err', err)
-            }
-        )
-    }
+    // const uploadVideoFile = (file, name) => {
+    //     console.log('videooo name', name)
+    //     uploadFile(
+    //         file,
+    //         (url) => {
+    //             console.log('done uploadfileee', url)
+    //             onChangeField('video', url)
+    //             updateIsCustom(true)
+    //             onChangeField('videoName', name)
+    //             updateRemoveVideoOption(false)
+    //         },
+    //         (err) => {
+    //             console.log('err', err)
+    //         }
+    //     )
+    // }
 
+    const updateVideoData = (file, name) => {
+        onChangeField('videoName', name)
+        updateVideoFileData(file)
+    }
     const convertTimeForEdit = (date, type) => {
         if (date) {
             var localZone = moment.tz.guess();
@@ -279,7 +304,10 @@ const WatchPartyForm = ({
             return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
         }
     }
-    console.log('videoname', setvideoName, isCustom, fields.video)
+    useEffect(() => {
+        console.log('videoname inside useeffcet', fields.videoName, isCustom, fields.video)
+    }, [fields.video])
+    console.log('videoname =>>>>>>>>>>>>>>>>>>>', fields)
     return (
         <div class="container">
             <SnackbarWrapper
@@ -446,13 +474,12 @@ const WatchPartyForm = ({
                                 <div style={{ marginTop: '10px', marginBottom: '20px' }}>
                                     <label style={{ color: 'gray' }}>{fields.videoName}</label>
                                     <button className="btn btn-sm btn-secondary" style={{ marginLeft: '20px' }} onClick={() => {
+                                        onChangeField('videoName', '')
                                         updateRemoveVideoOption(false)
-                                        updateVideoName('')
-                                        onChangeField('video', '')
-                                        console.log('removeee video condoleee', setvideoName, isCustom, fields.video)
                                     }}>Remove</button>
                                 </div> : null}
-                            <div style={{ marginBottom: '10px' }}>
+
+                            <div style={{ marginBottom: '10px', marginLeft: 10 }}>
                                 <RadioButtons
                                     handleValueChange={(value) => {
                                         setSelectedWatchPartyVideoOption(value)
@@ -473,13 +500,13 @@ const WatchPartyForm = ({
                                         placeholder={'Watch Party Video'}
                                         onChange={value => {
                                             console.log('video on change', value.value, value.label)
-                                            onChangeField('video', value.value)
+                                            // onChangeField('video', value.value)
                                             setSelectedVideo(value.label)
-                                            updateVideoName(value.label)
+                                            // onChangeField('videoName', value.label)
+                                            setFields({ ...fields, videoName: value.label, video: value.value })
+                                            updateRemoveVideoOption(false)
                                         }}
                                         config={{
-                                            // type: 'number',
-                                            // readOnly: true,
                                             value: fields.video ? fields.video : null
                                         }}
                                     />
@@ -487,12 +514,12 @@ const WatchPartyForm = ({
                                         name='video'
                                         component={CustomFileDrop}
                                         acceptFiles={'.webm,.MPG,.MP2,.MPEG,.MPE,.MPV,.mp4,.m4p,.m4v'}
-                                        uploadVideoFile={uploadVideoFile}
+                                        updateVideoData={updateVideoData}
                                     />}
 
                             </div>
                         </div>
-                        <div className="btn_group text-center col-md-12" style={{ textAlign: 'left' }}>
+                        <div className="btn_group  col-md-12" style={{ alignSelf: 'left' }}>
                             <InputSubmit buttonLabel={history && history.location && history.location.editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_WATCH_PARTY} />
                         </div>
                     </div>
@@ -513,7 +540,8 @@ const mapStateToProps = (state) => {
         endTime: new Date(initialParty && initialParty.endTime),
         startTime: new Date(initialParty && initialParty.startTime),
         contentLength: initialParty && initialParty.contentLength,
-        videoName: initialParty && initialParty.videoName
+        // videoName: initialParty && initialParty.videoName,
+        video: initialParty && initialParty.video
     };
     return {
         initialValues: initialValues
