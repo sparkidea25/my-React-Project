@@ -292,6 +292,7 @@ const WatchPartyForm = ({
     const updateVideoData = (file, name) => {
         onChangeField('videoName', name)
         updateVideoFileData(file)
+        updateRemoveVideoOption(false)
     }
     const convertTimeForEdit = (date, type) => {
         if (date) {
@@ -307,7 +308,7 @@ const WatchPartyForm = ({
     useEffect(() => {
         console.log('videoname inside useeffcet', fields.videoName, isCustom, fields.video)
     }, [fields.video])
-    console.log('videoname =>>>>>>>>>>>>>>>>>>>', fields)
+    console.log('video file data =>>>>>>>>>>>>>>>>>>>', videoFileData)
     return (
         <div class="container">
             <SnackbarWrapper
@@ -483,6 +484,10 @@ const WatchPartyForm = ({
                                 <RadioButtons
                                     handleValueChange={(value) => {
                                         setSelectedWatchPartyVideoOption(value)
+                                        updateVideoFileData('')
+                                        //onChangeField('videoName', '')
+                                        setFields({ ...fields, videoName: '', video: '' })
+                                        updateRemoveVideoOption(false)
                                     }}
                                     selectedValue={selectedWatchPartyVideoOption}
                                     component={RadioButtons}
