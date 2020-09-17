@@ -509,7 +509,7 @@ export const Screen = ({ listWatchParty, history,
                                                     </td>
                                                     <td>
                                                         <div className="input_field">
-
+                                                            {party && party.videoInfo && party.videoInfo.name}
                                                         </div>
                                                     </td>
                                                     <td>
@@ -609,6 +609,7 @@ export const Screen = ({ listWatchParty, history,
                                                 <td><div className="input_field">{pastParty.contentLength}</div></td>
                                                 <td><div className="input_field">{pastParty.joined}</div></td>
                                                 <td><div className="input_field">{pastParty.interested}</div></td>
+                                                <td><div className="input_field">{pastParty && pastParty.videoInfo && pastParty.videoInfo.name}</div></td>
                                                 <td style={{ minWidth: '86px' }}> </td>
                                             </tr>
                                         })}

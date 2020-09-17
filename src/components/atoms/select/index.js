@@ -21,7 +21,6 @@ export const Select = ({
       <span className="error_msg text-danger">{error}</span>
     ) : null;
 
-  console.log('selecteddd->>>>>.', value, config)
   return (
     <>
       {label && <label>{label}</label>}

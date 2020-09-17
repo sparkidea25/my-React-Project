@@ -1,6 +1,6 @@
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import 'date-fns';
 import Grid from '@material-ui/core/Grid';
@@ -20,7 +20,7 @@ export const KeyboardDateTimePickerr = ({
     widthStyle,
     disabled = false,
     onChangeDate,
-    dateValue,
+    defaultValue,
     minTime,
     placeholder,
     maxTime,
@@ -33,8 +33,11 @@ export const KeyboardDateTimePickerr = ({
         touched && error ? (
             <span className="error_msg text-danger">{error}</span>
         ) : null;
-    const [dateVal, setDateVal] = useState(value)
+    const [dateVal, setDateVal] = useState(null)
 
+useEffect(() => {
+    setDateVal(defaultValue)
+},[defaultValue])
 
     return (
         <>
@@ -73,11 +76,12 @@ export const KeyboardDateTimePickerr = ({
                                 input.onChange(value);
 
                                 onChangeDate(value)
+                                setDateVal(value)
                                 setErr('')
                                 setOpenCalendar(false)
 
 
-                                setDateVal(value)
+                               
 
                             }
                         }}

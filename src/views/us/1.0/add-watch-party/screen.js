@@ -72,8 +72,10 @@ const WatchPartyForm = ({
         if (history && history.location && history.location.state && history.location.state.party && editMode) {
             let { party } = history.location.state
             console.log('partyuuuuuuuu conetnt=>>>>>>>>>>>>>>>>>>>', party)
-            updateRemoveVideoOption(true)
-            // onChangeForm('watchparty', 'show', party.contentName)
+
+            if (party && party.videoInfo && party.videoInfo.name) {
+                updateRemoveVideoOption(true)
+            }
             setFields({
                 ...fields,
                 watchPartyId: party._id,
@@ -86,17 +88,16 @@ const WatchPartyForm = ({
                 // year: moment(party && party.startTime).format('YYYY'),
                 //time: convertTimeForEdit(party && party.startTime, party && party.contentName),
 
-                endTime: new Date(party && party.endTime),
-                startTime: new Date(party && party.startTime),
+                endTime: new Date(convertTimeForEdit(party && party.endTime)),
+                startTime: new Date(convertTimeForEdit(party && party.startTime)),
                 //joined: party && party.joined,
                 //interested: party && party.interested,
                 contentLength: party && party.contentLength,
-                //video:party && party.video
-
+                videoName: party && party.videoInfo.name
             })
             // setSelectedLeague(fields.league)
             //setSelectedSport(fields.sports)
-            console.log('showwwww name', fields.show)
+            // console.log('showwwww name', fields.show)
         }
     }, [])
     const updateWatchParty = (index) => {
@@ -108,7 +109,6 @@ const WatchPartyForm = ({
         //     return
         // }
         //else {
-        console.log('editttt=>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
         let st = convertToServerTimeZone(new Date(fields.startTime))
         let et = convertToServerTimeZone(new Date(fields.endTime))
@@ -122,8 +122,12 @@ const WatchPartyForm = ({
             "sports": fields.sports === 'No' ? 'false' : 'true',
             "league": fields.league,
             "platform": fields.platform,
-            "contentLength": fields.contentLength
+            "contentLength": fields.contentLength,
+            "videoUrl": fields.video,
+            "isCustom": isCustom,
+            "videoName": setvideoName
         }
+        console.log('editttt=>>>>>>>>>>>>>>>>>>>>>>>>>>>', postData)
 
 
         updateParty(postData, (response) => {
@@ -189,41 +193,40 @@ const WatchPartyForm = ({
     const onSubmit = (credentials) => {
         //   history && history.location && history.location.editMode ? updateWatchParty() :
         console.log('addd=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-        // let st = convertToServerTimeZone(fields.startTime)
-        // let et = convertToServerTimeZone(fields.endTime)
-        // let postData = {
-        //     "contentName": fields.show,
-        //     "host": fields.host,
-        //     "startTime": st,
-        //     "sports": fields.sports === 'No' ? 'false' : 'true',
-        //     "league": fields.league,
-        //     "platform": fields.platform,
-        //     "contentLength": fields.contentLength,
-        //     "endTime": et,
-        //     "contentPicture": credentials.contentPicture,
-        //     "videoUrl": fields.video,
-        //     "isCustom": isCustom,
-        //     "videoName": setvideoName
-        // }
+        let st = convertToServerTimeZone(fields.startTime)
+        let et = convertToServerTimeZone(fields.endTime)
+        let postData = {
+            "contentName": fields.show,
+            "host": fields.host,
+            "startTime": st,
+            "sports": fields.sports === 'No' ? 'false' : 'true',
+            "league": fields.league,
+            "platform": fields.platform,
+            "contentLength": fields.contentLength,
+            "endTime": et,
+            "contentPicture": credentials.contentPicture,
+            "videoUrl": fields.video,
+            "isCustom": isCustom,
+            "videoName": setvideoName
+        }
 
-        // addWatchParty(postData, (response) => {
-        //     setSnackBarData({
-        //         variant: response.status ? 'success' : 'error',
-        //         message: response.msg
-        //     });
-        //     setOpenSnackbar(true)
-        //     history.push(ROUTES.WATCH_PARTY)
-        // }, (response) => {
-        //     setSnackBarData({
-        //         variant: response.status ? 'success' : 'error',
-        //         message: response.msg
-        //     });
-        //     setOpenSnackbar(true)
-        // })
+        addWatchParty(postData, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+            history.push(ROUTES.WATCH_PARTY)
+        }, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+        })
     }
 
     useEffect(() => {
-
         if (fields.endTime !== null) {
             onChangeField('endTime', null)
         }
@@ -245,7 +248,7 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-        console.log('fieldsssss in useEffect', fields, fields.sports)
+        console.log('fieldsssss in useEffect', fields)
         initialParty = { ...fields }
     }, [fields])
 
@@ -265,6 +268,18 @@ const WatchPartyForm = ({
         )
     }
 
+    const convertTimeForEdit = (date, type) => {
+        if (date) {
+            var localZone = moment.tz.guess();
+
+            var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
+
+            var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
+            var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
+            return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
+        }
+    }
+    console.log('videoname', setvideoName, isCustom, fields.video)
     return (
         <div class="container">
             <SnackbarWrapper
@@ -389,7 +404,7 @@ const WatchPartyForm = ({
                                             placeholder={'Start Time'}
                                             minDate={new Date()}
                                             minTime={new Date()}
-                                            value={fields.startTime}
+                                            defaultValue={fields.startTime}
                                             onChangeDate={(value) => {
                                                 onChangeField('startTime', value)
                                             }}
@@ -428,13 +443,16 @@ const WatchPartyForm = ({
                             <label>{STRINGS.WATCH_PARTY_VIDEO}</label>
 
                             {showRemoveVideoOption ?
-                                <div>
-                                    <input value={'sample video thusa sts uas u7sa shy aus astu asu '} style={{ width: '100%' }} disabled></input>
-                                    <button className="btn btn-sm btn-secondary" style={{ marginTop: '20px' }} onClick={() => {
+                                <div style={{ marginTop: '10px', marginBottom: '20px' }}>
+                                    <label style={{ color: 'gray' }}>{fields.videoName}</label>
+                                    <button className="btn btn-sm btn-secondary" style={{ marginLeft: '20px' }} onClick={() => {
                                         updateRemoveVideoOption(false)
+                                        updateVideoName('')
+                                        onChangeField('video', '')
+                                        console.log('removeee video condoleee', setvideoName, isCustom, fields.video)
                                     }}>Remove</button>
                                 </div> : null}
-                            <div>
+                            <div style={{ marginBottom: '10px' }}>
                                 <RadioButtons
                                     handleValueChange={(value) => {
                                         setSelectedWatchPartyVideoOption(value)
@@ -457,6 +475,12 @@ const WatchPartyForm = ({
                                             console.log('video on change', value.value, value.label)
                                             onChangeField('video', value.value)
                                             setSelectedVideo(value.label)
+                                            updateVideoName(value.label)
+                                        }}
+                                        config={{
+                                            // type: 'number',
+                                            // readOnly: true,
+                                            value: fields.video ? fields.video : null
                                         }}
                                     />
                                     : <Field
@@ -489,6 +513,7 @@ const mapStateToProps = (state) => {
         endTime: new Date(initialParty && initialParty.endTime),
         startTime: new Date(initialParty && initialParty.startTime),
         contentLength: initialParty && initialParty.contentLength,
+        videoName: initialParty && initialParty.videoName
     };
     return {
         initialValues: initialValues
