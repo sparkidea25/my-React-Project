@@ -4,7 +4,7 @@ import ReactSelect from "react-select";
 export const Select = ({
   defaultValue,
   label,
-  config,
+  config = {},
   meta: { touched, error },
   options,
   widthStyle,
@@ -12,7 +12,8 @@ export const Select = ({
   data,
   onValueChange = () => { },
   isSearchable = false,
-  placeholder
+  placeholder,
+  value
 }) => {
   widthStyle = widthStyle ? widthStyle : "";
   const validationSpan =
@@ -20,8 +21,7 @@ export const Select = ({
       <span className="error_msg text-danger">{error}</span>
     ) : null;
 
-
-
+  console.log('selecteddd->>>>>.', value, config)
   return (
     <>
       {label && <label>{label}</label>}
@@ -33,9 +33,9 @@ export const Select = ({
           // onChange={onValueChange}
           isSearchable={isSearchable}
           // placeholder={placeholder}
-
+          value={options.filter(option => option.value == config.value)}
           onChange={(value) => {
-            console.log(value)
+            console.log('changed selectedd vallue', value)
             input.onChange(value);
 
             onValueChange(value)

@@ -33,7 +33,7 @@ export const CustomFileDrop = ({
         updateFilename(file.name)
         if (status === 'done') {
             console.log('file', file.name)
-            uploadVideoFile(file)
+            uploadVideoFile(file, file.name)
         }
     }
     return (

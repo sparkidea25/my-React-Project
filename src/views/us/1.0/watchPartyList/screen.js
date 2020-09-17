@@ -509,7 +509,21 @@ export const Screen = ({ listWatchParty, history,
                                                     </td>
                                                     <td>
                                                         <div className="input_field">
-                                                            <button className="btn btn-sm btn-secondary" onClick={() => editRow(index, party)}>Edit</button></div></td>
+
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            <button className="btn btn-sm btn-secondary" onClick={() => {
+                                                                //editRow(index, party)
+                                                                history.push({
+                                                                    pathname: ROUTES.EDIT_WATCH_PARTY,
+                                                                    editMode: true,
+                                                                    state: {
+                                                                        party
+                                                                    }
+                                                                });
+                                                            }}>Edit</button></div></td>
                                                 </tr>
                                         })}
                                     </>

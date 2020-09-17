@@ -33,7 +33,7 @@ export const KeyboardDateTimePickerr = ({
         touched && error ? (
             <span className="error_msg text-danger">{error}</span>
         ) : null;
-    const [dateVal, setDateVal] = useState(null)
+    const [dateVal, setDateVal] = useState(value)
 
 
     return (
