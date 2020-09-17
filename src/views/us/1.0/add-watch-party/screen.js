@@ -475,7 +475,7 @@ const WatchPartyForm = ({
                                 <div style={{ marginTop: '10px', marginBottom: '20px' }}>
                                     <label style={{ color: 'gray' }}>{fields.videoName}</label>
                                     <button className="btn btn-sm btn-secondary" style={{ marginLeft: '20px' }} onClick={() => {
-                                        onChangeField('videoName', '')
+                                        setFields({ ...fields, videoName: '', video: '' })
                                         updateRemoveVideoOption(false)
                                     }}>Remove</button>
                                 </div> : null}
@@ -545,7 +545,7 @@ const mapStateToProps = (state) => {
         endTime: new Date(initialParty && initialParty.endTime),
         startTime: new Date(initialParty && initialParty.startTime),
         contentLength: initialParty && initialParty.contentLength,
-        // videoName: initialParty && initialParty.videoName,
+        videoName: initialParty && initialParty.videoName,
         video: initialParty && initialParty.video
     };
     return {

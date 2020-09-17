@@ -17,7 +17,7 @@ export const PAGE_TITLES = {
   USER_MANAGEMENT: 'User Management',
   ADD_NEW_WATCH_PARTY: 'Add New Watch Party',
   CONTENT_MANGEMENT: 'Content Management',
-  EDIT_WATCH_PARTY: 'Edit Watch Party'
+  EDIT_WATCH_PARTY: 'Update Watch Party'
 }
 
 export const KEY_CODES = {
