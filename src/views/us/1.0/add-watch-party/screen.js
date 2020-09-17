@@ -73,7 +73,7 @@ const WatchPartyForm = ({
             let { party } = history.location.state
             console.log('partyuuuuuuuu conetnt=>>>>>>>>>>>>>>>>>>>', party)
             updateRemoveVideoOption(true)
-            // onChangeForm('watchparty', 'show', party.contentName)
+
             setFields({
                 ...fields,
                 watchPartyId: party._id,
@@ -86,8 +86,8 @@ const WatchPartyForm = ({
                 // year: moment(party && party.startTime).format('YYYY'),
                 //time: convertTimeForEdit(party && party.startTime, party && party.contentName),
 
-                endTime: new Date(party && party.endTime),
-                startTime: new Date(party && party.startTime),
+                endTime: new Date(convertTimeForEdit(party && party.endTime)),
+                startTime: new Date(convertTimeForEdit(party && party.startTime)),
                 //joined: party && party.joined,
                 //interested: party && party.interested,
                 contentLength: party && party.contentLength,
@@ -95,7 +95,7 @@ const WatchPartyForm = ({
             })
             // setSelectedLeague(fields.league)
             //setSelectedSport(fields.sports)
-            console.log('showwwww name', fields.show)
+            // console.log('showwwww name', fields.show)
         }
     }, [])
     const updateWatchParty = (index) => {
@@ -107,7 +107,7 @@ const WatchPartyForm = ({
         //     return
         // }
         //else {
-        console.log('editttt=>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        // console.log('editttt=>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         history.push(ROUTES.WATCH_PARTY)
         // let st = convertToServerTimeZone(new Date(fields.time))
         // let et = convertToServerTimeZone(new Date(fields.endTime))
@@ -221,7 +221,6 @@ const WatchPartyForm = ({
     }
 
     useEffect(() => {
-
         if (fields.endTime !== null) {
             onChangeField('endTime', null)
         }
@@ -243,7 +242,7 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-        console.log('fieldsssss in useEffect', fields, fields.sports)
+        console.log('fieldsssss in useEffect', fields)
         initialParty = { ...fields }
     }, [fields])
 
@@ -261,6 +260,18 @@ const WatchPartyForm = ({
                 console.log('err', err)
             }
         )
+    }
+
+    const convertTimeForEdit = (date, type) => {
+        if (date) {
+            var localZone = moment.tz.guess();
+    
+            var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
+    
+            var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
+            var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
+            return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
+        }
     }
 
     return (
@@ -387,7 +398,7 @@ const WatchPartyForm = ({
                                             placeholder={'Start Time'}
                                             minDate={new Date()}
                                             minTime={new Date()}
-                                            value={fields.startTime}
+                                            defaultValue={fields.startTime}
                                             onChangeDate={(value) => {
                                                 onChangeField('startTime', value)
                                             }}
