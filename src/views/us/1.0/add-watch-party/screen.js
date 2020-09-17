@@ -92,6 +92,7 @@ const WatchPartyForm = ({
                 //interested: party && party.interested,
                 contentLength: party && party.contentLength,
                 //video:party && party.video
+
             })
             // setSelectedLeague(fields.league)
             //setSelectedSport(fields.sports)
@@ -108,42 +109,43 @@ const WatchPartyForm = ({
         // }
         //else {
         console.log('editttt=>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-        history.push(ROUTES.WATCH_PARTY)
-        // let st = convertToServerTimeZone(new Date(fields.time))
-        // let et = convertToServerTimeZone(new Date(fields.endTime))
 
-        // const postData = {
-        //     "watchPartyId": fields.watchPartyId,
-        //     "contentName": fields.show,
-        //     "host": fields.host,
-        //     "startTime": st,
-        //     "endTime": et,
-        //     "sports": fields.sports === 'No' ? 'false' : 'true',
-        //     "league": fields.league,
-        //     "platform": fields.platform,
-        //     "contentLength": fields.contentLength
-        // }
+        let st = convertToServerTimeZone(new Date(fields.startTime))
+        let et = convertToServerTimeZone(new Date(fields.endTime))
+
+        const postData = {
+            "watchPartyId": fields.watchPartyId,
+            "contentName": fields.show,
+            "host": fields.host,
+            "startTime": st,
+            "endTime": et,
+            "sports": fields.sports === 'No' ? 'false' : 'true',
+            "league": fields.league,
+            "platform": fields.platform,
+            "contentLength": fields.contentLength
+        }
 
 
-        // updateParty(postData, (response) => {
-        //     setSnackBarData({
-        //         variant: response.status ? 'success' : 'error',
-        //         message: response.msg
-        //     });
-        //     setOpenSnackbar(true)
-        //     // postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
-        //     //     setUpcomingAndLiveListing(response && response.watchPartyListing)
-        //     //     setLiveTotalCount(response && response.totalCount)
-        //     // })
-        // }, (error) => {
-        //     setSnackBarData({
-        //         variant: error.status ? 'success' : 'error',
-        //         message: error.msg
-        //     });
-        //     setOpenSnackbar(true)
-        // })
+        updateParty(postData, (response) => {
+            setSnackBarData({
+                variant: response.status ? 'success' : 'error',
+                message: response.msg
+            });
+            setOpenSnackbar(true)
+            history.push(ROUTES.WATCH_PARTY)
+            // postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
+            //     setUpcomingAndLiveListing(response && response.watchPartyListing)
+            //     setLiveTotalCount(response && response.totalCount)
+            // })
+        }, (error) => {
+            setSnackBarData({
+                variant: error.status ? 'success' : 'error',
+                message: error.msg
+            });
+            setOpenSnackbar(true)
+        })
         //setEditMode(false)
-        // }
+
     }
     useEffect(() => {
         let arr = []
@@ -497,6 +499,7 @@ const showForm = reduxForm({
     form: "watchparty",
     onSubmitFail,
     validate: validator,
+    enableReinitialize: true
 })(WatchPartyForm);
-export const Screen = connect(mapStateToProps, { onChangeForm })(showForm);
+export const Screen = connect(mapStateToProps)(showForm);
 

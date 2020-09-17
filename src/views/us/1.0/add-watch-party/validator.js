@@ -16,7 +16,7 @@ const validator = values => {
         errors[STRINGS.SHOW_NAME] = VALIDATION_MESSAGES.NAME_VALIDATION;
     }
     if (
-        !NAME_REGX.test(
+        values[STRINGS.HOST_NAME] && !NAME_REGX.test(
             values[STRINGS.HOST_NAME]
         )) {
         errors[STRINGS.HOST_NAME] = VALIDATION_MESSAGES.NAME_VALIDATION;
