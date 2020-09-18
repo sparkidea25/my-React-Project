@@ -13,8 +13,8 @@ export const ADD_WATCH_PARTY = "ADD_WATCH_PARTY"
 export const UPLOAD_IMAGE = "UPLOAD_IMAGE"
 export const GET_WATCH_PARTY_VIDEO = "GET_WATCH_PARTY_VIDEO"
 export const SET_WATCH_PARTY_VIDEOS = "SET_WATCH_PARTY_VIDEOS"
-
-
+export const GET_WATCH_PARTY_BY_ID = "GET_WATCH_PARTY_BY_ID"
+export const SET_WATCH_PARTY_BY_ID = "SET_WATCH_PARTY_BY_ID"
 export const exportWatchParty = (data, success, failure) => {
     return {
         type: EXPORT_CSV,
@@ -67,6 +67,21 @@ export const getPlatforms = (success, failure) => {
         type: GET_PLATFORMS,
         success,
         failure
+    }
+}
+
+export const getWatchPartyInfo = (data, success, failure) => {
+    return {
+        type: GET_WATCH_PARTY_BY_ID,
+        data,
+        success,
+        failure
+    }
+}
+export const setWatchPartyInfoById = (data) => {
+    return {
+        type: SET_WATCH_PARTY_BY_ID,
+        data
     }
 }
 export const setPlatforms = (data) => {

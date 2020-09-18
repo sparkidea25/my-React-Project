@@ -42,7 +42,7 @@ const convertTimeForEdit = (date, type) => {
     }
 }
 
-export const Screen = ({ listWatchParty, history,
+export const Screen = ({ listWatchParty, history, setWatchListParty,
     allPlatforms, allLeagues, updateParty, getPlatforms, getLeagues, listPastWatchParty, getSports }) => {
 
     const [upcomingAndLiveListing, setUpcomingAndLiveListing] = useState([])
@@ -66,7 +66,7 @@ export const Screen = ({ listWatchParty, history,
     }
     useEffect(() => {
         postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
-
+            setWatchListParty(response && response.watchPartyListing)
             setUpcomingAndLiveListing(response && response.watchPartyListing)
             setLiveTotalCount(response && response.totalCount)
         })
@@ -516,13 +516,15 @@ export const Screen = ({ listWatchParty, history,
                                                         <div className="input_field">
                                                             <button className="btn btn-sm btn-secondary" onClick={() => {
                                                                 //editRow(index, party)
-                                                                history.push({
-                                                                    pathname: ROUTES.EDIT_WATCH_PARTY,
-                                                                    editMode: true,
-                                                                    state: {
-                                                                        party
-                                                                    }
-                                                                });
+                                                                //  setWatchListParty(party)
+                                                                // history.push({
+                                                                //     pathname: ROUTES.EDIT_WATCH_PARTY,
+                                                                //     editMode: true,
+                                                                //     state: {
+                                                                //         party
+                                                                //     }
+                                                                // });
+                                                                history.push(`${ROUTES.EDIT_WATCH_PARTY}?watch_party_id=${party._id}`)
                                                             }}>Edit</button></div></td>
                                                 </tr>
                                         })}

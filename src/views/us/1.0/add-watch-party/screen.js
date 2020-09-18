@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom'
 import { reduxForm, Field, change as onChangeForm } from "redux-form";
 import "./style.scss";
 import validator from "./validator";
@@ -34,9 +35,16 @@ const WatchPartyForm = ({
     getWatchPartyVideos,
     allWatchPartyVideosList,
     uploadFile = () => { },
-    updateParty
+    updateParty,
+    watchPartyList,
+    getWatchPartyInfo,
+    // watchPartyForUpdate
 }) => {
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
 
+    let query = useQuery();
     const [fields, setFields] = useState({
         "host": "",
         "startTime": null,
@@ -49,10 +57,14 @@ const WatchPartyForm = ({
         "video": "",
         "videoName": ""
     })
-    let editMode = history && history.location && history.location.editMode
+
     const [selectedWatchPartyVideoOption, setSelectedWatchPartyVideoOption] = React.useState('Select Video')
     const [openSnackBar, setOpenSnackbar] = useState(false);
     const [setvideoName, updateVideoName] = useState()
+    const [currentWatchParty, updateCurrentWatchParty] = useState()
+    const [editMode, updateEditMode] = useState(false)
+    const [showNotFoundWatchPartyIdMessage, updateNotFoundWatchPartyIdMessage] = useState()
+    const [watchPartyForUpdate, updateWatchPartyForUpdate] = useState()
     const [snackbarData, setSnackBarData] = useState({
         variant: '',
         message: ''
@@ -70,29 +82,63 @@ const WatchPartyForm = ({
     const [isCustom, updateIsCustom] = useState(false)
     const [videoFileData, updateVideoFileData] = useState()
     const [showRemoveVideoOption, updateRemoveVideoOption] = useState(false)
-    useEffect(() => {
-        if (history && history.location && history.location.state && history.location.state.party && editMode) {
-            let { party } = history.location.state
-            console.log('partyuuuuuuuu conetnt=>>>>>>>>>>>>>>>>>>>', party)
 
-            if (party && party.videoInfo && party.videoInfo.name) {
-                updateRemoveVideoOption(true)
-            }
+
+    useEffect(() => {
+        if (watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.name && editMode) {
+            updateRemoveVideoOption(true)
+        }
+        console.log('ruyn=>>>>>>>>>>>>>>', watchPartyForUpdate)
+        if (watchPartyForUpdate) {
             setFields({
                 ...fields,
-                watchPartyId: party._id,
-                show: party && party.contentName, host: party.host,
-                sports: party.sports === true ? 'Yes' : 'No',
-                league: party && party.leagueInfo && party.leagueInfo._id,
-                platform: party && party.platformInfo && party.platformInfo._id,
-                endTime: new Date(convertTimeForEdit(party && party.endTime)),
-                startTime: new Date(convertTimeForEdit(party && party.startTime)),
-                contentLength: party && party.contentLength,
-                videoName: party && party.videoInfo.name,
-                video: party && party.videoInfo.url
+                watchPartyId: watchPartyForUpdate._id,
+                show: watchPartyForUpdate && watchPartyForUpdate.contentName,
+                host: watchPartyForUpdate.host,
+                sports: watchPartyForUpdate.sports === true ? 'Yes' : 'No',
+                league: watchPartyForUpdate && watchPartyForUpdate.leagueInfo && watchPartyForUpdate.leagueInfo._id,
+                platform: watchPartyForUpdate && watchPartyForUpdate.platformInfo && watchPartyForUpdate.platformInfo._id,
+                endTime: new Date(convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.endTime)),
+                startTime: new Date(convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.startTime)),
+                contentLength: watchPartyForUpdate && watchPartyForUpdate.contentLength,
+                videoName: watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.name,
+                video: watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.url
             })
         }
-    }, [])
+    }, [watchPartyForUpdate])
+
+    useEffect(() => {
+        let path = history.location.pathname
+        let watch_party_id = query.get("watch_party_id")
+        if (path == '/edit-watch-party' && watch_party_id) {
+            updateEditMode(true)
+            getWatchPartyInfo(
+                watch_party_id,
+                (response) => {
+                    console.log('dataaaaaa paryyyyyyyyyyy=>>>>>', response)
+                    updateWatchPartyForUpdate(response)
+                    setSnackBarData({
+                        variant: response.status ? 'success' : 'error',
+                        message: response.msg
+                    });
+                    //  setOpenSnackbar(true)
+                },
+                (error) => {
+                    console.log('error=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', error)
+                    setSnackBarData({
+                        variant: error.status ? 'success' : 'error',
+                        message: error.msg
+                    });
+                    setOpenSnackbar(true)
+                }
+            )
+        }
+
+        else if (path == '/edit-watch-party') {
+            updateNotFoundWatchPartyIdMessage(true)
+        }
+    }, [history && history.location && history.location.pathname])
+
     const updateWatchParty = (index) => {
         if (!!videoFileData) {
             uploadFile(
@@ -102,18 +148,23 @@ const WatchPartyForm = ({
                     onChangeField('video', url)
                     updateIsCustom(true)
                     updateRemoveVideoOption(false)
-                    edit_WatchParty()
+                    edit_WatchParty(url)
                 },
-                (err) => {
-                    console.log('err', err)
+                (error) => {
+                    console.log('err', error)
+                    setSnackBarData({
+                        variant: error.status ? 'success' : 'error',
+                        message: error.msg
+                    });
+                    setOpenSnackbar(true)
                 }
             )
         }
         else {
-            edit_WatchParty()
+            edit_WatchParty('')
         }
     }
-    const edit_WatchParty = (index) => {
+    const edit_WatchParty = (url) => {
         let st = convertToServerTimeZone(new Date(fields.startTime))
         let et = convertToServerTimeZone(new Date(fields.endTime))
 
@@ -127,7 +178,7 @@ const WatchPartyForm = ({
             "league": fields.league,
             "platform": fields.platform,
             "contentLength": fields.contentLength,
-            "videoUrl": fields.video,
+            "videoUrl": !!url ? url : fields.video,
             "isCustom": isCustom,
             "videoName": fields.videoName
         }
@@ -142,6 +193,7 @@ const WatchPartyForm = ({
             setOpenSnackbar(true)
             history.push(ROUTES.WATCH_PARTY)
         }, (error) => {
+            console.log('err', error)
             setSnackBarData({
                 variant: error.status ? 'success' : 'error',
                 message: error.msg
@@ -150,6 +202,7 @@ const WatchPartyForm = ({
         })
 
     }
+
     useEffect(() => {
         let arr = []
 
@@ -168,9 +221,7 @@ const WatchPartyForm = ({
         })
         setLeagues(arr)
     }, [allLeagues])
-    // useEffect(() => {
 
-    // }, [fields])
 
     useEffect(() => {
         let arr = []
@@ -185,13 +236,12 @@ const WatchPartyForm = ({
         var localZone = moment.tz.guess();
         var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
         var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) + 60) * 60000;
-
+        console.log('Server timw=>>>>>>>>>>>', moment(date.getTime() - zoneOffset + estOffset).toISOString())
         return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
 
     const onSubmit = (credentials) => {
-        //   history && history.location && history.location.editMode ? updateWatchParty() :
-        console.log('addd=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+
         if (!!videoFileData) {
             uploadFile(
                 videoFileData,
@@ -200,18 +250,23 @@ const WatchPartyForm = ({
                     onChangeField('video', url)
                     updateIsCustom(true)
                     updateRemoveVideoOption(false)
-                    add_WatchParty(credentials)
+                    add_WatchParty(credentials, url)
                 },
-                (err) => {
-                    console.log('err', err)
+                (error) => {
+                    console.log('err', error)
+                    setSnackBarData({
+                        variant: error.status ? 'success' : 'error',
+                        message: error.msg
+                    });
+                    setOpenSnackbar(true)
                 }
             )
         }
         else {
-            add_WatchParty(credentials)
+            add_WatchParty(credentials, '')
         }
     }
-    const add_WatchParty = (credentials) => {
+    const add_WatchParty = (credentials, url) => {
 
         let st = convertToServerTimeZone(fields.startTime)
         let et = convertToServerTimeZone(fields.endTime)
@@ -225,11 +280,11 @@ const WatchPartyForm = ({
             "contentLength": fields.contentLength,
             "endTime": et,
             "contentPicture": credentials.contentPicture,
-            "videoUrl": fields.video,
+            "videoUrl": !!url ? url : fields.video,
             "isCustom": isCustom,
             "videoName": fields.videoName
         }
-
+        console.log('videooooo url=>>>>>>>>>>>> post dataaaaaaa', postData)
         addWatchParty(postData, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -237,13 +292,15 @@ const WatchPartyForm = ({
             });
             setOpenSnackbar(true)
             history.push(ROUTES.WATCH_PARTY)
-        }, (response) => {
-            setSnackBarData({
-                variant: response.status ? 'success' : 'error',
-                message: response.msg
-            });
-            setOpenSnackbar(true)
-        })
+        },
+            (error) => {
+                console.log('err', error)
+                setSnackBarData({
+                    variant: error.status ? 'success' : 'error',
+                    message: error.msg
+                });
+                setOpenSnackbar(true)
+            })
     }
 
     useEffect(() => {
@@ -268,30 +325,15 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-        console.log('fieldsssss in useEffect', fields)
+        //  console.log('fieldsssss in useEffect', fields)
         initialParty = { ...fields }
     }, [fields])
 
-    // const uploadVideoFile = (file, name) => {
-    //     console.log('videooo name', name)
-    //     uploadFile(
-    //         file,
-    //         (url) => {
-    //             console.log('done uploadfileee', url)
-    //             onChangeField('video', url)
-    //             updateIsCustom(true)
-    //             onChangeField('videoName', name)
-    //             updateRemoveVideoOption(false)
-    //         },
-    //         (err) => {
-    //             console.log('err', err)
-    //         }
-    //     )
-    // }
 
     const updateVideoData = (file, name) => {
         onChangeField('videoName', name)
         updateVideoFileData(file)
+        updateIsCustom(true)
         updateRemoveVideoOption(false)
     }
     const convertTimeForEdit = (date, type) => {
@@ -306,231 +348,237 @@ const WatchPartyForm = ({
         }
     }
     useEffect(() => {
-        console.log('videoname inside useeffcet', fields.videoName, isCustom, fields.video)
-    }, [fields.video])
-    console.log('video file data =>>>>>>>>>>>>>>>>>>>', videoFileData)
+        console.log('Fieldssssssssss', fields)
+    }, [fields])
+
     return (
         <div class="container">
-            <SnackbarWrapper
-                visible={openSnackBar}
-                onClose={() => setOpenSnackbar(false)}
-                variant={snackbarData.variant}
-                message={snackbarData.message}
-            />
-            <div class="content-panel">
-                <div class="page-title">
-                    <h1>{history && history.location && history.location.editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
-                </div>
-                <Form onSubmit={
-                    history && history.location && history.location.editMode ? handleSubmit(updateWatchParty) :
-                        handleSubmit(onSubmit)
-                } class="add_watch_form">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <label>{STRINGS.SHOW}</label>
-                            <Field
-                                name={STRINGS.SHOW_NAME}
-                                component={Input}
-                                placeholder={'Show'}
-                                default={fields.show}
-                                type={'text'}
-                                onChange={event => onChangeField('show', event.target.value)}
-                                config={{
-                                    // type: 'number',
-                                    // readOnly: true,
-                                    value: fields.show ? fields.show : null
-                                }}
-                            />
+            {showNotFoundWatchPartyIdMessage ?
+                <div>Watch Party Id Not Found for Update</div>
+                :
+                <>
+                    <SnackbarWrapper
+                        visible={openSnackBar}
+                        onClose={() => setOpenSnackbar(false)}
+                        variant={snackbarData.variant}
+                        message={snackbarData.message}
+                    />
+                    <div class="content-panel">
+                        <div class="page-title">
+                            <h1>{!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
                         </div>
-                        <div className="col-md-6">
-                            <label>{STRINGS.HOST}</label>
-                            <Field
-                                name={STRINGS.HOST_NAME}
-                                component={Input}
-                                value={fields.host}
-                                placeholder={'Host'}
-                                type={"text"}
-                                onChange={event => onChangeField('host', event.target.value)}
-                                config={{
-                                    // type: 'number',
-                                    // readOnly: true,
-                                    value: fields.host ? fields.host : null
-                                }}
-                            />
-                        </div>
-                        <div class="col-md-12">
-                            <label>{STRINGS.SPORTS} </label>
-                            <Field
-                                name={STRINGS.SPORTS_NAME}
-                                component={Select}
-                                options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
-                                value={selectedSport}
-                                placeholder={'Sports'}
-                                onChange={value => {
-                                    console.log('sportsss', value.label)
-                                    onChangeField('sports', value.label)
-                                    setSelectedSport(value.label)
-                                }}
-                                config={{
-                                    // type: 'number',
-                                    // readOnly: true,
-                                    value: fields.sports ? fields.sports == 'Yes' ? true : false : null
-                                }}
-                            />
-                        </div>
-                    </div>
+                        <Form onSubmit={
+                            !!editMode ? handleSubmit(updateWatchParty) :
+                                handleSubmit(onSubmit)
+                        } class="add_watch_form">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <label>{STRINGS.SHOW}</label>
+                                    <Field
+                                        name={STRINGS.SHOW_NAME}
+                                        component={Input}
+                                        placeholder={'Show'}
+                                        default={fields.show}
+                                        type={'text'}
+                                        onChange={event => onChangeField('show', event.target.value)}
+                                        config={{
+                                            // type: 'number',
+                                            // readOnly: true,
+                                            value: fields.show ? fields.show : null
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-md-6">
+                                    <label>{STRINGS.HOST}</label>
+                                    <Field
+                                        name={STRINGS.HOST_NAME}
+                                        component={Input}
+                                        value={fields.host}
+                                        placeholder={'Host'}
+                                        type={"text"}
+                                        onChange={event => onChangeField('host', event.target.value)}
+                                        config={{
+                                            // type: 'number',
+                                            // readOnly: true,
+                                            value: fields.host ? fields.host : null
+                                        }}
+                                    />
+                                </div>
+                                <div class="col-md-12">
+                                    <label>{STRINGS.SPORTS} </label>
+                                    <Field
+                                        name={STRINGS.SPORTS_NAME}
+                                        component={Select}
+                                        options={[{ label: 'Yes', value: true }, { label: 'No', value: false }]}
+                                        value={selectedSport}
+                                        placeholder={'Sports'}
+                                        onChange={value => {
+                                            console.log('sportsss', value.label)
+                                            onChangeField('sports', value.label)
+                                            setSelectedSport(value.label)
+                                        }}
+                                        config={{
+                                            // type: 'number',
+                                            // readOnly: true,
+                                            value: fields.sports ? fields.sports == 'Yes' ? true : false : null
+                                        }}
+                                    />
+                                </div>
+                            </div>
 
-                    <div className="row">
-                        <div class="col-md-6">
-                            <label>{STRINGS.LEAGUE}</label>
-                            <Field
-                                name={STRINGS.LEAGUE_NAME}
-                                component={Select}
-                                options={leagues}
-                                value={selectedLeague}
-                                placeholder={"League"}
-                                onChange={value => {
-                                    onChangeField('league', value.value)
-                                    setSelectedLeague(value.label)
-                                }}
-                                config={{
-                                    // type: 'number',
-                                    // readOnly: true,
-                                    value: fields.league ? fields.league : null
-                                }}
-                            />
-                        </div>
-                        <div class="col-md-6">
-                            <label>{STRINGS.PLATFORM} </label>
-                            <Field
-                                name={STRINGS.PLATFORM_NAME}
-                                component={Select}
-                                options={platforms}
-                                value={selectedPlatform}
-                                placeholder={'Platform'}
-                                onChange={value => {
-                                    onChangeField('platform', value.value)
-                                    setSelectedPlatform(value.label)
-                                }}
-                                config={{
-                                    // type: 'number',
-                                    // readOnly: true,
-                                    value: fields.platform ? fields.platform : null
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div class="col-md-6">
                             <div className="row">
                                 <div class="col-md-6">
-                                    <label>{STRINGS.START}</label>
-                                    <div className="form-group">
-                                        <Field
-                                            name={STRINGS.START_TIME}
-                                            component={KeyboardDateTimePickerr}
-                                            placeholder={'Start Time'}
-                                            minDate={new Date()}
-                                            minTime={new Date()}
-                                            defaultValue={fields.startTime}
-                                            onChangeDate={(value) => {
-                                                onChangeField('startTime', value)
-                                            }}
-                                        />
+                                    <label>{STRINGS.LEAGUE}</label>
+                                    <Field
+                                        name={STRINGS.LEAGUE_NAME}
+                                        component={Select}
+                                        options={leagues}
+                                        value={selectedLeague}
+                                        placeholder={"League"}
+                                        onChange={value => {
+                                            onChangeField('league', value.value)
+                                            setSelectedLeague(value.label)
+                                        }}
+                                        config={{
+                                            // type: 'number',
+                                            // readOnly: true,
+                                            value: fields.league ? fields.league : null
+                                        }}
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <label>{STRINGS.PLATFORM} </label>
+                                    <Field
+                                        name={STRINGS.PLATFORM_NAME}
+                                        component={Select}
+                                        options={platforms}
+                                        value={selectedPlatform}
+                                        placeholder={'Platform'}
+                                        onChange={value => {
+                                            onChangeField('platform', value.value)
+                                            setSelectedPlatform(value.label)
+                                        }}
+                                        config={{
+                                            // type: 'number',
+                                            // readOnly: true,
+                                            value: fields.platform ? fields.platform : null
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div class="col-md-6">
+                                    <div className="row">
+                                        <div class="col-md-6">
+                                            <label>{STRINGS.START}</label>
+                                            <div className="form-group">
+                                                <Field
+                                                    name={STRINGS.START_TIME}
+                                                    component={KeyboardDateTimePickerr}
+                                                    placeholder={'Start Time'}
+                                                    minDate={new Date()}
+                                                    minTime={new Date()}
+                                                    defaultValue={fields.startTime}
+                                                    onChangeDate={(value) => {
+                                                        onChangeField('startTime', value)
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>{STRINGS.END}</label>
+                                            <Field
+                                                name={STRINGS.END_TIME}
+                                                component={TimePickerInputField}
+                                                placeholder={'End Time'}
+                                                defaultValue={fields.endTime}
+                                                minTime={fields.startTime}
+                                                onChangeTime={time => {
+                                                    onChangeField('endTime', changeEndDate(fields.startTime, time))
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>{STRINGS.END}</label>
+                                    <label>{STRINGS.CONTENT}</label>
                                     <Field
-                                        name={STRINGS.END_TIME}
-                                        component={TimePickerInputField}
-                                        placeholder={'End Time'}
-                                        defaultValue={fields.endTime}
-                                        minTime={fields.startTime}
-                                        onChangeTime={time => {
-                                            onChangeField('endTime', changeEndDate(fields.startTime, time))
+                                        name={STRINGS.CONTENT_LENGTH}
+                                        component={Input}
+                                        placeholder={'Content Length'}
+                                        config={{
+                                            type: 'number',
+                                            readOnly: true,
+                                            value: fields.contentLength ? fields.contentLength : null
                                         }}
                                     />
                                 </div>
+                                <div class="col-md-12">
+                                    <label>{STRINGS.WATCH_PARTY_VIDEO}</label>
+
+                                    {showRemoveVideoOption ?
+                                        <div style={{ marginTop: '10px', marginBottom: '20px' }}>
+                                            <label style={{ color: 'gray', marginRight: '20px' }}>{fields.videoName}</label>
+                                            <button className="btn btn-sm btn-secondary" onClick={() => {
+                                                setFields({ ...fields, videoName: '', video: '' })
+                                                updateRemoveVideoOption(false)
+                                            }}>Remove</button>
+                                        </div> : null}
+
+                                    <div style={{ marginBottom: '10px', marginLeft: 10 }}>
+                                        <RadioButtons
+                                            handleValueChange={(value) => {
+                                                setSelectedWatchPartyVideoOption(value)
+                                                updateVideoFileData('')
+                                                //onChangeField('videoName', '')
+                                                setFields({ ...fields, videoName: '', video: '' })
+                                                updateRemoveVideoOption(false)
+                                            }}
+                                            selectedValue={selectedWatchPartyVideoOption}
+                                            component={RadioButtons}
+                                            radioGroupItems={[{ label: 'Select Video', value: 'Select Video' }, { label: 'Add Video', value: 'Add Video' }]}
+                                        />
+                                    </div>
+                                    <div>
+
+                                        {selectedWatchPartyVideoOption == 'Select Video' ?
+                                            <Field
+                                                name={'video name'}
+                                                component={Select}
+                                                options={watchPartyVideos}
+                                                value={selectedVideo}
+                                                placeholder={'Watch Party Video'}
+                                                onChange={value => {
+                                                    console.log('video on change', value.value, value.label)
+                                                    // onChangeField('video', value.value)
+                                                    setSelectedVideo(value.label)
+                                                    // onChangeField('videoName', value.label)
+                                                    setFields({ ...fields, videoName: value.label, video: value.value })
+                                                    updateRemoveVideoOption(false)
+                                                }}
+                                                config={{
+                                                    value: fields.video ? fields.video : null
+                                                }}
+                                            />
+                                            : <Field
+                                                name='video'
+                                                component={CustomFileDrop}
+                                                acceptFiles={'.webm,.MPG,.MP2,.MPEG,.MPE,.MPV,.mp4,.m4p,.m4v'}
+                                                updateVideoData={updateVideoData}
+                                            />}
+
+                                    </div>
+                                </div>
+                                <div className="btn_group  col-md-12" style={{ alignSelf: 'left' }}>
+                                    <InputSubmit buttonLabel={!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_WATCH_PARTY} />
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label>{STRINGS.CONTENT}</label>
-                            <Field
-                                name={STRINGS.CONTENT_LENGTH}
-                                component={Input}
-                                placeholder={'Content Length'}
-                                config={{
-                                    type: 'number',
-                                    readOnly: true,
-                                    value: fields.contentLength ? fields.contentLength : null
-                                }}
-                            />
-                        </div>
-                        <div class="col-md-12">
-                            <label>{STRINGS.WATCH_PARTY_VIDEO}</label>
+                        </Form>
 
-                            {showRemoveVideoOption ?
-                                <div style={{ marginTop: '10px', marginBottom: '20px' }}>
-                                    <label style={{ color: 'gray' }}>{fields.videoName}</label>
-                                    <button className="btn btn-sm btn-secondary" style={{ marginLeft: '20px' }} onClick={() => {
-                                        setFields({ ...fields, videoName: '', video: '' })
-                                        updateRemoveVideoOption(false)
-                                    }}>Remove</button>
-                                </div> : null}
-
-                            <div style={{ marginBottom: '10px', marginLeft: 10 }}>
-                                <RadioButtons
-                                    handleValueChange={(value) => {
-                                        setSelectedWatchPartyVideoOption(value)
-                                        updateVideoFileData('')
-                                        //onChangeField('videoName', '')
-                                        setFields({ ...fields, videoName: '', video: '' })
-                                        updateRemoveVideoOption(false)
-                                    }}
-                                    selectedValue={selectedWatchPartyVideoOption}
-                                    component={RadioButtons}
-                                    radioGroupItems={[{ label: 'Select Video', value: 'Select Video' }, { label: 'Add Video', value: 'Add Video' }]}
-                                />
-                            </div>
-                            <div>
-
-                                {selectedWatchPartyVideoOption == 'Select Video' ?
-                                    <Field
-                                        name={'video name'}
-                                        component={Select}
-                                        options={watchPartyVideos}
-                                        value={selectedVideo}
-                                        placeholder={'Watch Party Video'}
-                                        onChange={value => {
-                                            console.log('video on change', value.value, value.label)
-                                            // onChangeField('video', value.value)
-                                            setSelectedVideo(value.label)
-                                            // onChangeField('videoName', value.label)
-                                            setFields({ ...fields, videoName: value.label, video: value.value })
-                                            updateRemoveVideoOption(false)
-                                        }}
-                                        config={{
-                                            value: fields.video ? fields.video : null
-                                        }}
-                                    />
-                                    : <Field
-                                        name='video'
-                                        component={CustomFileDrop}
-                                        acceptFiles={'.webm,.MPG,.MP2,.MPEG,.MPE,.MPV,.mp4,.m4p,.m4v'}
-                                        updateVideoData={updateVideoData}
-                                    />}
-
-                            </div>
-                        </div>
-                        <div className="btn_group  col-md-12" style={{ alignSelf: 'left' }}>
-                            <InputSubmit buttonLabel={history && history.location && history.location.editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_WATCH_PARTY} />
-                        </div>
                     </div>
-                </Form>
-
-            </div>
+                </>
+            }
         </div>
     );
 };

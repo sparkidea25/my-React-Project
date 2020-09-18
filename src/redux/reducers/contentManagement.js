@@ -4,7 +4,8 @@ import {
     SET_PLATFORMS,
     SET_WATCH_PARTY_LISTING,
     SET_SPORTS,
-    SET_WATCH_PARTY_VIDEOS
+    SET_WATCH_PARTY_VIDEOS,
+    SET_WATCH_PARTY_BY_ID
 } from '../actions';
 
 const { updateAuthToken } = require(`../../helpers/axios`);
@@ -14,7 +15,8 @@ const initialCommonState = {
     leagueList: [],
     sportList: [],
     watchPartyList: {},
-    watchPartyVideosList: []
+    watchPartyVideosList: [],
+    watchPartyForUpdate: {}
 };
 
 const ContentReducer = (state = { ...initialCommonState }, action) => {
@@ -40,6 +42,11 @@ const ContentReducer = (state = { ...initialCommonState }, action) => {
                 ...state,
                 watchPartyList: action.data
             };
+        case SET_WATCH_PARTY_BY_ID:
+            return {
+                ...state,
+                watchPartyForUpdate: action.data
+            }
         case SET_WATCH_PARTY_VIDEOS:
             return {
                 ...state,

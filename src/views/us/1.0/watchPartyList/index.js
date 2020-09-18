@@ -6,7 +6,7 @@ const {
     updateWatchParty,
     getPlatforms,
     getLeagues,
-    getSports, listPastWatchParty
+    getSports, listPastWatchParty, setWatchListParty
 } = require(`../../../../redux/actions`);
 
 const mapStateToProps = (state) => {
@@ -26,7 +26,8 @@ const mapDispatchToProps = (dispatch) => {
         getPlatforms: (success, failure) => dispatch(getPlatforms(success, failure)),
         getLeagues: (success, failure) => dispatch(getLeagues(success, failure)),
         getSports: (success, failure) => dispatch(getSports(success, failure)),
-        listPastWatchParty: (data, success, failure) => dispatch(listPastWatchParty(data, success, failure))
+        listPastWatchParty: (data, success, failure) => dispatch(listPastWatchParty(data, success, failure)),
+        setWatchListParty: (data) => dispatch(setWatchListParty(data))
     }
 }
 export const WatchPartyScreen = connect(mapStateToProps, mapDispatchToProps)(Screen);

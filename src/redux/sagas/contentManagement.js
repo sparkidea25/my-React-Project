@@ -7,6 +7,8 @@ import {
     EXPORT_CSV,
     GET_WATCH_PARTY,
     GET_LEAGUES,
+    GET_WATCH_PARTY_BY_ID,
+    setWatchPartyInfoById,
     GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, GET_WATCH_PARTY_VIDEO, setWatchPartyVideoList,
     setSports, GET_SPORTS, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY, UPLOAD_IMAGE
 } from '../actions';
@@ -170,6 +172,42 @@ function* updateWatchparty({ data, success, failure }) {
     }
 }
 
+function* getWatchpartyInfoById({ data, success, failure }) {
+    console.log('daattaaa', data)
+    try {
+        yield put(startLoader());
+        const response = yield getRequest({ API: `${api.URL.GET_WATCH_PARTY_INFO}?watchPartyId=${data}` });
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success(response.data.data)
+                //yield put(setWatchPartyInfoById(response.data.data))
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
 function* getLeagues({ success, failure }) {
     try {
         yield put(startLoader());
@@ -278,7 +316,7 @@ function* getSports({ success, failure }) {
 function* getPlatforms({ success, failure }) {
     try {
         yield put(startLoader());
-        const response = yield getRequest({ API: `${api.URL.GET_PLATFORMS}?skip=0&limit=50` });
+        const response = yield getRequest({ API: `${api.URL.GET_PLATFORMS}?skip=0` });
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
             failure({
@@ -355,7 +393,8 @@ function* ContentSaga() {
         takeLatest(GET_LIST_WATCH_PARTY, listWatchparty),
         takeLatest(ADD_WATCH_PARTY, addWatchParty),
         takeLatest(UPLOAD_IMAGE, uploadFile),
-        takeLatest(GET_WATCH_PARTY_VIDEO, getWatchPartyVideos)
+        takeLatest(GET_WATCH_PARTY_VIDEO, getWatchPartyVideos),
+        takeLatest(GET_WATCH_PARTY_BY_ID, getWatchpartyInfoById)
     ]);
 }
 
