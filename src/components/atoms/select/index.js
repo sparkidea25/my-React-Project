@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import ReactSelect from "react-select";
 
 export const Select = ({
@@ -21,7 +21,16 @@ export const Select = ({
       <span className="error_msg text-danger">{error}</span>
     ) : null;
 
-const [selectValue,setSelectvalue] = useState('' || config.value)
+const [selectValue,setSelectvalue] = useState('')
+
+useEffect(() => {
+ if(options){
+  let obj  = options.filter(option => option.value === config.value)
+  setSelectvalue(obj)
+ }
+
+},[config.value && options])
+
   return (
     <>
       {label && <label>{label}</label>}
