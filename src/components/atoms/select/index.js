@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import ReactSelect from "react-select";
 
 export const Select = ({
@@ -21,6 +21,7 @@ export const Select = ({
       <span className="error_msg text-danger">{error}</span>
     ) : null;
 
+const [selectValue,setSelectvalue] = useState('' || config.value)
   return (
     <>
       {label && <label>{label}</label>}
@@ -32,12 +33,12 @@ export const Select = ({
           // onChange={onValueChange}
           isSearchable={isSearchable}
           // placeholder={placeholder}
-          value={options.filter(option => option.value == config.value)}
+          value={selectValue}
           onChange={(value) => {
             console.log('changed selectedd vallue', value)
             input.onChange(value);
-
             onValueChange(value)
+            setSelectvalue(value)
           }}
           onBlur={event => event.preventDefault()}
         // onBlur={value => input.onBlur(value)}
