@@ -23,7 +23,7 @@ const copyDate = (date, time) => {
 
 const convertToClientTimeZone = (date, format, type) => {
     if (date) {
-        var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
+        var toEST = new Date(date).setHours(new Date(date).getHours(), new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
         if (type) {
             return moment(toEST).format(format)
         }

@@ -98,13 +98,15 @@ const WatchPartyForm = ({
                 sports: watchPartyForUpdate.sports === true ? 'Yes' : 'No',
                 league: watchPartyForUpdate && watchPartyForUpdate.leagueInfo && watchPartyForUpdate.leagueInfo._id,
                 platform: watchPartyForUpdate && watchPartyForUpdate.platformInfo && watchPartyForUpdate.platformInfo._id,
-                endTime: new Date(convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.endTime)),
-                startTime: new Date(convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.startTime)),
+                endTime: (convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.endTime)),
+                startTime: (convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.startTime)),
                 contentLength: watchPartyForUpdate && watchPartyForUpdate.contentLength,
                 videoName: watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.name,
                 video: watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.url
             })
         }
+        console.log('conberrrt time for end edit', convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.endTime))
+        console.log('conberrrt time for edit start', convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.startTime))
     }, [watchPartyForUpdate])
 
     useEffect(() => {
@@ -115,7 +117,7 @@ const WatchPartyForm = ({
             getWatchPartyInfo(
                 watch_party_id,
                 (response) => {
-                    console.log('dataaaaaa paryyyyyyyyyyy=>>>>>', response)
+                    console.log('dataaaaaa partttttyyyyyyyyyyy=>>>>>>>>>>>>>>>>', response)
                     updateWatchPartyForUpdate(response)
                     setSnackBarData({
                         variant: response.status ? 'success' : 'error',
@@ -232,13 +234,7 @@ const WatchPartyForm = ({
         setWatchPartyVideos(arr)
     }, [allWatchPartyVideosList])
 
-    const convertToServerTimeZone = (date) => {
-        var localZone = moment.tz.guess();
-        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
-        var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) + 60) * 60000;
-        console.log('Server timw=>>>>>>>>>>>', moment(date.getTime() - zoneOffset + estOffset).toISOString())
-        return moment(date.getTime() - zoneOffset + estOffset).toISOString()
-    }
+
 
     const onSubmit = (credentials) => {
 
@@ -325,7 +321,7 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-        //  console.log('fieldsssss in useEffect', fields)
+        console.log('fieldsssss in useEffect=>>>>>>>>>>>>>>>>>>>>>>>>>>>', fields)
         initialParty = { ...fields }
     }, [fields])
 
@@ -343,9 +339,17 @@ const WatchPartyForm = ({
             var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
 
             var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-            var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
+            var toEST = new Date(date).setHours(new Date(date).getHours(), new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
             return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
         }
+    }
+    const convertToServerTimeZone = (date) => {
+        var localZone = moment.tz.guess();
+        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
+        var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime())) * 60000;
+        console.log('offset=>>>>>>>>>', zoneOffset, estOffset)
+        console.log('Server timw=>>>>>>>>>>>', moment(date.getTime() - zoneOffset + estOffset).toISOString())
+        return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
     useEffect(() => {
         console.log('Fieldssssssssss', fields)
