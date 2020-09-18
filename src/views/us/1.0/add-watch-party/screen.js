@@ -339,7 +339,7 @@ const WatchPartyForm = ({
             var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
 
             var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-            var toEST = new Date(date).setHours(new Date(date).getHours(), new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
+            var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
             return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
         }
     }
@@ -351,6 +351,7 @@ const WatchPartyForm = ({
         console.log('Server timw=>>>>>>>>>>>', moment(date.getTime() - zoneOffset + estOffset).toISOString())
         return moment(date.getTime() - zoneOffset + estOffset).toISOString()
     }
+
     useEffect(() => {
         console.log('Fieldssssssssss', fields)
     }, [fields])
