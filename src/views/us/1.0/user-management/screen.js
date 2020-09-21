@@ -299,7 +299,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{admin.address}</td>
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{admin.age}</td>
-                      <td>{moment(admin.createdAt).format('DD/MM/YYYY')}</td>
+                      <td>{moment(admin.createdAt).format('MM/DD/YYYY')}</td>
                       <td>{admin.lastactive}</td>
                     </tr>
                   })
@@ -367,7 +367,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{user.address}</td>
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{user.age}</td>
-                      <td>{moment(user.createdAt).format('DD/MM/YYYY')}</td>
+                      <td>{moment(user.createdAt).format('MM/DD/YYYY')}</td>
                       <td>{user.lastactive}</td>
                       <td>
                         <div className="d-flex">
