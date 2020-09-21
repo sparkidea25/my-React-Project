@@ -10,7 +10,7 @@ const {
 const { SPORTS_OPTIONS, PAGE_TITLES, NAME_REGX, LABELS, VALIDATION_MESSAGES, upcomingPartyTable, pastPartyTable } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
-const { diff_minutes } = require('../../../../helpers')
+const { diff_minutes,convertToESTTimeZone,convertTimeForEdit } = require('../../../../helpers')
 
 const copyDate = (date, time) => {
     time = time ? new Date(time) : new Date()
@@ -27,18 +27,6 @@ const convertToClientTimeZone = (date, format, type) => {
         if (type) {
             return moment(toEST).format(format)
         }
-    }
-}
-
-const convertTimeForEdit = (date, type) => {
-    if (date) {
-        var localZone = moment.tz.guess();
-
-        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
-
-        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        var toEST = new Date(date).setHours(new Date(date).getHours() - 1, new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
-        return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
     }
 }
 
@@ -132,12 +120,6 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
 
     }
 
-    const convertToServerTimeZone = (date) => {
-        var localZone = moment.tz.guess();
-        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
-        var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-        return moment(date.getTime() - zoneOffset + (estOffset + 3600000)).toISOString()
-    }
     const [error, setError] = useState({})
 
     const updateWatchParty = (index) => {
@@ -150,8 +132,8 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
         }
         else {
 
-            let st = convertToServerTimeZone(new Date(fields.time))
-            let et = convertToServerTimeZone(new Date(fields.endTime))
+            let st = convertToESTTimeZone(new Date(fields.time))
+            let et = convertToESTTimeZone(new Date(fields.endTime))
 
             const postData = {
                 "watchPartyId": fields.watchPartyId,

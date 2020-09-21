@@ -12,7 +12,7 @@ const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
 const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
-const { onSubmitFail, diff_minutes, changeEndDate } = require(`../../../../helpers`);
+const { onSubmitFail, diff_minutes, changeEndDate,convertToESTTimeZone,convertTimeForEdit } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES, PAGE_TITLES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
@@ -21,7 +21,7 @@ const { CustomFileDrop } = require(`../../../../components/cells/custom-filedrop
 moment.tz.setDefault('America/New_York');
 
 let initialParty = {}
-//let initilaParty = window.history.state.state.party || {}
+
 const WatchPartyForm = ({
     handleSubmit = () => { },
     initialize,
@@ -88,7 +88,6 @@ const WatchPartyForm = ({
         if (watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.name && editMode) {
             updateRemoveVideoOption(true)
         }
-        console.log('ruyn=>>>>>>>>>>>>>>', watchPartyForUpdate)
         if (watchPartyForUpdate) {
             setFields({
                 ...fields,
@@ -98,15 +97,13 @@ const WatchPartyForm = ({
                 sports: watchPartyForUpdate.sports === true ? 'Yes' : 'No',
                 league: watchPartyForUpdate && watchPartyForUpdate.leagueInfo && watchPartyForUpdate.leagueInfo._id,
                 platform: watchPartyForUpdate && watchPartyForUpdate.platformInfo && watchPartyForUpdate.platformInfo._id,
-                endTime: (convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.endTime)),
-                startTime: (convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.startTime)),
+                endTime: new Date(convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.endTime)),
+                startTime: new Date(convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.startTime)),
                 contentLength: watchPartyForUpdate && watchPartyForUpdate.contentLength,
                 videoName: watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.name,
                 video: watchPartyForUpdate && watchPartyForUpdate.videoInfo && watchPartyForUpdate.videoInfo.url
             })
         }
-        console.log('conberrrt time for end edit', convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.endTime))
-        console.log('conberrrt time for edit start', convertTimeForEdit(watchPartyForUpdate && watchPartyForUpdate.startTime))
     }, [watchPartyForUpdate])
 
     useEffect(() => {
@@ -167,8 +164,8 @@ const WatchPartyForm = ({
         }
     }
     const edit_WatchParty = (url) => {
-        let st = convertToServerTimeZone(new Date(fields.startTime))
-        let et = convertToServerTimeZone(new Date(fields.endTime))
+        let st = convertToESTTimeZone(new Date(fields.startTime))
+        let et = convertToESTTimeZone(new Date(fields.endTime))
 
         const postData = {
             "watchPartyId": fields.watchPartyId,
@@ -264,8 +261,8 @@ const WatchPartyForm = ({
     }
     const add_WatchParty = (credentials, url) => {
 
-        let st = convertToServerTimeZone(fields.startTime)
-        let et = convertToServerTimeZone(fields.endTime)
+        let st = convertToESTTimeZone(fields.startTime)
+        let et = convertToESTTimeZone(fields.endTime)
         let postData = {
             "contentName": fields.show,
             "host": fields.host,
@@ -280,7 +277,7 @@ const WatchPartyForm = ({
             "isCustom": isCustom,
             "videoName": fields.videoName
         }
-        console.log('videooooo url=>>>>>>>>>>>> post dataaaaaaa', postData)
+
         addWatchParty(postData, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -321,7 +318,7 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-        console.log('fieldsssss in useEffect=>>>>>>>>>>>>>>>>>>>>>>>>>>>', fields)
+
         initialParty = { ...fields }
     }, [fields])
 
@@ -332,25 +329,8 @@ const WatchPartyForm = ({
         updateIsCustom(true)
         updateRemoveVideoOption(false)
     }
-    const convertTimeForEdit = (date, type) => {
-        if (date) {
-            var localZone = moment.tz.guess();
 
-            var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
 
-            var estOffset = moment.tz.zone('America/New_York').utcOffset(new Date().getTime()) * 60000;
-            var toEST = new Date(date).setHours(new Date(date).getHours(), new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
-            return moment(new Date(date).getTime() - (estOffset + 3600000) + zoneOffset).format()
-        }
-    }
-    const convertToServerTimeZone = (date) => {
-        var localZone = moment.tz.guess();
-        var zoneOffset = moment.tz.zone(localZone).utcOffset(new Date().getTime()) * 60000;
-        var estOffset = (moment.tz.zone('America/New_York').utcOffset(new Date().getTime())) * 60000;
-        console.log('offset=>>>>>>>>>', zoneOffset, estOffset)
-        console.log('Server timw=>>>>>>>>>>>', moment(date.getTime() - zoneOffset + estOffset).toISOString())
-        return moment(date.getTime() - zoneOffset + estOffset).toISOString()
-    }
     useEffect(() => {
         console.log('Fieldssssssssss', fields)
     }, [fields])
