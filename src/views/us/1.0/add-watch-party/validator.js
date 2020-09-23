@@ -5,7 +5,7 @@ const { calculateCurrentTimeInEst } = require(`../../../../helpers`);
 
 const validator = values => {
     const errors = {};
-
+console.log(values,'values ss')
     if (!values[STRINGS.SHOW_NAME]) {
         errors[STRINGS.SHOW_NAME] =
             VALIDATION_MESSAGES.SHOW_NAME_REQUIRED;

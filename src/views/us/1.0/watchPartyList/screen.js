@@ -12,14 +12,14 @@ const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
 const { diff_minutes,convertToESTTimeZone,convertTimeForEdit } = require('../../../../helpers')
 
-const copyDate = (date, time) => {
-    time = time ? new Date(time) : new Date()
-    date = date ? new Date(date) : new Date()
-    time.setDate(date.getDate());
-    time.setMonth(date.getMonth());
-    time.setYear(date.getFullYear());
-    return time;
-}
+// const copyDate = (date, time) => {
+//     time = time ? new Date(time) : new Date()
+//     date = date ? new Date(date) : new Date()
+//     time.setDate(date.getDate());
+//     time.setMonth(date.getMonth());
+//     time.setYear(date.getFullYear());
+//     return time;
+// }
 
 const convertToClientTimeZone = (date, format, type) => {
     if (date) {
@@ -77,182 +77,14 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
         variant: '',
         message: ''
     });
-    const [editMode, setEditMode] = useState(false)
-    const [rowToEdit, setRowToEdit] = useState(null)
+
     const [liveTableIndex, setLiveTableIndex] = useState(0)
     const [PastTableIndex, setPastTableIndex] = useState(0)
-    const [fields, setFields] = useState({
-        show: null,
-        host: null,
-        sports: '',
-        league: '',
-        platform: '',
-        month: '',
-        date: '',
-        time: null,
-        endTime: null,
-        contentLength: '',
-        year: null,
-        joined: '',
-        interested: '',
-        watchPartyId: ''
-    })
 
-
-    const editRow = (index, party) => {
-        setFields({
-            ...fields, watchPartyId: party._id, show: party.contentName, host: party.host,
-            sports: party.sports === true ? 'Yes' : 'No', league: party && party.leagueInfo && party.leagueInfo._id,
-            platform: party && party.platformInfo && party.platformInfo._id,
-            month: moment(party && party.startTime).format('MMM').toUpperCase(),
-            date: convertTimeForEdit(party && party.startTime),
-            year: moment(party && party.startTime).format('YYYY'),
-            time: convertTimeForEdit(party && party.startTime, party && party.contentName),
-
-            endTime: convertTimeForEdit(party && party.endTime),
-            joined: party && party.joined,
-            interested: party && party.interested,
-            contentLength: party && party.contentLength,
-            watchPartyId: party && party._id
-        })
-        setRowToEdit(index)
-        setEditMode(true)
-
-    }
-
-    const [error, setError] = useState({})
-
-    const updateWatchParty = (index) => {
-        let obj = checkValidateFields()
-        setLiveArrow('asc')
-        setError(obj)
-
-        if (obj['show'] || obj['host'] || obj['time'] || obj['endTime']) {
-            return
-        }
-        else {
-
-            let st = convertToESTTimeZone(new Date(fields.time))
-            let et = convertToESTTimeZone(new Date(fields.endTime))
-
-            const postData = {
-                "watchPartyId": fields.watchPartyId,
-                "contentName": fields.show,
-                "host": fields.host,
-                "startTime": st,
-                "endTime": et,
-                "sports": fields.sports === 'No' ? 'false' : 'true',
-                "league": fields.league,
-                "platform": fields.platform,
-                "contentLength": fields.contentLength
-            }
-
-
-            updateParty(postData, (response) => {
-                setSnackBarData({
-                    variant: response.status ? 'success' : 'error',
-                    message: response.msg
-                });
-                setOpenSnackbar(true)
-                postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
-                    setUpcomingAndLiveListing(response && response.watchPartyListing)
-                    setLiveTotalCount(response && response.totalCount)
-                })
-            }, (error) => {
-                setSnackBarData({
-                    variant: error.status ? 'success' : 'error',
-                    message: error.msg
-                });
-                setOpenSnackbar(true)
-            })
-            setEditMode(false)
-        }
-    }
-    const updateFields = (type, value) => {
-        if (error[type]) {
-            setError({ ...error, [type]: null })
-        }
-        setFields({ ...fields, [type]: value })
-    }
-
-    const checkValidateFields = () => {
-        let error = {}
-        if (fields.show === '') {
-
-            error['show'] = VALIDATION_MESSAGES.SHOW_NAME_REQUIRED
-        }
-        if (!NAME_REGX.test(fields.show)) {
-            error['show'] = VALIDATION_MESSAGES.NAME_VALIDATION
-        }
-        if (fields.host === '') {
-
-            error['host'] = VALIDATION_MESSAGES.HOST_REQUIRED
-        }
-        if (!NAME_REGX.test(fields.host)) {
-            error['host'] = VALIDATION_MESSAGES.NAME_VALIDATION
-        }
-        var localZone = moment.tz.guess();
-        let currTime = new Date();
-        var zoneOffset = moment.tz(new Date(), localZone).utcOffset();
-        var estOffset = moment.tz(new Date(), 'America/New_York').utcOffset();
-        currTime = currTime.setHours((currTime.getHours() - (zoneOffset / 60) + (estOffset / 60)), (currTime.getMinutes() - (zoneOffset % 60) + (estOffset % 60)), 0)
-
-        if (new Date(fields.time) < new Date(currTime)) {
-            error['time'] = VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST
-        }
-        if (new Date(fields.endTime) < new Date(currTime)) {
-            error['endTime'] = VALIDATION_MESSAGES.END_TIME_SHOUDLD_NOT_BE_IN_PAST
-        }
-
-        if (diff_minutes(fields.time, fields.endTime) == 0) {
-            error['endTime'] = VALIDATION_MESSAGES.SAME_TIME_VALIDATION
-        }
-
-
-        if (new Date(fields.endTime) < new Date(fields.time)) {
-
-            error['endTime'] = VALIDATION_MESSAGES.START_TIME_SHOULD_BE_AHEAD
-        }
-        setError(error)
-        return error
-    }
-
-    useEffect(() => {
-
-    }, [rowToEdit])
-    useEffect(() => {
-
-    }, [editMode])
-    useEffect(() => {
-
-    }, [fields])
-    useEffect(() => {
-        changeStartTime()
-    }, [fields.endTime])
-    useEffect(() => {
-        changeStartTime()
-    }, [fields.time])
-
-    const changeStartTime = () => {
-        let min = diff_minutes(fields.time, fields.endTime)
-        updateFields('contentLength', min)
-    }
-
-
-    useEffect(() => {
-    }, [fields])
-
-    useEffect(() => {
-        updateFields('time', copyDate(fields.date, fields.time))
-    }, [fields.date])
-
-    useEffect(() => {
-        updateFields('endTime', copyDate(fields.date, fields.endTime))
-    }, [fields.time])
 
     const sortAscending = (sortkey, type, order) => {
         let key = (sortkey === 'Show') ? 'contentName' : (sortkey === 'Time (EST)') ? 'startTime' : ''
-        if (type === 2 && !editMode) {
+        if (type === 2 ) {
             order === 1 ? setLiveArrow('asc') : setLiveArrow('des')
             postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortKey: key, sortOrder: order }, (response) => {
                 setUpcomingAndLiveListing(response && response.watchPartyListing)
@@ -308,132 +140,8 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                 {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ?
                                     <>
                                         {upcomingAndLiveListing.map((party, index) => {
-                                            return index === rowToEdit && editMode === true ?
-
-                                                <tr key={index}>
-                                                    <td><div className="input_field">
-                                                        <input name="Content Name" type="text" placefolder="Content Name"
-                                                            value={fields.show}
-                                                            onChange={(e) => {
-                                                                updateFields('show', e.target.value)
-
-                                                            }}
-                                                        />
-
-                                                        {error && error.show ? (
-                                                            <span className="error_msg text-danger">{error.show}</span>
-                                                        ) : null}
-                                                    </div></td>
-                                                    <td><div className="input_field">
-                                                        <input type="text" placefolder="Host Name" value={fields.host}
-                                                            onChange={(e) => updateFields('host', e.target.value)} />
-                                                        {error && error.host !== '' ? (
-
-                                                            <span className="error_msg text-danger">{error.host}</span>
-                                                        ) : null}
-
-
-                                                    </div></td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            <select value={fields.sports} onChange={(e) => updateFields('sports', e.target.value)}>
-                                                                {SPORTS_OPTIONS.map(sport => {
-                                                                    return <option>{sport && sport.value}</option>
-                                                                })}
-                                                            </select>
-
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-
-                                                            <select value={fields.league} onChange={(e) => updateFields('league', e.target.value)}>
-                                                                {allLeagues && allLeagues.map(league => {
-                                                                    return <option value={league._id}>{league && league.name}</option>
-                                                                })}
-                                                            </select>
-
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-
-                                                            <select value={fields.platform} onChange={(e) => updateFields('platform', e.target.value)}>
-                                                                {allPlatforms && allPlatforms.map(platform => {
-                                                                    return <option value={platform._id}>{platform && platform.name}</option>
-                                                                })}
-                                                            </select>
-
-                                                        </div>
-                                                    </td>
-                                                    <td><div className="input_field">
-                                                        <>
-                                                            <FieldDatePickerr
-                                                                value={(fields.date)}
-                                                                onChangeDate={(value) => {
-                                                                    updateFields('date', value)
-                                                                }}
-
-                                                            /></>
-
-                                                    </div></td>
-                                                    <td><div className="input_field">
-
-                                                        <TimePickerInput
-                                                            value={fields.time}
-                                                            minTime={new Date()}
-
-                                                            onChangeTime={(time) => {
-
-                                                                updateFields('time', copyDate(fields.date, time))
-                                                            }}
-                                                        />
-                                                        {error && error.time ? (
-                                                            <span className="error_msg text-danger">{error.time}</span>
-                                                        ) : null}
-
-
-                                                    </div></td>
-                                                    <td><div className="input_field">
-                                                        <TimePickerInput
-                                                            value={fields.endTime}
-                                                            minTime={new Date()}
-                                                            onChangeTime={(time) => {
-                                                                updateFields('endTime', copyDate(fields.date, time))
-
-                                                            }}
-                                                        />
-                                                        {error && error.endTime ? (
-                                                            <span className="error_msg text-danger">{error.endTime}</span>
-                                                        ) : null}
-
-                                                    </div></td>
-                                                    <td><div className="input_field">
-                                                        <input type="number" value={fields.contentLength}
-                                                            readonly={true} disabled={true} />
-
-                                                    </div>
-                                                    </td>
-                                                    <td><div className="input_field">
-
-                                                        <input type="number" value={fields.joined} onChange={(e) => updateFields('joined', e.target.value)} disabled={true} readOnly={true} />
-
-                                                    </div>
-                                                    </td>
-                                                    <td><div className="input_field">
-
-                                                        <input type="number" value={fields.interested} onChange={(e) => updateFields('interested', e.target.value)} disabled={true} readOnly={true} />
-
-                                                    </div>
-                                                    </td>
-                                                    <td>
-                                                        <button className="btn btn-sm btn-secondary" onClick={() => updateWatchParty(index)}>Done</button>
-
-
-                                                    </td>
-                                                </tr> :
-
-                                                <tr>
+                                            
+                                               return <tr>
                                                     <td>
                                                         <div className="input_field">
                                                             {party.contentName}
@@ -497,15 +205,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     <td>
                                                         <div className="input_field">
                                                             <button className="btn btn-sm btn-secondary" onClick={() => {
-                                                                //editRow(index, party)
-                                                                //  setWatchListParty(party)
-                                                                // history.push({
-                                                                //     pathname: ROUTES.EDIT_WATCH_PARTY,
-                                                                //     editMode: true,
-                                                                //     state: {
-                                                                //         party
-                                                                //     }
-                                                                // });
+                                                             
                                                                 history.push(`${ROUTES.EDIT_WATCH_PARTY}?watch_party_id=${party._id}`)
                                                             }}>Edit</button></div></td>
                                                 </tr>
@@ -529,7 +229,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                 setLiveTotalCount(response && response.totalCount)
                             })
                             setLiveTableIndex(value && value.selected)
-                            setEditMode(false)
+                            // setEditMode(false)
 
                         }}
                     /> : ''}

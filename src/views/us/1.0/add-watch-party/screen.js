@@ -114,7 +114,6 @@ const WatchPartyForm = ({
             getWatchPartyInfo(
                 watch_party_id,
                 (response) => {
-                    console.log('dataaaaaa partttttyyyyyyyyyyy=>>>>>>>>>>>>>>>>', response)
                     updateWatchPartyForUpdate(response)
                     setSnackBarData({
                         variant: response.status ? 'success' : 'error',
@@ -123,7 +122,6 @@ const WatchPartyForm = ({
                     //  setOpenSnackbar(true)
                 },
                 (error) => {
-                    console.log('error=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', error)
                     setSnackBarData({
                         variant: error.status ? 'success' : 'error',
                         message: error.msg
@@ -138,19 +136,20 @@ const WatchPartyForm = ({
         }
     }, [history && history.location && history.location.pathname])
 
-    const updateWatchParty = (index) => {
+    const updateWatchParty = (credentials) => {
+        console.log('while update',videoFileData)
         if (!!videoFileData) {
             uploadFile(
                 videoFileData,
                 (url) => {
-                    console.log('done uploadfileee', url)
                     onChangeField('video', url)
                     updateIsCustom(true)
                     updateRemoveVideoOption(false)
-                    edit_WatchParty(url)
+                    !!editMode ? edit_WatchParty(url) :
+                    add_WatchParty(credentials, url)
                 },
                 (error) => {
-                    console.log('err', error)
+            
                     setSnackBarData({
                         variant: error.status ? 'success' : 'error',
                         message: error.msg
@@ -160,7 +159,7 @@ const WatchPartyForm = ({
             )
         }
         else {
-            edit_WatchParty('')
+            !!editMode ?  edit_WatchParty('') :  add_WatchParty(credentials, '')
         }
     }
     const edit_WatchParty = (url) => {
@@ -181,8 +180,6 @@ const WatchPartyForm = ({
             "isCustom": isCustom,
             "videoName": fields.videoName
         }
-        console.log('editttt=>>>>>>>>>>>>>>>>>>>>>>>>>>>', postData)
-
 
         updateParty(postData, (response) => {
             setSnackBarData({
@@ -192,7 +189,6 @@ const WatchPartyForm = ({
             setOpenSnackbar(true)
             history.push(ROUTES.WATCH_PARTY)
         }, (error) => {
-            console.log('err', error)
             setSnackBarData({
                 variant: error.status ? 'success' : 'error',
                 message: error.msg
@@ -233,32 +229,31 @@ const WatchPartyForm = ({
 
 
 
-    const onSubmit = (credentials) => {
+    // const onSubmit = (credentials) => {
 
-        if (!!videoFileData) {
-            uploadFile(
-                videoFileData,
-                (url) => {
-                    console.log('done uploadfileee', url)
-                    onChangeField('video', url)
-                    updateIsCustom(true)
-                    updateRemoveVideoOption(false)
-                    add_WatchParty(credentials, url)
-                },
-                (error) => {
-                    console.log('err', error)
-                    setSnackBarData({
-                        variant: error.status ? 'success' : 'error',
-                        message: error.msg
-                    });
-                    setOpenSnackbar(true)
-                }
-            )
-        }
-        else {
-            add_WatchParty(credentials, '')
-        }
-    }
+    //     if (!!videoFileData) {
+    //         uploadFile(
+    //             videoFileData,
+    //             (url) => {
+    //                 onChangeField('video', url)
+    //                 updateIsCustom(true)
+    //                 updateRemoveVideoOption(false)
+    //                 add_WatchParty(credentials, url)
+    //             },
+    //             (error) => {
+                 
+    //                 setSnackBarData({
+    //                     variant: error.status ? 'success' : 'error',
+    //                     message: error.msg
+    //                 });
+    //                 setOpenSnackbar(true)
+    //             }
+    //         )
+    //     }
+    //     else {
+    //         add_WatchParty(credentials, '')
+    //     }
+    // }
     const add_WatchParty = (credentials, url) => {
 
         let st = convertToESTTimeZone(fields.startTime)
@@ -287,7 +282,7 @@ const WatchPartyForm = ({
             history.push(ROUTES.WATCH_PARTY)
         },
             (error) => {
-                console.log('err', error)
+              
                 setSnackBarData({
                     variant: error.status ? 'success' : 'error',
                     message: error.msg
@@ -332,7 +327,7 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-        console.log('Fieldssssssssss', fields)
+      
     }, [fields])
 
     return (
@@ -351,10 +346,8 @@ const WatchPartyForm = ({
                         <div class="page-title">
                             <h1>{!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
                         </div>
-                        <Form onSubmit={
-                            !!editMode ? handleSubmit(updateWatchParty) :
-                                handleSubmit(onSubmit)
-                        } class="add_watch_form">
+                        {console.log(!!editMode,'!!editMode')}
+                        <Form onSubmit={handleSubmit(updateWatchParty)} class="add_watch_form">
                             <div className="row">
                                 <div className="col-md-6">
                                     <label>{STRINGS.SHOW}</label>
@@ -397,7 +390,7 @@ const WatchPartyForm = ({
                                         value={selectedSport}
                                         placeholder={'Sports'}
                                         onChange={value => {
-                                            console.log('sportsss', value.label)
+                                           
                                             onChangeField('sports', value.label)
                                             setSelectedSport(value.label)
                                         }}
@@ -534,7 +527,7 @@ const WatchPartyForm = ({
                                                 value={selectedVideo}
                                                 placeholder={'Watch Party Video'}
                                                 onChange={value => {
-                                                    console.log('video on change', value.value, value.label)
+                                             
                                                     // onChangeField('video', value.value)
                                                     setSelectedVideo(value.label)
                                                     // onChangeField('videoName', value.label)
@@ -587,7 +580,7 @@ const mapStateToProps = (state) => {
 
 const showForm = reduxForm({
     form: "watchparty",
-    onSubmitFail,
+     onSubmitFail,
     validate: validator,
     enableReinitialize: true
 })(WatchPartyForm);

@@ -470,7 +470,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                             <span className="error_msg text-danger">{error.age}</span>
                           ) : null}
                         </td>
-                        <td>{moment(user.createdAt).format('DD/MM/YYYY')}</td>
+                        <td>{moment(user.createdAt).format('MM/DD/YYYY')}</td>
                         <td>{user.lastactive}</td>
                         <td>  <button className="btn btn-sm btn-secondary" onClick={onSubmit} >Update</button></td>
                       </tr>
