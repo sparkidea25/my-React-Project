@@ -48,7 +48,7 @@ export const TimePickerInputField = ({
         time.setDate(date.getDate());
         time.setMonth(date.getMonth());
         time.setYear(date.getFullYear());
-        console.log(time, 'check time')
+
         return time;
     }
 

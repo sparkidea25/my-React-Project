@@ -19,7 +19,7 @@ export const Input = ({
     touched && error ? (
       <span className="error_msg text-danger">{error}</span>
     ) : null;
-  // console.log('input compo', input, value, props)
+
   return (
     // <div className={widthStyle}>
     <div className="form-group" style={style}>

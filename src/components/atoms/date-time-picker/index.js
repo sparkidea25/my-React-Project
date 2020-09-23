@@ -38,7 +38,7 @@ export const KeyboardDateTimePickerr = ({
     useEffect(() => {
         setDateVal(defaultValue)
     }, [defaultValue])
-    console.log('defaultttt value in date=>>>', defaultValue)
+
     return (
         <>
             {label && <label>{label}</label>}

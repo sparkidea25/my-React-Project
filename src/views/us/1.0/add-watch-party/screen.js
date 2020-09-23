@@ -44,6 +44,7 @@ const WatchPartyForm = ({
         return new URLSearchParams(useLocation().search);
     }
 
+
     let query = useQuery();
     const [fields, setFields] = useState({
         "host": "",
@@ -136,8 +137,8 @@ const WatchPartyForm = ({
         }
     }, [history && history.location && history.location.pathname])
 
-    const updateWatchParty = (credentials) => {
-        console.log('while update',videoFileData)
+    const onsubmit = (credentials) => {
+  
         if (!!videoFileData) {
             uploadFile(
                 videoFileData,
@@ -227,33 +228,6 @@ const WatchPartyForm = ({
         setWatchPartyVideos(arr)
     }, [allWatchPartyVideosList])
 
-
-
-    // const onSubmit = (credentials) => {
-
-    //     if (!!videoFileData) {
-    //         uploadFile(
-    //             videoFileData,
-    //             (url) => {
-    //                 onChangeField('video', url)
-    //                 updateIsCustom(true)
-    //                 updateRemoveVideoOption(false)
-    //                 add_WatchParty(credentials, url)
-    //             },
-    //             (error) => {
-                 
-    //                 setSnackBarData({
-    //                     variant: error.status ? 'success' : 'error',
-    //                     message: error.msg
-    //                 });
-    //                 setOpenSnackbar(true)
-    //             }
-    //         )
-    //     }
-    //     else {
-    //         add_WatchParty(credentials, '')
-    //     }
-    // }
     const add_WatchParty = (credentials, url) => {
 
         let st = convertToESTTimeZone(fields.startTime)
@@ -313,8 +287,9 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-
-        initialParty = { ...fields }
+        if (editMode) {
+            initialParty = { ...fields }
+        }
     }, [fields])
 
 
@@ -346,8 +321,8 @@ const WatchPartyForm = ({
                         <div class="page-title">
                             <h1>{!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
                         </div>
-                        {console.log(!!editMode,'!!editMode')}
-                        <Form onSubmit={handleSubmit(updateWatchParty)} class="add_watch_form">
+                     
+                        <Form onSubmit={handleSubmit(onsubmit)} >
                             <div className="row">
                                 <div className="col-md-6">
                                     <label>{STRINGS.SHOW}</label>
@@ -547,10 +522,11 @@ const WatchPartyForm = ({
 
                                     </div>
                                 </div>
-                                <div className="btn_group  col-md-12" style={{ alignSelf: 'left' }}>
+                                
+                            </div>
+                            <div className="btn_group  col-md-12" style={{ alignSelf: 'left' }}>
                                     <InputSubmit buttonLabel={!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_WATCH_PARTY} />
                                 </div>
-                            </div>
                         </Form>
 
                     </div>
@@ -559,8 +535,17 @@ const WatchPartyForm = ({
         </div>
     );
 };
+
+const showForm = reduxForm({
+    form: "watchparty",
+     onSubmitFail,
+    validate: validator,
+    enableReinitialize: true
+})(WatchPartyForm);
+
 const mapStateToProps = (state) => {
-    //  console.log('initial', initialParty)
+
+    if(Object.keys(initialParty).length > 0) {
     let initialValues = {
         show: initialParty && initialParty.show,
         host: initialParty.host,
@@ -577,12 +562,11 @@ const mapStateToProps = (state) => {
         initialValues: initialValues
     };
 }
+}
 
-const showForm = reduxForm({
-    form: "watchparty",
-     onSubmitFail,
-    validate: validator,
-    enableReinitialize: true
-})(WatchPartyForm);
-export const Screen = connect(mapStateToProps)(showForm);
+const mapDispatchToProps = (state, props) => {
+    return {}
+}
+
+export const Screen = connect(mapStateToProps,mapDispatchToProps)(showForm);
 
