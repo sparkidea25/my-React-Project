@@ -169,7 +169,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     </td>
                                                     <td>
                                                         <div className="input_field">
-                                                            {convertToClientTimeZone(party && party.startTime, 'Do MMM', party && party.contentName)}
+                                                            {convertToClientTimeZone(party && party.startTime, 'MMM Do', party && party.contentName)}
                                                         </div>
                                                     </td>
                                                     <td>
