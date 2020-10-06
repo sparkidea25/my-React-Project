@@ -25,7 +25,7 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
                 party.contentLength = diff_minutes(party.startTime, party.endTime)
                 party.startTime = convertToESTTimeZone(party.startTime);
                 party.endTime = convertToESTTimeZone(party.endTime);
-                party.league = party.league.value
+                party.league =party && party.league && party.league.value
                 party.platform = party.platform.value
                 party.sports = party.sports.value === 'Yes' ? true : false
 
