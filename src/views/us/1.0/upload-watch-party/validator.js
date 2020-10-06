@@ -28,7 +28,7 @@ const validator = values => {
             partyErrors.sports = VALIDATION_MESSAGES.SPORTS_REQUIRED
             partyArrayErrors[partyIndex] = partyErrors
         }
-        if (!party.league) {
+        if (party.sports &&  party.sports.value && !party.league) {
             partyErrors.league = VALIDATION_MESSAGES.LEAGUE_REQUIRED
             partyArrayErrors[partyIndex] = partyErrors
         }

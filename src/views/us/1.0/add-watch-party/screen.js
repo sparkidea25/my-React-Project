@@ -247,6 +247,12 @@ const WatchPartyForm = ({
             "videoName": fields.videoName
         }
 
+      
+            if (postData['league'] === "") {
+                delete postData['league']
+            }
+      
+
         addWatchParty(postData, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -441,6 +447,19 @@ const WatchPartyForm = ({
                                         <div class="col-md-6">
                                             <label>{STRINGS.END}</label>
                                             <Field
+                                                    name={STRINGS.END_TIME}
+                                                    component={KeyboardDateTimePickerr}
+                                                    placeholder={'End Time'}
+                                                    // minDate={new Date()}
+                                              
+                                                    defaultValue={fields.endTime}
+                                                    minDate={fields.startTime}
+                                                    minTime={fields.startTime}
+                                                    onChangeDate={(value) => {
+                                                        onChangeField('endTime', value)
+                                                    }}
+                                                />
+                                            {/* <Field
                                                 name={STRINGS.END_TIME}
                                                 component={TimePickerInputField}
                                                 placeholder={'End Time'}
@@ -449,7 +468,7 @@ const WatchPartyForm = ({
                                                 onChangeTime={time => {
                                                     onChangeField('endTime', changeEndDate(fields.startTime, time))
                                                 }}
-                                            />
+                                            /> */}
                                         </div>
                                     </div>
                                 </div>

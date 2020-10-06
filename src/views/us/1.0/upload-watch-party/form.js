@@ -133,7 +133,7 @@ const UForm = (props) => {
                                                     placeholder={'Start Time(EST.)'}
                                                     minDate={new Date()}
                                                     minTime={new Date()}
-                                                    value={startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate[`${member}.${STRINGS.START_TIME}`] : null}
+                                                     defaultValue={startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate[`${member}.${STRINGS.START_TIME}`] : null}
                                                     onChangeDate={(value) => {
                                                         if (endDate && endDate[`${member}.${STRINGS.END_TIME}`]) {
                                                             setEndDate({ ...endDate, [`${member}.${STRINGS.END_TIME}`]: null })
@@ -147,19 +147,18 @@ const UForm = (props) => {
                                         <div className="col-md-3 col-sm-6">
                                             <label>{STRINGS.END}</label>
                                             <div className="form-group">
-                                                <Field
+                                            <Field
                                                     name={`${member}.${STRINGS.END_TIME}`}
-                                                    component={TimePickerInputField}
+                                                    component={KeyboardDateTimePickerr}
                                                     placeholder={'End Time(EST.)'}
-                                                    defaultValue={endDate && endDate[`${member}.${STRINGS.END_TIME}`] ? endDate[`${member}.${STRINGS.END_TIME}`] : null}
+                                                    minDate={startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate[`${member}.${STRINGS.START_TIME}`] : null}
                                                     minTime={startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate[`${member}.${STRINGS.START_TIME}`] : null}
-                                                    onChangeTime={value => {
-                                                        let convertedTime = changeEndDate(startDate && startDate[`${member}.${STRINGS.START_TIME}`] ? startDate && startDate[`${member}.${STRINGS.START_TIME}`] : new Date(), value)
-
-                                                        setEndDate({ ...endDate, [`${member}.${STRINGS.END_TIME}`]: convertedTime })
+                                                    defaultValue={endDate && endDate[`${member}.${STRINGS.END_TIME}`] ? endDate[`${member}.${STRINGS.END_TIME}`] : null}
+                                                    onChangeDate={(value) => {
+                                                        setEndDate({ ...endDate, [`${member}.${STRINGS.END_TIME}`]: value })
                                                         if (startDate && startDate[`${member}.${STRINGS.START_TIME}`]) {
 
-                                                            let min = diff_minutes(startDate[`${member}.${STRINGS.START_TIME}`], convertedTime)
+                                                            let min = diff_minutes(startDate[`${member}.${STRINGS.START_TIME}`], value)
                                                             setContentLength({ ...contentLength, [`${member}.${STRINGS.CONTENT_LENGTH}`]: min })
                                                         }
                                                     }}

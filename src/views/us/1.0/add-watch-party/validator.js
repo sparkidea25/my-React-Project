@@ -30,7 +30,7 @@ const validator = values => {
         errors[STRINGS.PLATFORM_NAME] =
             VALIDATION_MESSAGES.PLATFORM_REQUIRED;
     }
-    if (!values[STRINGS.LEAGUE_NAME]) {
+    if (values[STRINGS.SPORTS_NAME] && values[STRINGS.SPORTS_NAME].value && !values[STRINGS.LEAGUE_NAME]) {
         errors[STRINGS.LEAGUE_NAME] =
             VALIDATION_MESSAGES.LEAGUE_REQUIRED;
     }

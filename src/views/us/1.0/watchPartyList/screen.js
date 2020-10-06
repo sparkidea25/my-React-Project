@@ -12,15 +12,6 @@ const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
 const { diff_minutes,convertToESTTimeZone,convertTimeForEdit } = require('../../../../helpers')
 
-// const copyDate = (date, time) => {
-//     time = time ? new Date(time) : new Date()
-//     date = date ? new Date(date) : new Date()
-//     time.setDate(date.getDate());
-//     time.setMonth(date.getMonth());
-//     time.setYear(date.getFullYear());
-//     return time;
-// }
-
 const convertToClientTimeZone = (date, format, type) => {
     if (date) {
         var toEST = new Date(date).setHours(new Date(date).getHours(), new Date(date).getMinutes(), new Date(date).getSeconds(), new Date(date).getMilliseconds())
@@ -53,12 +44,12 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
         listPastWatchParty(postData, (resp) => { response(resp) }, () => { })
     }
     useEffect(() => {
-        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
+        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2,sortKey:"createdAt", sortOrder: -1 }, (response) => {
             setWatchListParty(response && response.watchPartyListing)
             setUpcomingAndLiveListing(response && response.watchPartyListing)
             setLiveTotalCount(response && response.totalCount)
         })
-        pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3, sortkey: "startTime", sortOrder: 1 }, (response) => {
+        pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3, sortKey:"createdAt",sortOrder: -1 }, (response) => {
 
             setPastListing(response && response.watchPartyListing)
             setPastTotalCount(response && response.totalCount)
@@ -159,7 +150,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     </td>
                                                     <td>
                                                         <div className="input_field">
-                                                            {party && party.leagueInfo && party.leagueInfo.name}
+                                                            {party && party.leagueInfo && party.leagueInfo.name ? party.leagueInfo.name : 'N/A'}
                                                         </div>
                                                     </td>
                                                     <td>
@@ -175,6 +166,11 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     <td>
                                                         <div className="input_field">
                                                             {convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            {convertToClientTimeZone(party && party.endTime, "MMM Do", party && party.contentName)}
                                                         </div>
                                                     </td>
                                                     <td>
@@ -274,12 +270,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                         {pastParty && pastParty.platformInfo && pastParty.platformInfo.name}
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <div className="input_field">
-                                                        {convertToClientTimeZone(pastParty && pastParty.startTime, 'MMM', pastParty && pastParty.contentName)}
-
-                                                    </div>
-                                                </td>
+                              
                                                 <td><div className="input_field">
                                                     {convertToClientTimeZone(pastParty && pastParty.startTime, 'Do', pastParty && pastParty.contentName)}
                                                 </div>
@@ -287,6 +278,10 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                 <td><div className="input_field">
                                                     {convertToClientTimeZone(pastParty && pastParty.startTime, 'LT', pastParty && pastParty.contentName)}
                                                 </div></td>
+                                                <td><div className="input_field">
+                                                    {convertToClientTimeZone(pastParty && pastParty.endTime, 'Do', pastParty && pastParty.contentName)}
+                                                </div>
+                                                </td>
                                                 <td><div className="input_field">
                                                     {convertToClientTimeZone(pastParty && pastParty.endTime, 'LT', pastParty && pastParty.contentName)}
                                                 </div></td>
