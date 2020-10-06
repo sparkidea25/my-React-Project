@@ -17,10 +17,12 @@ const validator = values => {
             partyErrors.contentName = VALIDATION_MESSAGES.NAME_VALIDATION
             partyArrayErrors[partyIndex] = partyErrors
         }
-        if (!party.host) {
-            partyErrors.host = VALIDATION_MESSAGES.HOST_REQUIRED
-            partyArrayErrors[partyIndex] = partyErrors
-        } else if (!NAME_REGX.test(party.host)) {
+        // if (!party.host) {
+        //     partyErrors.host = VALIDATION_MESSAGES.HOST_REQUIRED
+        //     partyArrayErrors[partyIndex] = partyErrors
+        // }
+        //  else
+          if (!NAME_REGX.test(party.host)) {
             partyErrors.host = VALIDATION_MESSAGES.NAME_VALIDATION
             partyArrayErrors[partyIndex] = partyErrors
         }
