@@ -14,11 +14,20 @@ export const UPLOAD_IMAGE = "UPLOAD_IMAGE"
 export const GET_WATCH_PARTY_VIDEO = "GET_WATCH_PARTY_VIDEO"
 export const SET_WATCH_PARTY_VIDEOS = "SET_WATCH_PARTY_VIDEOS"
 export const GET_WATCH_PARTY_BY_ID = "GET_WATCH_PARTY_BY_ID"
+export const GET_WATCH_PARTY_USERS = "GET_WATCH_PARTY_USERS"
 export const SET_WATCH_PARTY_BY_ID = "SET_WATCH_PARTY_BY_ID"
 export const exportWatchParty = (data, success, failure) => {
     return {
         type: EXPORT_CSV,
         data,
+        success,
+        failure
+    }
+}
+export const getWatchPartyUsers = (payload, success, failure) => {
+    return {
+        type: GET_WATCH_PARTY_USERS,
+        payload,
         success,
         failure
     }

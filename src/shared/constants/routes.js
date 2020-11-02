@@ -9,6 +9,7 @@ export const ROUTES = {
     WATCH_PARTY: '/watch-party',
     ADD_WATCH_PARTY: '/add-watch-party',
     EDIT_WATCH_PARTY: '/edit-watch-party',
+    WATCH_PARTY_USERS: '/watch-party-users',
     UPLOAD_WATCH_PARTY: '/upload-watch-party',
     FORGOT_PASSWORD: '/forget-password',
     RESET_PASSWORD: '/admin/reset-password',

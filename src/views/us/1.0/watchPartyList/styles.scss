@@ -39,6 +39,14 @@
     }
   }
 }
+.watchcPartyName{
+    cursor: pointer;
+    &:hover{
+        color:#64d2ff;
+        text-decoration: underline;
+    }
+};
+
 .input_field {
     word-break: initial;
     .MuiTextField-root.form-control {

@@ -158,7 +158,10 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                         {upcomingAndLiveListing.map((party, index) => {
                                             return <tr>
                                                 <td>
-                                                    <div className="input_field">
+                                                    <div
+                                                        onClick={() => history.push(`${ROUTES.WATCH_PARTY_USERS}?watch_party_id=${party._id}`)}
+                                                        className="input_field watchcPartyName"
+                                                    >
                                                         {party.contentName}
                                                     </div>
                                                 </td>
@@ -276,7 +279,13 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                     <>
                                         {pastListing.map((pastParty, index) => {
                                             return <tr className="preview_mode" key={index}>
-                                                <td><div className="input_field">{pastParty.contentName}</div></td>
+                                                <td> <div
+                                                    onClick={() => history.push(`${ROUTES.WATCH_PARTY_USERS}?watch_party_id=${pastParty._id}`)}
+                                                    className="input_field watchcPartyName"
+                                                >
+                                                    {pastParty.contentName}
+                                                </div>
+                                                </td>
                                                 <td><div className="input_field">{pastParty.host}</div></td>
                                                 <td>
                                                     <div className="input_field">

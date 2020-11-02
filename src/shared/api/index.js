@@ -24,6 +24,7 @@ module.exports = {
     GET_TIME_ZONES: SERVER_URL + API_VERSION + '/timezone/getAllTimezones',
     DELETE_USER: SERVER_URL + API_VERSION + '/admin/deleteUser',
     GET_WATCH_PARTY_VIDEOS: SERVER_URL + API_VERSION + '/video/getVideos',
-    GET_WATCH_PARTY_INFO: SERVER_URL + API_VERSION + '/watchParty/getInfo'
+    GET_WATCH_PARTY_INFO: SERVER_URL + API_VERSION + '/watchParty/getInfo',
+    GET_WATCH_PARTY_USERS: SERVER_URL + API_VERSION + '/watchParty/users/listing',
   }
 };
