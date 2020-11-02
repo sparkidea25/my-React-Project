@@ -5,6 +5,7 @@ import "./style.scss";
 import validator from "./validator";
 import moment from "moment-timezone"
 import { connect } from 'react-redux'
+import Switch from "react-switch";
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { Form } = require(`../../../../components/atoms/form`);
 const { InputSubmit } = require(`../../../../components/atoms/input-submit`);
@@ -12,7 +13,7 @@ const { Input } = require(`../../../../components/atoms/input`);
 const { Select } = require(`../../../../components/atoms/select`)
 const { KeyboardDateTimePickerr } = require(`../../../../components/atoms/date-time-picker`)
 const { TimePickerInputField } = require(`../../../../components/atoms/field-time-picker`)
-const { onSubmitFail, diff_minutes, changeEndDate,convertToESTTimeZone,convertTimeForEdit } = require(`../../../../helpers`);
+const { onSubmitFail, diff_minutes, changeEndDate, convertToESTTimeZone, convertTimeForEdit } = require(`../../../../helpers`);
 const { STRINGS } = require(`../../../../shared/constants/${LOCATION}/strings`)
 const { ROUTES, PAGE_TITLES } = require(`../../../../shared/constants`);
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
@@ -95,6 +96,7 @@ const WatchPartyForm = ({
                 watchPartyId: watchPartyForUpdate._id,
                 show: watchPartyForUpdate && watchPartyForUpdate.contentName,
                 host: watchPartyForUpdate.host,
+                isHidden: watchPartyForUpdate.isHidden,
                 sports: watchPartyForUpdate.sports === true ? 'Yes' : 'No',
                 league: watchPartyForUpdate && watchPartyForUpdate.leagueInfo && watchPartyForUpdate.leagueInfo._id,
                 platform: watchPartyForUpdate && watchPartyForUpdate.platformInfo && watchPartyForUpdate.platformInfo._id,
@@ -138,7 +140,7 @@ const WatchPartyForm = ({
     }, [history && history.location && history.location.pathname])
 
     const onsubmit = (credentials) => {
-  
+
         if (!!videoFileData) {
             uploadFile(
                 videoFileData,
@@ -147,10 +149,9 @@ const WatchPartyForm = ({
                     updateIsCustom(true)
                     updateRemoveVideoOption(false)
                     !!editMode ? edit_WatchParty(url) :
-                    add_WatchParty(credentials, url)
+                        add_WatchParty(credentials, url)
                 },
                 (error) => {
-            
                     setSnackBarData({
                         variant: error.status ? 'success' : 'error',
                         message: error.msg
@@ -160,7 +161,7 @@ const WatchPartyForm = ({
             )
         }
         else {
-            !!editMode ?  edit_WatchParty('') :  add_WatchParty(credentials, '')
+            !!editMode ? edit_WatchParty('') : add_WatchParty(credentials, '')
         }
     }
     const edit_WatchParty = (url) => {
@@ -173,6 +174,7 @@ const WatchPartyForm = ({
             "host": fields.host,
             "startTime": st,
             "endTime": et,
+            "isHidden": fields.isHidden,
             "sports": fields.sports === 'No' ? 'false' : 'true',
             "league": fields.league,
             "platform": fields.platform,
@@ -247,11 +249,11 @@ const WatchPartyForm = ({
             "videoName": fields.videoName
         }
 
-      
-            if (postData['league'] === "") {
-                delete postData['league']
-            }
-      
+
+        if (postData['league'] === "") {
+            delete postData['league']
+        }
+
 
         addWatchParty(postData, (response) => {
             setSnackBarData({
@@ -262,7 +264,7 @@ const WatchPartyForm = ({
             history.push(ROUTES.WATCH_PARTY)
         },
             (error) => {
-              
+
                 setSnackBarData({
                     variant: error.status ? 'success' : 'error',
                     message: error.msg
@@ -308,7 +310,7 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-      
+
     }, [fields])
 
     return (
@@ -327,7 +329,7 @@ const WatchPartyForm = ({
                         <div class="page-title">
                             <h1>{!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
                         </div>
-                     
+
                         <Form onSubmit={handleSubmit(onsubmit)} >
                             <div className="row">
                                 <div className="col-md-6">
@@ -362,7 +364,7 @@ const WatchPartyForm = ({
                                         }}
                                     />
                                 </div>
-                                <div class="col-md-12">
+                                <div class='col-md-12'>
                                     <label>{STRINGS.SPORTS} </label>
                                     <Field
                                         name={STRINGS.SPORTS_NAME}
@@ -371,7 +373,7 @@ const WatchPartyForm = ({
                                         value={selectedSport}
                                         placeholder={'Sports'}
                                         onChange={value => {
-                                           
+
                                             onChangeField('sports', value.label)
                                             setSelectedSport(value.label)
                                         }}
@@ -447,18 +449,18 @@ const WatchPartyForm = ({
                                         <div class="col-md-6">
                                             <label>{STRINGS.END}</label>
                                             <Field
-                                                    name={STRINGS.END_TIME}
-                                                    component={KeyboardDateTimePickerr}
-                                                    placeholder={'End Time'}
-                                                    // minDate={new Date()}
-                                              
-                                                    defaultValue={fields.endTime}
-                                                    minDate={fields.startTime}
-                                                    minTime={fields.startTime}
-                                                    onChangeDate={(value) => {
-                                                        onChangeField('endTime', value)
-                                                    }}
-                                                />
+                                                name={STRINGS.END_TIME}
+                                                component={KeyboardDateTimePickerr}
+                                                placeholder={'End Time'}
+                                                // minDate={new Date()}
+
+                                                defaultValue={fields.endTime}
+                                                minDate={fields.startTime}
+                                                minTime={fields.startTime}
+                                                onChangeDate={(value) => {
+                                                    onChangeField('endTime', value)
+                                                }}
+                                            />
                                             {/* <Field
                                                 name={STRINGS.END_TIME}
                                                 component={TimePickerInputField}
@@ -472,7 +474,7 @@ const WatchPartyForm = ({
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class={`col-md-${editMode ? '4' : '6'}`}>
                                     <label>{STRINGS.CONTENT}</label>
                                     <Field
                                         name={STRINGS.CONTENT_LENGTH}
@@ -485,6 +487,20 @@ const WatchPartyForm = ({
                                         }}
                                     />
                                 </div>
+                                {!!editMode && <div style={{ display: 'flex', flexDirection: 'column' }} class="col-md-2">
+                                    <label>{STRINGS.SHOWN} </label>
+                                    <div className='css-yk16xz-control' style={{ alignItems: 'center', borderWidth: 0 }} >
+                                        <Switch
+                                            checked={!fields.isHidden}
+                                            checkedIcon={false}
+                                            height={24}
+                                            onChange={(val) => onChangeField('isHidden', !val)}
+                                            onColor={'#64d2ff'}
+                                            uncheckedIcon={false}
+                                            width={48}
+                                        />
+                                    </div>
+                                </div>}
                                 <div class="col-md-12">
                                     <label>{STRINGS.WATCH_PARTY_VIDEO}</label>
 
@@ -521,7 +537,7 @@ const WatchPartyForm = ({
                                                 value={selectedVideo}
                                                 placeholder={'Watch Party Video'}
                                                 onChange={value => {
-                                             
+
                                                     // onChangeField('video', value.value)
                                                     setSelectedVideo(value.label)
                                                     // onChangeField('videoName', value.label)
@@ -541,11 +557,11 @@ const WatchPartyForm = ({
 
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div className="btn_group  col-md-12" style={{ alignSelf: 'left' }}>
-                                    <InputSubmit buttonLabel={!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_WATCH_PARTY} />
-                                </div>
+                                <InputSubmit buttonLabel={!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : PAGE_TITLES.ADD_WATCH_PARTY} />
+                            </div>
                         </Form>
 
                     </div>
@@ -557,35 +573,35 @@ const WatchPartyForm = ({
 
 const showForm = reduxForm({
     form: "watchparty",
-     onSubmitFail,
+    onSubmitFail,
     validate: validator,
     enableReinitialize: true
 })(WatchPartyForm);
 
 const mapStateToProps = (state) => {
 
-    if(Object.keys(initialParty).length > 0) {
-    let initialValues = {
-        show: initialParty && initialParty.show,
-        host: initialParty.host,
-        sports: initialParty.sports,
-        league: initialParty && initialParty.league,
-        platform: initialParty && initialParty.platform,
-        endTime: new Date(initialParty && initialParty.endTime),
-        startTime: new Date(initialParty && initialParty.startTime),
-        contentLength: initialParty && initialParty.contentLength,
-        videoName: initialParty && initialParty.videoName,
-        video: initialParty && initialParty.video
-    };
-    return {
-        initialValues: initialValues
-    };
-}
+    if (Object.keys(initialParty).length > 0) {
+        let initialValues = {
+            show: initialParty && initialParty.show,
+            host: initialParty.host,
+            sports: initialParty.sports,
+            league: initialParty && initialParty.league,
+            platform: initialParty && initialParty.platform,
+            endTime: new Date(initialParty && initialParty.endTime),
+            startTime: new Date(initialParty && initialParty.startTime),
+            contentLength: initialParty && initialParty.contentLength,
+            videoName: initialParty && initialParty.videoName,
+            video: initialParty && initialParty.video
+        };
+        return {
+            initialValues: initialValues
+        };
+    }
 }
 
 const mapDispatchToProps = (state, props) => {
     return {}
 }
 
-export const Screen = connect(mapStateToProps,mapDispatchToProps)(showForm);
+export const Screen = connect(mapStateToProps, mapDispatchToProps)(showForm);
 

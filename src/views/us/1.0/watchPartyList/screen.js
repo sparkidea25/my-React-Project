@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment';
 import { ROUTES } from '../../../../shared/constants';
-const { CustomPagination } = require('../../../../components/atoms/pagination')
-const { TimePickerInput } = require('../../../../components/atoms/time-picker')
+import Switch from "react-switch";
+const { CustomPagination } = require('../../../../components/atoms/pagination');
+const { TimePickerInput } = require('../../../../components/atoms/time-picker');
 const { SnackbarWrapper } = require(`../../../../components/molecules/snackbar-wrapper`);
 const {
     Input,
@@ -10,7 +11,7 @@ const {
 const { SPORTS_OPTIONS, PAGE_TITLES, NAME_REGX, LABELS, VALIDATION_MESSAGES, upcomingPartyTable, pastPartyTable } = require('../../../../shared/constants/constants')
 const { STRINGS } = require('../../../../shared/constants/us/strings')
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
-const { diff_minutes,convertToESTTimeZone,convertTimeForEdit } = require('../../../../helpers')
+const { diff_minutes, convertToESTTimeZone, convertTimeForEdit } = require('../../../../helpers')
 
 const convertToClientTimeZone = (date, format, type) => {
     if (date) {
@@ -28,6 +29,8 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
     const [pastListing, setPastListing] = useState([])
     const [LiveTotalCount, setLiveTotalCount] = useState(0)
     const [PastTotalCount, setPastTotalCount] = useState(0)
+    const [livePageLimit, updateLivePageLimit] = useState(STRINGS.SHOW_LIMIT)
+    const [pastPageLimit, updatePastPageLimit] = useState(STRINGS.SHOW_LIMIT)
     const [liveArrow, setLiveArrow] = useState('asc')
     const [pastArrow, setPastArrow] = useState('asc')
 
@@ -44,21 +47,27 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
         listPastWatchParty(postData, (resp) => { response(resp) }, () => { })
     }
     useEffect(() => {
-        postWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 2,sortKey:"createdAt", sortOrder: -1 }, (response) => {
+        getPlatforms(() => { }, () => { })
+        getLeagues(() => { }, () => { })
+        getSports(() => { }, () => { })
+    }, []);
+
+    useEffect(() => {
+        postWatchPartyApi({ skip: 0, limit: livePageLimit, filter: 2, sortKey: "createdAt", sortOrder: -1 }, (response) => {
+            setLiveTableIndex(0);
             setWatchListParty(response && response.watchPartyListing)
             setUpcomingAndLiveListing(response && response.watchPartyListing)
             setLiveTotalCount(response && response.totalCount)
         })
-        pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3, sortKey:"createdAt",sortOrder: -1 }, (response) => {
+    }, [livePageLimit]);
 
+    useEffect(() => {
+        pastWatchPartyApi({ skip: 0, limit: pastPageLimit, filter: 3, sortKey: "createdAt", sortOrder: -1 }, (response) => {
+            setPastTableIndex(0);
             setPastListing(response && response.watchPartyListing)
             setPastTotalCount(response && response.totalCount)
         })
-        getPlatforms(() => { }, () => { })
-        getLeagues(() => { }, () => { })
-        getSports(() => { }, () => { })
-
-    }, [])
+    }, [pastPageLimit])
 
     useEffect(() => {
     }, [upcomingAndLiveListing])
@@ -75,20 +84,36 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
 
     const sortAscending = (sortkey, type, order) => {
         let key = (sortkey === 'Show') ? 'contentName' : (sortkey === 'Time (EST)') ? 'startTime' : ''
-        if (type === 2 ) {
+        if (type === 2) {
             order === 1 ? setLiveArrow('asc') : setLiveArrow('des')
-            postWatchPartyApi({ skip: (liveTableIndex) * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, filter: 2, sortKey: key, sortOrder: order }, (response) => {
+            postWatchPartyApi({ skip: (liveTableIndex) * livePageLimit, limit: livePageLimit, filter: 2, sortKey: key, sortOrder: order }, (response) => {
                 setUpcomingAndLiveListing(response && response.watchPartyListing)
                 setLiveTotalCount(response && response.totalCount)
             })
         }
         if (type === 3) {
             order === 1 ? setPastArrow('asc') : setPastArrow('des')
-            pastWatchPartyApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, filter: 3, sortKey: key, sortOrder: order }, (response) => {
+            pastWatchPartyApi({ skip: 0, limit: pastPageLimit, filter: 3, sortKey: key, sortOrder: order }, (response) => {
                 setPastListing(response && response.watchPartyListing)
                 setPastTotalCount(response && response.totalCount)
             })
         }
+    }
+
+    const _toggleWatchpartyVisibility = (val, party = {}) => {
+        updateParty(
+            {
+                watchPartyId: party._id,
+                isHidden: val
+            },
+            (data) => {
+                data && setUpcomingAndLiveListing((parties) => {
+                    let index = parties.findIndex(item => item._id == party._id);
+                    index >= 0 && (parties[index] = { ...parties[index], ...data.data })
+                    return [...parties];
+                })
+            }
+        )
     }
 
     return (
@@ -131,80 +156,77 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                 {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ?
                                     <>
                                         {upcomingAndLiveListing.map((party, index) => {
-                                            
-                                               return <tr>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party.contentName}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party.host ? party.host : 'N/A'}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party && party.sports === true ? 'Yes' : 'No'}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party && party.leagueInfo && party.leagueInfo.name ? party.leagueInfo.name : 'N/A'}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party && party.platformInfo && party.platformInfo.name}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {convertToClientTimeZone(party && party.startTime, 'MMM Do', party && party.contentName)}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {convertToClientTimeZone(party && party.startTime, "hh:mm A", party && party.contentName)}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {convertToClientTimeZone(party && party.endTime, "MMM Do", party && party.contentName)}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {convertToClientTimeZone(party && party.endTime, "hh:mm A", party && party.contentName)}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party.contentLength}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party.joined}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party.interested}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {party && party.videoInfo && party.videoInfo.name ? party.videoInfo.name : 'N/A'}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            <button className="btn btn-sm btn-secondary" onClick={() => {
-                                                             
-                                                                history.push(`${ROUTES.EDIT_WATCH_PARTY}?watch_party_id=${party._id}`)
-                                                            }}>Edit</button></div></td>
-                                                </tr>
+                                            return <tr>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {party.contentName}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {party.host ? party.host : 'N/A'}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {party && party.sports === true ? 'Yes' : 'No'}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {party && party.leagueInfo && party.leagueInfo.name ? party.leagueInfo.name : 'N/A'}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {party && party.platformInfo && party.platformInfo.name}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {convertToClientTimeZone(party && party.startTime, 'lll', party && party.contentName)}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {convertToClientTimeZone(party && party.endTime, "lll", party && party.contentName)}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {convertToClientTimeZone(party && party.createdAt, "MM/DD/yyyy", party && party.contentName)}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {party.joined}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        {party && party.videoInfo && party.videoInfo.name ? party.videoInfo.name : 'N/A'}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        <Switch
+                                                            checked={!party.isHidden}
+                                                            checkedIcon={false}
+                                                            height={24}
+                                                            onColor={'#64d2ff'}
+                                                            onChange={(val) => _toggleWatchpartyVisibility(!val, party)}
+                                                            uncheckedIcon={false}
+                                                            width={48}
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className="input_field">
+                                                        <button className="btn btn-sm btn-secondary" onClick={() => {
+
+                                                            history.push(`${ROUTES.EDIT_WATCH_PARTY}?watch_party_id=${party._id}`)
+                                                        }}>Edit</button></div></td>
+                                            </tr>
                                         })}
                                     </>
 
@@ -214,13 +236,14 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
 
                     </div>
                     {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ? <CustomPagination
-                        limit={STRINGS.SHOW_LIMIT}
+                        limit={livePageLimit}
                         totalPages={LiveTotalCount}
+                        onChangePageLimit={(val) => updateLivePageLimit(val)}
                         itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
                         currentPage={liveTableIndex + 1}
                         onPageChange={(value) => {
                             setLiveArrow('asc')
-                            postWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
+                            postWatchPartyApi({ limit: livePageLimit, skip: (value && value.selected) * livePageLimit, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
                                 setUpcomingAndLiveListing(response && response.watchPartyListing)
                                 setLiveTotalCount(response && response.totalCount)
                             })
@@ -270,24 +293,20 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                         {pastParty && pastParty.platformInfo && pastParty.platformInfo.name}
                                                     </div>
                                                 </td>
-                              
+
                                                 <td><div className="input_field">
-                                                    {convertToClientTimeZone(pastParty && pastParty.startTime, 'Do', pastParty && pastParty.contentName)}
+                                                    {convertToClientTimeZone(pastParty && pastParty.startTime, 'lll', pastParty && pastParty.contentName)}
                                                 </div>
                                                 </td>
                                                 <td><div className="input_field">
-                                                    {convertToClientTimeZone(pastParty && pastParty.startTime, 'LT', pastParty && pastParty.contentName)}
-                                                </div></td>
-                                                <td><div className="input_field">
-                                                    {convertToClientTimeZone(pastParty && pastParty.endTime, 'Do', pastParty && pastParty.contentName)}
+                                                    {convertToClientTimeZone(pastParty && pastParty.endTime, 'lll', pastParty && pastParty.contentName)}
                                                 </div>
                                                 </td>
                                                 <td><div className="input_field">
-                                                    {convertToClientTimeZone(pastParty && pastParty.endTime, 'LT', pastParty && pastParty.contentName)}
-                                                </div></td>
-                                                <td><div className="input_field">{pastParty.contentLength}</div></td>
+                                                    {convertToClientTimeZone(pastParty && pastParty.createdAt, 'MM/DD/yyyy', pastParty && pastParty.contentName)}
+                                                </div>
+                                                </td>
                                                 <td><div className="input_field">{pastParty.joined}</div></td>
-                                                <td><div className="input_field">{pastParty.interested}</div></td>
                                                 <td><div className="input_field">{pastParty && pastParty.videoInfo && pastParty.videoInfo.name ? pastParty.videoInfo.name : 'N/A'}</div></td>
                                                 <td style={{ minWidth: '86px' }}> </td>
                                             </tr>
@@ -298,13 +317,14 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                         </table>
                     </div>
                     {pastListing && pastListing.length > 0 ? <CustomPagination
-                        limit={STRINGS.SHOW_LIMIT}
+                        limit={pastPageLimit}
                         totalPages={PastTotalCount}
+                        onChangePageLimit={(val) => updatePastPageLimit(val)}
                         itemsCount={pastListing && pastListing.length}
                         currentPage={PastTableIndex + 1}
                         onPageChange={(value) => {
                             setPastArrow('asc')
-                            pastWatchPartyApi({ limit: STRINGS.SHOW_LIMIT, skip: (value && value.selected) * STRINGS.SHOW_LIMIT, filter: 3, sortkey: "startTime", sortOrder: 1 }, (response) => {
+                            pastWatchPartyApi({ limit: pastPageLimit, skip: (value && value.selected) * pastPageLimit, filter: 3, sortkey: "startTime", sortOrder: 1 }, (response) => {
                                 setPastListing(response && response.watchPartyListing)
                             })
                             setPastTableIndex(value && value.selected)

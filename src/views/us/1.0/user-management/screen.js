@@ -16,6 +16,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const [usersTotalCount, set_usersTotalCount] = useState(0);
   const [adminsTableIndex, set_adminsTableIndex] = useState(0);
   const [usersTableIndex, set_usersTableIndex] = useState(0);
+  const [userPageLimit, updateUserPageLimit] = useState(STRINGS.SHOW_LIMIT);
+  const [adminPageLimit, updateAdminPageLimit] = useState(STRINGS.SHOW_LIMIT);
   const [rowToEdit, setRowToEdit] = useState(null)
   const [editmode, setEditMode] = useState(false)
   const [fields, setFields] = useState({})
@@ -51,14 +53,20 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   };
 
   useEffect(() => {
-    adminListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT, sortKey: 'firstName', sortOrder: 1 });
-    userListApi({ skip: 0, limit: STRINGS.SHOW_LIMIT }, (response) => {
-      set_usersListing(response.users);
-      set_usersTotalCount(response.totalRecords);
-    });
-
     getAllTimeZones({}, () => { }, () => { })
   }, []);
+
+  useEffect(() => {
+    userListApi({ skip: 0, limit: userPageLimit }, (response) => {
+      set_usersListing(response.users);
+      set_usersTableIndex(0);
+      set_usersTotalCount(response.totalRecords);
+    });
+  }, [userPageLimit]);
+
+  useEffect(() => {
+    adminListApi({ skip: 0, limit: adminPageLimit, sortKey: 'firstName', sortOrder: 1 });
+  }, [adminPageLimit]);
 
   useEffect(() => { }, [adminsTableIndex]);
   useEffect(() => { }, [usersTableIndex]);
@@ -87,16 +95,16 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
             skip:
               usersTotalCount === 1
                 ? 0
-                : usersTotalCount === usersTableIndex * STRINGS.SHOW_LIMIT + 1
-                  ? (usersTableIndex - 1) * STRINGS.SHOW_LIMIT
-                  : usersTableIndex * STRINGS.SHOW_LIMIT,
-            limit: STRINGS.SHOW_LIMIT,
+                : usersTotalCount === usersTableIndex * userPageLimit + 1
+                  ? (usersTableIndex - 1) * userPageLimit
+                  : usersTableIndex * userPageLimit,
+            limit: userPageLimit,
           },
           (response) => {
             set_usersTableIndex(
               usersTotalCount === 1
                 ? 0
-                : usersTotalCount === usersTableIndex * STRINGS.SHOW_LIMIT + 1
+                : usersTotalCount === usersTableIndex * userPageLimit + 1
                   ? usersTableIndex - 1
                   : usersTableIndex
             );
@@ -162,7 +170,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
             message: response.msg
           });
           setOpenSnackbar(true)
-          userListApi({ skip: usersTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT }, (response) => {
+          userListApi({ skip: usersTableIndex * userPageLimit, limit: userPageLimit }, (response) => {
             set_usersListing(response.users);
             set_usersTotalCount(response.totalRecords);
           });
@@ -219,13 +227,13 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     let key = (sortkey === 'First Name') ? 'firstName' : (sortkey === 'Date Added') ? 'createdAt' : 'email'
     if (type === 'user' && !editmode) {
       if (type === 'user') { order === 1 ? setUserArrow('asc') : setUserArrow('des') }
-      userListApi({ skip: usersTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, sortKey: key, sortOrder: order }, (response) => {
+      userListApi({ skip: usersTableIndex * userPageLimit, limit: userPageLimit, sortKey: key, sortOrder: order }, (response) => {
         set_usersListing(response.users);
         set_usersTotalCount(response.totalRecords);
       });
     }
     if (type === 'admin') {
-      adminListApi({ skip: adminsTableIndex * STRINGS.SHOW_LIMIT, limit: STRINGS.SHOW_LIMIT, sortKey: key, sortOrder: order });
+      adminListApi({ skip: adminsTableIndex * adminPageLimit, limit: adminPageLimit, sortKey: key, sortOrder: order });
     }
 
   }
@@ -310,15 +318,16 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
             </table>
             {adminsListing && adminsListing.length ? (
               <CustomPagination
-                limit={STRINGS.SHOW_LIMIT}
+                limit={adminPageLimit}
                 totalPages={adminTotalCount}
+                // onChangePageLimit={(val) => updateAdminPageLimit(val)}
                 itemsCount={adminsListing && adminsListing.length}
                 currentPage={adminsTableIndex + 1}
                 onPageChange={(value) => {
                   adminListApi(
                     {
-                      skip: value.selected * STRINGS.SHOW_LIMIT,
-                      limit: STRINGS.SHOW_LIMIT,
+                      skip: value.selected * adminPageLimit,
+                      limit: adminPageLimit,
                       sortKey: 'firstName', sortOrder: 1
                     },
                     (response) => {
@@ -496,8 +505,9 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
           </div>
           {usersListing && usersListing.length ? (
             <CustomPagination
-              limit={STRINGS.SHOW_LIMIT}
+              limit={userPageLimit}
               totalPages={usersTotalCount}
+              onChangePageLimit={(val) => updateUserPageLimit(val)}
               itemsCount={usersListing && usersListing.length}
               currentPage={usersTableIndex + 1}
               onPageChange={(value) => {
@@ -505,8 +515,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                 setFields({})
                 userListApi(
                   {
-                    skip: value.selected * STRINGS.SHOW_LIMIT,
-                    limit: STRINGS.SHOW_LIMIT,
+                    skip: value.selected * userPageLimit,
+                    limit: userPageLimit,
                   },
                   (response) => {
                     set_usersListing(response.users);

@@ -225,35 +225,45 @@ export const DAY_OPTIONS = [
   { value: 31 }
 ]
 
-export const pastPartyTable = [{ name: 'Show' },
-{ name: 'Host' },
-{ name: 'Sports' },
-{ name: 'League' },
-{ name: 'Platform' },
-{ name: 'Start Date' },
-{ name: 'Time (EST)' },
-{ name: 'End Date' },
-{ name: 'End Time' },
-{ name: 'Content length' },
-{ name: 'Joined' },
-{ name: 'Interested' },
-{ name: 'Video' }
+export const pastPartyTable = [
+  { name: 'Show' },
+  { name: 'Host' },
+  { name: 'Sports' },
+  { name: 'League' },
+  { name: 'Platform' },
+  { name: 'Start Time (EST)' },
+  { name: 'End Time' },
+  { name: 'Created Date' },
+  // { name: 'Content length' },
+  { name: 'Joined' },
+  // { name: 'Interested' },
+  { name: 'Video' }
 ]
 
-export const upcomingPartyTable = [{ name: 'Show' },
-{ name: 'Host' },
-{ name: 'Sports' },
-{ name: 'League' },
-{ name: 'Platform' },
-{ name: 'Start Date' },
-{ name: 'Time (EST)' },
-{ name: 'End Date' },
-{ name: 'End Time' },
-{ name: 'Content length' },
-{ name: 'Joined' },
-{ name: 'Interested' },
-{ name: 'Video' },
-{ name: '' }
+export const pageData = [
+  { label: '10', value: 10 },
+  { label: '20', value: 20 },
+  { label: '50', value: 50 },
+  { label: '100', value: 100 },
+  { label: '150', value: 150 },
+  { label: '200', value: 200 },
+]
+
+export const upcomingPartyTable = [
+  { name: 'Show' },
+  { name: 'Host' },
+  { name: 'Sports' },
+  { name: 'League' },
+  { name: 'Platform' },
+  { name: 'Start Time (EST)' },
+  { name: 'End Time' },
+  { name: 'Created Date' },
+  // { name: 'Content length' },
+  { name: 'Joined' },
+  // { name: 'Interested' },
+  { name: 'Video' },
+  { name: 'Shown' },
+  { name: '' },
 ]
 
 export const ADMIN_TABLE_HEADINGS = [

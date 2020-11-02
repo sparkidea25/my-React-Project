@@ -1,5 +1,15 @@
 @import '../../../theme/base.scss';
 
+.pageCountField{
+    width: 100%;
+    justify-content: center !important;
+    // align-items: center;
+    display: flex;
+    .form-group{
+        width:25vh !important;
+        margin-bottom: 0 !important;
+    }
+}
 .pagination-div{
     @include flexbox; 
     //@include flex-direction(column);         
