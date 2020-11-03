@@ -25,26 +25,32 @@ const convertToClientTimeZone = (date, format, type) => {
 export const Screen = ({ listWatchParty, history, setWatchListParty,
     allPlatforms, allLeagues, updateParty, getPlatforms, getLeagues, listPastWatchParty, getSports }) => {
 
-    const [upcomingAndLiveListing, setUpcomingAndLiveListing] = useState([])
-    const [pastListing, setPastListing] = useState([])
-    const [LiveTotalCount, setLiveTotalCount] = useState(0)
-    const [PastTotalCount, setPastTotalCount] = useState(0)
-    const [livePageLimit, updateLivePageLimit] = useState(STRINGS.SHOW_LIMIT)
-    const [pastPageLimit, updatePastPageLimit] = useState(STRINGS.SHOW_LIMIT)
-    const [liveArrow, setLiveArrow] = useState('asc')
-    const [pastArrow, setPastArrow] = useState('asc')
+    const [upcomingAndLiveListing, setUpcomingAndLiveListing] = useState([]);
+    const [pastListing, setPastListing] = useState([]);
+    const [LiveTotalCount, setLiveTotalCount] = useState(0);
+    const [PastTotalCount, setPastTotalCount] = useState(0);
+    const [livePageLimit, updateLivePageLimit] = useState(STRINGS.SHOW_LIMIT);
+    const [pastPageLimit, updatePastPageLimit] = useState(STRINGS.SHOW_LIMIT);
+    const [liveSortFilter, updateLiveSortFilter] = useState({ sortKey: 'startTime', sortOrder: 1 })
+    const [pastSortFilter, updatePastSortFilter] = useState({ sortKey: 'startTime', sortOrder: 1 })
 
-    const postWatchPartyApi = (data, response) => {
-        let postData = Object.keys(data)
-            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
-            ).join('&');
-        listWatchParty(postData, (resp) => { response(resp) }, () => { })
+    const getLiveWatchParties = (data = {}) => {
+        listWatchParty(
+            data,
+            ({ watchPartyListing = [], totalCount = 0 }) => {
+                setUpcomingAndLiveListing(watchPartyListing)
+                setLiveTotalCount(totalCount)
+            },
+            () => { })
     }
-    const pastWatchPartyApi = (data, response) => {
-        let postData = Object.keys(data)
-            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
-            ).join('&');
-        listPastWatchParty(postData, (resp) => { response(resp) }, () => { })
+    const getPastWatchParties = (data = {}) => {
+        listPastWatchParty(
+            data,
+            ({ watchPartyListing = [], totalCount = 0 }) => {
+                setPastListing(watchPartyListing)
+                setPastTotalCount(totalCount)
+            },
+            () => { })
     }
     useEffect(() => {
         getPlatforms(() => { }, () => { })
@@ -53,20 +59,13 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
     }, []);
 
     useEffect(() => {
-        postWatchPartyApi({ skip: 0, limit: livePageLimit, filter: 2, sortKey: "createdAt", sortOrder: -1 }, (response) => {
-            setLiveTableIndex(0);
-            setWatchListParty(response && response.watchPartyListing)
-            setUpcomingAndLiveListing(response && response.watchPartyListing)
-            setLiveTotalCount(response && response.totalCount)
-        })
+        setLiveTableIndex(0);
+        getLiveWatchParties({ skip: 0, limit: livePageLimit, filter: 2, ...liveSortFilter })
     }, [livePageLimit]);
 
     useEffect(() => {
-        pastWatchPartyApi({ skip: 0, limit: pastPageLimit, filter: 3, sortKey: "createdAt", sortOrder: -1 }, (response) => {
-            setPastTableIndex(0);
-            setPastListing(response && response.watchPartyListing)
-            setPastTotalCount(response && response.totalCount)
-        })
+        setPastTableIndex(0);
+        getPastWatchParties({ skip: 0, limit: pastPageLimit, filter: 3, ...pastSortFilter })
     }, [pastPageLimit])
 
     useEffect(() => {
@@ -82,21 +81,13 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
     const [PastTableIndex, setPastTableIndex] = useState(0)
 
 
-    const sortAscending = (sortkey, type, order) => {
-        let key = (sortkey === 'Show') ? 'contentName' : (sortkey === 'Time (EST)') ? 'startTime' : ''
-        if (type === 2) {
-            order === 1 ? setLiveArrow('asc') : setLiveArrow('des')
-            postWatchPartyApi({ skip: (liveTableIndex) * livePageLimit, limit: livePageLimit, filter: 2, sortKey: key, sortOrder: order }, (response) => {
-                setUpcomingAndLiveListing(response && response.watchPartyListing)
-                setLiveTotalCount(response && response.totalCount)
-            })
-        }
-        if (type === 3) {
-            order === 1 ? setPastArrow('asc') : setPastArrow('des')
-            pastWatchPartyApi({ skip: 0, limit: pastPageLimit, filter: 3, sortKey: key, sortOrder: order }, (response) => {
-                setPastListing(response && response.watchPartyListing)
-                setPastTotalCount(response && response.totalCount)
-            })
+    const sortAscending = (sortKey, sortOrder, isLive = false) => {
+        if (isLive) {
+            updateLiveSortFilter({ sortKey, sortOrder });
+            getLiveWatchParties({ skip: liveTableIndex * livePageLimit, limit: livePageLimit, filter: 2, sortKey, sortOrder })
+        } else {
+            updatePastSortFilter({ sortKey, sortOrder });
+            getPastWatchParties({ skip: PastTableIndex * pastPageLimit, limit: pastPageLimit, filter: 3, sortKey, sortOrder })
         }
     }
 
@@ -142,12 +133,12 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                     <div className="table-responsive">
                         <table className="table">
                             <thead>
-                                {upcomingPartyTable && upcomingPartyTable.map(party => {
-                                    return <th>{party && party.name}
-                                        <div className="sorting">
-                                            {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span className={liveArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(party.name, 2, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                                                <span className={liveArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(party.name, 2, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
-                                        </div>
+                                {(upcomingPartyTable || []).map(({ name = '', key = '' }) => {
+                                    return <th key={name}>{name}
+                                        {!!key && <div className="sorting">
+                                            <span className={(liveSortFilter.sortKey == key && liveSortFilter.sortOrder == -1) ? 'active' : ''} onClick={() => sortAscending(key, -1, true)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                                            <span className={(liveSortFilter.sortKey == key && liveSortFilter.sortOrder == 1) ? 'active' : ''} onClick={() => sortAscending(key, 1, true)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span>
+                                        </div>}
                                     </th>
                                 })}
                             </thead>
@@ -156,7 +147,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                 {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ?
                                     <>
                                         {upcomingAndLiveListing.map((party, index) => {
-                                            return <tr>
+                                            return <tr key={index}>
                                                 <td>
                                                     <div
                                                         onClick={() => history.push(`${ROUTES.WATCH_PARTY_USERS}?watch_party_id=${party._id}`)}
@@ -238,23 +229,17 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                         </table>
 
                     </div>
-                    {upcomingAndLiveListing && upcomingAndLiveListing.length > 0 ? <CustomPagination
+                    {!!upcomingAndLiveListing.length && <CustomPagination
                         limit={livePageLimit}
                         totalPages={LiveTotalCount}
                         onChangePageLimit={(val) => updateLivePageLimit(val)}
                         itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
                         currentPage={liveTableIndex + 1}
                         onPageChange={(value) => {
-                            setLiveArrow('asc')
-                            postWatchPartyApi({ limit: livePageLimit, skip: (value && value.selected) * livePageLimit, filter: 2, sortkey: "startTime", sortOrder: 1 }, (response) => {
-                                setUpcomingAndLiveListing(response && response.watchPartyListing)
-                                setLiveTotalCount(response && response.totalCount)
-                            })
+                            getLiveWatchParties({ limit: livePageLimit, skip: (value && value.selected) * livePageLimit, filter: 2, ...liveSortFilter })
                             setLiveTableIndex(value && value.selected)
-                            // setEditMode(false)
-
                         }}
-                    /> : ''}
+                    />}
                 </div>
                 <div className="managment_list">
                     <div class="d-flex table_title">
@@ -264,12 +249,12 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                         <table className="table">
                             <thead>
                                 <tr>
-                                    {pastPartyTable && pastPartyTable.map(party => {
-                                        return <th>{party && party.name}
-                                            <div className="sorting">
-                                                {(party.name === 'Show' || party.name === 'Time (EST)') ? <><span className={pastArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(party.name, 3, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                                                    <span className={pastArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(party.name, 3, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
-                                            </div>
+                                    {(pastPartyTable || []).map(({ name = '', key = '' }) => {
+                                        return <th key={name}>{name}
+                                            {!!key && <div className="sorting">
+                                                <span className={(pastSortFilter.sortKey == key && pastSortFilter.sortOrder == -1) ? 'active' : ''} onClick={() => sortAscending(key, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                                                <span className={(pastSortFilter.sortKey == key && pastSortFilter.sortOrder == 1) ? 'active' : ''} onClick={() => sortAscending(key, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span>
+                                            </div>}
                                         </th>
                                     })}
                                 </tr>
@@ -286,7 +271,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     {pastParty.contentName}
                                                 </div>
                                                 </td>
-                                                <td><div className="input_field">{pastParty.host}</div></td>
+                                                <td><div className="input_field">{pastParty.host ? pastParty.host : 'N/A'}</div></td>
                                                 <td>
                                                     <div className="input_field">
                                                         {pastParty && pastParty.sports === true ? 'Yes' : 'No'}
@@ -332,12 +317,8 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                         itemsCount={pastListing && pastListing.length}
                         currentPage={PastTableIndex + 1}
                         onPageChange={(value) => {
-                            setPastArrow('asc')
-                            pastWatchPartyApi({ limit: pastPageLimit, skip: (value && value.selected) * pastPageLimit, filter: 3, sortkey: "startTime", sortOrder: 1 }, (response) => {
-                                setPastListing(response && response.watchPartyListing)
-                            })
-                            setPastTableIndex(value && value.selected)
-
+                            getPastWatchParties({ limit: pastPageLimit, skip: (value.selected || 0) * pastPageLimit, filter: 3, ...pastSortFilter })
+                            setPastTableIndex(value.selected)
                         }}
                     /> : ''}
                 </div>

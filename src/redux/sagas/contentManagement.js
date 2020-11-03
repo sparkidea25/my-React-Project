@@ -104,7 +104,7 @@ function* listWatchparty({ data, success, failure }) {
     try {
 
         yield put(startLoader());
-        const response = yield getRequest({ API: `${api.URL.WATCH_PARTY_LISTING}?${data}` });
+        const response = yield getRequest({ API: `${api.URL.WATCH_PARTY_LISTING}?${qs.stringify(data)}` });
 
         if (window.navigator.onLine === false) {
             yield put(stopLoader())

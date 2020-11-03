@@ -226,17 +226,15 @@ export const DAY_OPTIONS = [
 ]
 
 export const pastPartyTable = [
-  { name: 'Show' },
+  { name: 'Show', key: 'contentName' },
   { name: 'Host' },
   { name: 'Sports' },
   { name: 'League' },
   { name: 'Platform' },
-  { name: 'Start Time (EST)' },
+  { name: 'Start Time (EST)', key: 'startTime' },
   { name: 'End Time' },
-  { name: 'Created Date' },
-  // { name: 'Content length' },
-  { name: 'Joined' },
-  // { name: 'Interested' },
+  { name: 'Created Date', key: 'createdAt' },
+  { name: 'Joined', key: 'joined' },
   { name: 'Video' }
 ]
 
@@ -250,17 +248,15 @@ export const pageData = [
 ]
 
 export const upcomingPartyTable = [
-  { name: 'Show' },
+  { name: 'Show', key: 'contentName' },
   { name: 'Host' },
   { name: 'Sports' },
   { name: 'League' },
   { name: 'Platform' },
-  { name: 'Start Time (EST)' },
+  { name: 'Start Time (EST)', key: 'startTime' },
   { name: 'End Time' },
-  { name: 'Created Date' },
-  // { name: 'Content length' },
-  { name: 'Joined' },
-  // { name: 'Interested' },
+  { name: 'Created Date', key: 'createdAt' },
+  { name: 'Joined', key: 'joined' },
   { name: 'Video' },
   { name: 'Shown' },
   { name: '' },
