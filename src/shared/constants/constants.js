@@ -235,7 +235,8 @@ export const pastPartyTable = [
   { name: 'End Time' },
   { name: 'Created Date', key: 'createdAt' },
   { name: 'Joined', key: 'joined' },
-  { name: 'Video' }
+  { name: 'Video' },
+  { name: 'Source', key: 'source' },
 ]
 
 export const pageData = [
@@ -258,19 +259,20 @@ export const upcomingPartyTable = [
   { name: 'Created Date', key: 'createdAt' },
   { name: 'Joined', key: 'joined' },
   { name: 'Video' },
-  { name: 'Shown' },
+  { name: 'Source', key: 'source' },
+  { name: 'Shown', key: 'isHidden' },
   { name: '' },
 ]
 
 export const ADMIN_TABLE_HEADINGS = [
-  { name: 'First Name' },
+  { name: 'First Name', key: 'firstName' },
   { name: 'Last Name' },
   { name: 'Username' },
-  { name: 'Email' },
+  { name: 'Email', key: 'email' },
   { name: 'Phone Number' },
   { name: 'Home Town' },
   { name: 'Time Zone' },
   { name: 'Age' },
-  { name: 'Date Added' },
+  { name: 'Date Added', key: 'createdAt' },
   { name: 'Last Active' }
 ]

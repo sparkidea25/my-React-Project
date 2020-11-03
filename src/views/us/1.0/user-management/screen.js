@@ -22,33 +22,29 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   const [editmode, setEditMode] = useState(false)
   const [fields, setFields] = useState({})
   const [error, setError] = useState({})
-  const [adminArrow, setAdminArrow] = useState('asc')
-  const [userArrow, setUserArrow] = useState('asc')
+  const [adminSortFilter, updateAdminSortFilter] = useState({ sortKey: 'firstName', sortOrder: 1 })
+  const [userSortFilter, updateUserSortFilter] = useState({ sortKey: 'firstName', sortOrder: 1 })
 
-  const adminListApi = (data, resp) => {
+
+  const adminListApi = (data) => {
     listAdmins(
       data,
-      (response) => {
-        set_adminsListing(response && response.admins);
-        set_adminTotalCount(response && response.totalRecords);
-        resp();
+      ({ admins = [], totalRecords = 0 }) => {
+        set_adminsListing(admins);
+        set_adminTotalCount(totalRecords);
       },
       () => { }
     );
   };
 
-  const userListApi = (data, response) => {
-    let postData = Object.keys(data)
-      .map(
-        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
-      )
-      .join("&");
+  const getUsersList = (data, response) => {
+    console.log(data);
     listUsers(
-      postData,
-      (resp) => {
-        response(resp);
-      },
-      () => { }
+      data,
+      ({ users = [], totalRecords = 0 }) => {
+        set_usersListing(users);
+        set_usersTotalCount(totalRecords);
+      }
     );
   };
 
@@ -57,15 +53,12 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   }, []);
 
   useEffect(() => {
-    userListApi({ skip: 0, limit: userPageLimit }, (response) => {
-      set_usersListing(response.users);
-      set_usersTableIndex(0);
-      set_usersTotalCount(response.totalRecords);
-    });
+    set_usersTableIndex(0);
+    getUsersList({ skip: 0, limit: userPageLimit, ...userSortFilter });
   }, [userPageLimit]);
 
   useEffect(() => {
-    adminListApi({ skip: 0, limit: adminPageLimit, sortKey: 'firstName', sortOrder: 1 });
+    adminListApi({ skip: 0, limit: adminPageLimit, ...adminSortFilter });
   }, [adminPageLimit]);
 
   useEffect(() => { }, [adminsTableIndex]);
@@ -88,30 +81,24 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
           variant: response.status ? 'success' : 'error',
           message: response.msg
         });
-        setOpenSnackbar(true)
-        setUserArrow('asc')
-        userListApi(
-          {
-            skip:
-              usersTotalCount === 1
-                ? 0
-                : usersTotalCount === usersTableIndex * userPageLimit + 1
-                  ? (usersTableIndex - 1) * userPageLimit
-                  : usersTableIndex * userPageLimit,
-            limit: userPageLimit,
-          },
-          (response) => {
-            set_usersTableIndex(
-              usersTotalCount === 1
-                ? 0
-                : usersTotalCount === usersTableIndex * userPageLimit + 1
-                  ? usersTableIndex - 1
-                  : usersTableIndex
-            );
-            set_usersListing(response.users);
-            set_usersTotalCount(response.totalRecords);
-          }
+        setOpenSnackbar(true);
+        set_usersTableIndex(
+          usersTotalCount === 1
+            ? 0
+            : usersTotalCount === usersTableIndex * userPageLimit + 1
+              ? usersTableIndex - 1
+              : usersTableIndex
         );
+        getUsersList({
+          skip:
+            usersTotalCount === 1
+              ? 0
+              : usersTotalCount === usersTableIndex * userPageLimit + 1
+                ? (usersTableIndex - 1) * userPageLimit
+                : usersTableIndex * userPageLimit,
+          limit: userPageLimit,
+          ...userSortFilter
+        });
       },
       (error) => {
         setSnackBarData({
@@ -160,7 +147,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
           return obj
         }
       })
-      setUserArrow('asc')
       updateUser({ ...fields, timezone: timezone && timezone[0] && timezone[0]._id, zipcode: '140603', userId: usersListing[rowToEdit]._id },
         (response) => {
 
@@ -170,10 +156,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
             message: response.msg
           });
           setOpenSnackbar(true)
-          userListApi({ skip: usersTableIndex * userPageLimit, limit: userPageLimit }, (response) => {
-            set_usersListing(response.users);
-            set_usersTotalCount(response.totalRecords);
-          });
+          getUsersList({ skip: usersTableIndex * userPageLimit, limit: userPageLimit, ...userSortFilter });
         }, (response) => {
           setSnackBarData({
             variant: response.status ? 'success' : 'error',
@@ -220,20 +203,15 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     setFields({ ...fields, [type]: value })
   }
 
-  const sortAscending = (sortkey, type, order) => {
+  const sortAscending = (sortKey, sortOrder, isAdmin = false) => {
 
-    if (type === 'admin') { order === 1 ? setAdminArrow('asc') : setAdminArrow('des') }
-
-    let key = (sortkey === 'First Name') ? 'firstName' : (sortkey === 'Date Added') ? 'createdAt' : 'email'
-    if (type === 'user' && !editmode) {
-      if (type === 'user') { order === 1 ? setUserArrow('asc') : setUserArrow('des') }
-      userListApi({ skip: usersTableIndex * userPageLimit, limit: userPageLimit, sortKey: key, sortOrder: order }, (response) => {
-        set_usersListing(response.users);
-        set_usersTotalCount(response.totalRecords);
-      });
+    if (!isAdmin && !editmode) {
+      updateUserSortFilter({ sortKey, sortOrder });
+      getUsersList({ skip: usersTableIndex * userPageLimit, limit: userPageLimit, sortKey, sortOrder });
     }
-    if (type === 'admin') {
-      adminListApi({ skip: adminsTableIndex * adminPageLimit, limit: adminPageLimit, sortKey: key, sortOrder: order });
+    if (isAdmin) {
+      updateAdminSortFilter({ sortKey, sortOrder });
+      adminListApi({ skip: adminsTableIndex * adminPageLimit, limit: adminPageLimit, sortKey, sortOrder });
     }
 
   }
@@ -279,14 +257,13 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
             <table className="table">
               <thead>
                 <tr>
-                  {ADMIN_TABLE_HEADINGS.map((head) => (
-                    <th key={head.name} style={{ textDecoration: "none" }}>
-                      {head.name}
-
-                      <div className="sorting">
-                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span className={adminArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(head.name, 'admin', -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                          <span className={adminArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(head.name, 'admin', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
-                      </div>
+                  {ADMIN_TABLE_HEADINGS.map(({ name, key }) => (
+                    <th key={name} style={{ textDecoration: "none" }}>
+                      {name}
+                      {!!key && <div className="sorting">
+                        <span className={(adminSortFilter.sortKey == key && adminSortFilter.sortOrder === -1) ? 'active' : ''} onClick={() => sortAscending(key, -1, true)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                        <span className={(adminSortFilter.sortKey == key && adminSortFilter.sortOrder === 1) ? 'active' : ''} onClick={() => sortAscending(key, 1, true)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span>
+                      </div>}
                     </th>
                   ))}
                 </tr>
@@ -295,7 +272,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                 {adminsListing && adminsListing.length ? (
                   adminsListing.map((admin, ind) => {
                     let time = checkTimezone(ind)
-
+                    console.log(admin);
                     return <tr key={ind}>
                       <td>
                         {admin.firstName}
@@ -324,17 +301,8 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                 itemsCount={adminsListing && adminsListing.length}
                 currentPage={adminsTableIndex + 1}
                 onPageChange={(value) => {
-                  adminListApi(
-                    {
-                      skip: value.selected * adminPageLimit,
-                      limit: adminPageLimit,
-                      sortKey: 'firstName', sortOrder: 1
-                    },
-                    (response) => {
-                      set_adminsTableIndex(value && value.selected);
-                      setAdminArrow('asc')
-                    }
-                  );
+                  set_adminsTableIndex(value.selected);
+                  adminListApi({ skip: value.selected * adminPageLimit, limit: adminPageLimit, ...adminSortFilter });
                 }}
               />
             ) : null}
@@ -349,13 +317,13 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
             <table className="table">
               <thead>
                 <tr>
-                  {ADMIN_TABLE_HEADINGS.map((head) => (
-                    <th key={head.name} style={{ textDecoration: "none" }}>
-                      {head.name}
-                      <div className="sorting">
-                        {(head.name === 'First Name' || head.name === 'Email' || head.name === 'Date Added') ? <><span className={userArrow === 'des' ? 'active' : ''} onClick={() => sortAscending(head.name, 'user', -1)}><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
-                          <span className={userArrow === 'asc' ? 'active' : ''} onClick={() => sortAscending(head.name, 'user', 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span></> : ''}
-                      </div>
+                  {ADMIN_TABLE_HEADINGS.map(({ name, key }) => (
+                    <th key={name} style={{ textDecoration: "none" }}>
+                      {name}
+                      {!!key && <div className="sorting">
+                        <span className={(userSortFilter.sortKey == key && userSortFilter.sortOrder === -1) ? 'active' : ''} onClick={() => sortAscending(key, -1)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
+                        <span className={(userSortFilter.sortKey == key && userSortFilter.sortOrder === 1) ? 'active' : ''} onClick={() => sortAscending(key, 1)}><img src={require('../../../../assets/img/icons/up_arrow.png')} alt="up" /></span>
+                      </div>}
                     </th>
                   ))}
                 </tr>
@@ -513,18 +481,12 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
               onPageChange={(value) => {
                 setEditMode(false)
                 setFields({})
-                userListApi(
-                  {
-                    skip: value.selected * userPageLimit,
-                    limit: userPageLimit,
-                  },
-                  (response) => {
-                    set_usersListing(response.users);
-                    set_usersTotalCount(response.totalRecords);
-                    set_usersTableIndex(value.selected);
-                    setUserArrow('asc')
-                  }
-                );
+                set_usersTableIndex(value.selected);
+                getUsersList({
+                  skip: value.selected * userPageLimit,
+                  limit: userPageLimit,
+                  ...userSortFilter
+                });
               }}
             />
           ) : null}

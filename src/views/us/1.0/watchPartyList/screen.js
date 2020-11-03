@@ -201,6 +201,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                         {party && party.videoInfo && party.videoInfo.name ? party.videoInfo.name : 'N/A'}
                                                     </div>
                                                 </td>
+                                                <td><div className="input_field">{party.source == 1 ? 'Sports' : 'Admin'}</div></td>
                                                 <td>
                                                     <div className="input_field">
                                                         <Switch
@@ -302,6 +303,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                 </td>
                                                 <td><div className="input_field">{pastParty.joined}</div></td>
                                                 <td><div className="input_field">{pastParty && pastParty.videoInfo && pastParty.videoInfo.name ? pastParty.videoInfo.name : 'N/A'}</div></td>
+                                                <td><div className="input_field">{pastParty.source == 1 ? 'Sports' : 'Admin'}</div></td>
                                                 <td style={{ minWidth: '86px' }}> </td>
                                             </tr>
                                         })}

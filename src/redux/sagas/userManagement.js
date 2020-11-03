@@ -10,7 +10,7 @@ import {
   UPDATE_USER
 } from "../actions";
 import { getRequest, putRequest, deleteRequest } from "../../helpers";
-
+import qs from 'query-string';
 const api = require(`../../shared/api`);
 const { STATUS_CODE } = require(`../../shared/constants`);
 
@@ -18,7 +18,7 @@ function* getAdminList({ payload, success, failure }) {
   try {
     yield put(startLoader());
     const response = yield getRequest({
-      API: `${api.URL.GET_ADMIN_LIST}?skip=${payload.skip}&limit=${payload.limit}&sortKey=${payload.sortKey}&sortOrder=${payload.sortOrder}`,
+      API: `${api.URL.GET_ADMIN_LIST}?${qs.stringify(payload)}`,
     });
     yield responseChecker(response, success, failure);
   } catch (err) {
@@ -33,7 +33,7 @@ function* listUsers({ payload, success, failure }) {
   try {
     yield put(startLoader());
     const response = yield getRequest({
-      API: `${api.URL.GET_USERS_LIST}?${payload}`,
+      API: `${api.URL.GET_USERS_LIST}?${qs.stringify(payload)}`,
     });
     yield responseChecker(response, success, failure);
   } catch (err) {
