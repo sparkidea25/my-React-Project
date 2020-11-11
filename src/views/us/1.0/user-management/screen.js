@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import { ADMIN_TABLE_HEADINGS, MESSAGES, PAGE_TITLES, VALIDATION_MESSAGES, NAME_REGX, EMAIL_REGX } from "../../../../shared/constants";
+import Switch from "react-switch";
 
 import { CustomPagination } from "../../../../components/atoms/pagination";
 import { SnackbarWrapper } from "../../../../components/molecules/snackbar-wrapper";
@@ -38,7 +39,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
   };
 
   const getUsersList = (data, response) => {
-    console.log(data);
     listUsers(
       data,
       ({ users = [], totalRecords = 0 }) => {
@@ -116,7 +116,9 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     setEditMode(true)
     let time = checkTimezone(index)
     setFields({
-      ...fields, firstName: usersListing[index].firstName,
+      ...fields,
+      firstName: usersListing[index].firstName,
+      isHost: usersListing[index].isHost,
       lastName: usersListing[index].lastName, username: usersListing[index].username, email: usersListing[index].email,
       phone: usersListing[index].phone, age: usersListing[index].age, address: usersListing[index].address, timezone: time && time[0] ? time[0].label : ''
     })
@@ -185,7 +187,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
       error['phone'] = VALIDATION_MESSAGES.PHONE_VALIDATION
     }
 
-    console.log(fields.age)
     if (fields.age < 13 || fields.age === 0) {
       error['age'] = VALIDATION_MESSAGES.AGE_VALIDATION
     }
@@ -194,6 +195,28 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     }
     setError(error)
     return error
+  }
+
+  const _toggleHost = (isHost, user) => {
+    updateUser({
+      ...user,
+      userId: user._id,
+      isHost
+    },
+      (response) => {
+        setEditMode(false)
+        response && set_usersListing((users) => {
+          let index = users.findIndex(item => item._id == user._id);
+          index >= 0 && (users[index] = { ...users[index], ...response.data })
+          return [...users];
+        })
+      }, (response) => {
+        setSnackBarData({
+          variant: response.status ? 'success' : 'error',
+          message: response.msg
+        });
+        setOpenSnackbar(true)
+      })
   }
 
   const updateFields = (type, value) => {
@@ -258,7 +281,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
               <thead>
                 <tr>
                   {ADMIN_TABLE_HEADINGS.map(({ name, key }) => (
-                    <th key={name} style={{ textDecoration: "none" }}>
+                    key != 'isHost' && <th key={name} style={{ textDecoration: "none" }}>
                       {name}
                       {!!key && <div className="sorting">
                         <span className={(adminSortFilter.sortKey == key && adminSortFilter.sortOrder === -1) ? 'active' : ''} onClick={() => sortAscending(key, -1, true)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
@@ -272,20 +295,16 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                 {adminsListing && adminsListing.length ? (
                   adminsListing.map((admin, ind) => {
                     let time = checkTimezone(ind)
-                    console.log(admin);
                     return <tr key={ind}>
                       <td>
                         {admin.firstName}
                       </td>
                       <td>{admin.lastName}</td>
-                      <td>{admin.username}</td>
                       <td>{admin.email}</td>
                       <td>{admin.phone ? '+1 ' : ''}{admin.phone}</td>
-                      <td>{admin.address}</td>
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{admin.age}</td>
                       <td>{moment(admin.createdAt).format('MM/DD/YYYY')}</td>
-                      <td>{admin.lastactive}</td>
                     </tr>
                   })
                 ) :
@@ -338,14 +357,24 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                         {user.firstName}
                       </td>
                       <td>{user.lastName}</td>
-                      <td>{user.username}</td>
                       <td>{user.email}</td>
                       <td>{user.phone ? '+1' : ''} {user.phone}</td>
-                      <td>{user.address}</td>
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{user.age}</td>
                       <td>{moment(user.createdAt).format('MM/DD/YYYY')}</td>
-                      <td>{user.lastactive}</td>
+                      <td>
+                        <div className="input_field">
+                          <Switch
+                            checked={user.isHost == 1}
+                            checkedIcon={false}
+                            height={24}
+                            onColor={'#64d2ff'}
+                            onChange={(val) => _toggleHost(val ? '1' : '0', user)}
+                            uncheckedIcon={false}
+                            width={48}
+                          />
+                        </div>
+                      </td>
                       <td>
                         <div className="d-flex">
                           <button className="btn mr-1 btn-sm btn-secondary" onClick={() => EditUser(ind)}>Edit</button>
@@ -381,13 +410,13 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                             <span className="error_msg text-danger">{error.lastName}</span>
                           ) : null}
                         </td>
-                        <td>   <input name={STRINGS.USERNAME_INPUT}
+                        {/* <td>   <input name={STRINGS.USERNAME_INPUT}
                           type={'text'}
                           value={fields.username}
                           onChange={(e) => updateFields(STRINGS.USERNAME_INPUT, e.target.value)}
                         />  {error && error.username ? (
                           <span className="error_msg text-danger">{error.username}</span>
-                        ) : null}</td>
+                        ) : null}</td> */}
                         <td>
                           <input name={STRINGS.EMAIL_INPUT_NAME}
                             type={'email'}
@@ -416,14 +445,14 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                             ) : null}
                         </td>
 
-                        <td>  <input name={STRINGS.ADDRESS_INPUT}
+                        {/* <td>  <input name={STRINGS.ADDRESS_INPUT}
                           type={'text'}
                           value={fields.address}
                           onChange={(e) => updateFields(STRINGS.ADDRESS_INPUT, e.target.value)}
                         />  {error && error.address ? (
                           <span className="error_msg text-danger">{error.address}</span>
                         ) : null}
-                        </td>
+                        </td> */}
 
                         <td>   <select name={STRINGS.TIME_ZONE_INPUT}
                           value={fields.timezone}
@@ -448,7 +477,19 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                           ) : null}
                         </td>
                         <td>{moment(user.createdAt).format('MM/DD/YYYY')}</td>
-                        <td>{user.lastactive}</td>
+                        <td>
+                          <div className="input_field">
+                            <Switch
+                              checked={fields.isHost == 1}
+                              checkedIcon={false}
+                              height={24}
+                              onChange={(val) => updateFields('isHost', val ? '1' : '0')}
+                              onColor={'#64d2ff'}
+                              uncheckedIcon={false}
+                              width={48}
+                            />
+                          </div>
+                        </td>
                         <td>  <button className="btn btn-sm btn-secondary" onClick={onSubmit} >Update</button></td>
                       </tr>
                   }
