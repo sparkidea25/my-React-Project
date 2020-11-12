@@ -118,7 +118,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     setFields({
       ...fields,
       firstName: usersListing[index].firstName,
-      isHost: usersListing[index].isHost,
       lastName: usersListing[index].lastName, username: usersListing[index].username, email: usersListing[index].email,
       phone: usersListing[index].phone, age: usersListing[index].age, address: usersListing[index].address, timezone: time && time[0] ? time[0].label : ''
     })
@@ -197,28 +196,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
     return error
   }
 
-  const _toggleHost = (isHost, user) => {
-    updateUser({
-      ...user,
-      userId: user._id,
-      isHost
-    },
-      (response) => {
-        setEditMode(false)
-        response && set_usersListing((users) => {
-          let index = users.findIndex(item => item._id == user._id);
-          index >= 0 && (users[index] = { ...users[index], ...response.data })
-          return [...users];
-        })
-      }, (response) => {
-        setSnackBarData({
-          variant: response.status ? 'success' : 'error',
-          message: response.msg
-        });
-        setOpenSnackbar(true)
-      })
-  }
-
   const updateFields = (type, value) => {
     if (error[type]) {
       setError({ ...error, [type]: null })
@@ -281,7 +258,7 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
               <thead>
                 <tr>
                   {ADMIN_TABLE_HEADINGS.map(({ name, key }) => (
-                    key != 'isHost' && <th key={name} style={{ textDecoration: "none" }}>
+                    <th key={name} style={{ textDecoration: "none" }}>
                       {name}
                       {!!key && <div className="sorting">
                         <span className={(adminSortFilter.sortKey == key && adminSortFilter.sortOrder === -1) ? 'active' : ''} onClick={() => sortAscending(key, -1, true)} ><img src={require('../../../../assets/img/icons/down_arrow.png')} alt="down" /></span>
@@ -362,19 +339,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                       <td>{time && time[0] && time[0].label}</td>
                       <td>{user.age}</td>
                       <td>{moment(user.createdAt).format('MM/DD/YYYY')}</td>
-                      <td>
-                        <div className="input_field">
-                          <Switch
-                            checked={user.isHost == 1}
-                            checkedIcon={false}
-                            height={24}
-                            onColor={'#64d2ff'}
-                            onChange={(val) => _toggleHost(val ? '1' : '0', user)}
-                            uncheckedIcon={false}
-                            width={48}
-                          />
-                        </div>
-                      </td>
                       <td>
                         <div className="d-flex">
                           <button className="btn mr-1 btn-sm btn-secondary" onClick={() => EditUser(ind)}>Edit</button>
@@ -477,19 +441,6 @@ const User = ({ listAdmins, listUsers, removeUserAction, updateUser, getAllTimeZ
                           ) : null}
                         </td>
                         <td>{moment(user.createdAt).format('MM/DD/YYYY')}</td>
-                        <td>
-                          <div className="input_field">
-                            <Switch
-                              checked={fields.isHost == 1}
-                              checkedIcon={false}
-                              height={24}
-                              onChange={(val) => updateFields('isHost', val ? '1' : '0')}
-                              onColor={'#64d2ff'}
-                              uncheckedIcon={false}
-                              width={48}
-                            />
-                          </div>
-                        </td>
                         <td>  <button className="btn btn-sm btn-secondary" onClick={onSubmit} >Update</button></td>
                       </tr>
                   }

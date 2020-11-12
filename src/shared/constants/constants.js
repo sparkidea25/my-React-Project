@@ -267,13 +267,9 @@ export const upcomingPartyTable = [
 export const ADMIN_TABLE_HEADINGS = [
   { name: 'First Name', key: 'firstName' },
   { name: 'Last Name' },
-  // { name: 'Username' },
   { name: 'Email', key: 'email' },
   { name: 'Phone Number' },
-  // { name: 'Home Town' },
   { name: 'Time Zone' },
   { name: 'Age' },
-  { name: 'Date Added', key: 'createdAt' },
-  { name: 'Host', key: 'isHost' },
-  // { name: 'Last Active' }
+  { name: 'Date Added', key: 'createdAt' }
 ]
