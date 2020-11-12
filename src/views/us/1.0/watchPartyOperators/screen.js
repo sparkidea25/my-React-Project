@@ -5,6 +5,7 @@ import "./styles.scss";
 import moment from "moment-timezone"
 import { connect } from 'react-redux'
 import Switch from "react-switch";
+import { TextField } from '@material-ui/core';
 import { CustomPagination } from "../../../../components/atoms/pagination";
 const { defaultConfig: { LOCATION } } = require(`../../../../config/default`);
 const { Form } = require(`../../../../components/atoms/form`);
@@ -46,6 +47,7 @@ const WatchPartyOperators = ({
     const [operatorPageLimit, updateOperatorPageLimit] = useState(STRINGS.SHOW_LIMIT);
     const [currentPageIndex, updateCurrentPageIndex] = useState(0)
     const [totalOperators, updateTotalOperators] = useState(0);
+    const [searchString, setSearchString] = useState('');
     const [userOptionAvailable, setUsersOptionVisible] = useState(false);
     const [hostsToAdd, setHostsToAdd] = useState(new Set());
 
@@ -84,12 +86,26 @@ const WatchPartyOperators = ({
                 <>
                     {userOptionAvailable &&
                         <div className='dropzone-div'>
-                            <div className="overlay"></div>
-                            <div className="dropzone-dialog">
-                                <div className="dropzone-content">
-                                    <div className="dropzone-body">
-                                        <h3 className="mb-4 text-center">{'Add Hosts'}</h3>
-                                        <div>
+                <div className="overlay"></div>
+                <div className="dropzone-dialog">
+                    <div className="dropzone-content">
+                        <div className="dropzone-body">
+                            <h3 className="mb-4 text-center">{'Add Hosts'}</h3>
+                            <div>
+                                        <div className='form-row'>
+                                            <input
+                                                className='form-control col-md-12'
+                                                            
+                                                label={'Search User'}
+                                                type="text"
+                                                value={searchString}
+                                                placeholder={'Search here...'}
+                                                onChange={e => {
+                                                    setSearchString(e.target.value);
+                                                }}
+                                                margin="0"
+                                            />
+                                        </div>
                                             <div className="table-responsive">
                                                 <table className="table">
                                                     <thead>
@@ -164,9 +180,9 @@ const WatchPartyOperators = ({
                                         <button type={'button'} className={'btn btn-md btn-primary'} onClick={() => setUsersOptionVisible(false)}>{'Add'}</button>
 
                                     </div>
-                                </div>
-                            </div>
-                        </div>}
+                    </div>
+                </div>
+            </div>}
                     <div>
                         <div className="col-sm-8 text-md-right">
                             <button className={'btn btn-md btn-primary'} onClick={() => { setUsersOptionVisible(true) }}>{'Add Hosts'}</button>
