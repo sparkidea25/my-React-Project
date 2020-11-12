@@ -26,5 +26,6 @@ module.exports = {
     GET_WATCH_PARTY_VIDEOS: SERVER_URL + API_VERSION + '/video/getVideos',
     GET_WATCH_PARTY_INFO: SERVER_URL + API_VERSION + '/watchParty/getInfo',
     GET_WATCH_PARTY_USERS: SERVER_URL + API_VERSION + '/watchParty/users/listing',
+    GET_WATCH_PARTY_HOSTS: SERVER_URL + API_VERSION + '/watchParty/getoperators',
   }
 };

@@ -10,7 +10,7 @@ import {
     GET_WATCH_PARTY_BY_ID,
     setWatchPartyInfoById,
     GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, GET_WATCH_PARTY_VIDEO, setWatchPartyVideoList,
-    setSports, GET_SPORTS, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY, UPLOAD_IMAGE, GET_WATCH_PARTY_USERS
+    setSports, GET_SPORTS, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY, UPLOAD_IMAGE, GET_WATCH_PARTY_USERS, GET_WATCH_PARTY_HOSTS
 } from '../actions';
 import qs from 'query-string'
 const api = require(`../../shared/api`);
@@ -142,6 +142,42 @@ function* getWatchPartyUsersSaga({ payload, success, failure }) {
     try {
         yield put(startLoader());
         const response = yield getRequest({ API: `${api.URL.GET_WATCH_PARTY_USERS}?${qs.stringify(payload)}` });
+
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success(response.data.data)
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
+function* getWatchPartyHostsSaga({ payload, success, failure }) {
+    try {
+        yield put(startLoader());
+        const response = yield getRequest({ API: `${api.URL.GET_WATCH_PARTY_HOSTS}?${qs.stringify(payload)}` });
 
         if (window.navigator.onLine === false) {
             yield put(stopLoader())
@@ -427,6 +463,7 @@ function* ContentSaga() {
         takeLatest(GET_PLATFORMS, getPlatforms),
         takeLatest(GET_SPORTS, getSports),
         takeLatest(GET_WATCH_PARTY_USERS, getWatchPartyUsersSaga),
+        takeLatest(GET_WATCH_PARTY_HOSTS, getWatchPartyHostsSaga),
         takeLatest(GET_LIST_WATCH_PARTY, listWatchparty),
         takeLatest(ADD_WATCH_PARTY, addWatchParty),
         takeLatest(UPLOAD_IMAGE, uploadFile),

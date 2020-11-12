@@ -34,37 +34,38 @@ let addHostColumns = [
     { name: 'Host Access' },
 ]
 
-const WatchPartyUsers = ({
+const WatchPartyOperators = ({
     history,
-    getWatchPartyUsers,
+    getWatchPartyHosts,
 }) => {
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     }
     const [noData, toggleNoData] = useState(false)
-    const [users, updateUsers] = useState([])
-    const [usersPageLimit, updateUsersPageLimit] = useState(STRINGS.SHOW_LIMIT);
+    const [operators, updateOperators] = useState([])
+    const [operatorPageLimit, updateOperatorPageLimit] = useState(STRINGS.SHOW_LIMIT);
     const [currentPageIndex, updateCurrentPageIndex] = useState(0)
-    const [totalUsers, updateTotalUsers] = useState(0);
+    const [totalOperators, updateTotalOperators] = useState(0);
     const [userOptionAvailable, setUsersOptionVisible] = useState(false);
-    const [hostsToAdd,setHostsToAdd] = useState(new Set());
+    const [hostsToAdd, setHostsToAdd] = useState(new Set());
 
     let query = useQuery();
-    useEffect(() => { updateCurrentPageIndex(0); _getJoinedUsers() }, [usersPageLimit]);
-    const _getJoinedUsers = (skip = 0,) => {
+    useEffect(() => { updateCurrentPageIndex(0); _getOperators() }, [operatorPageLimit]);
+    const _getOperators = (skip = 0,) => {
         let path = history.location.pathname
         let watchPartyId = query.get("watch_party_id")
         if (path == '/watch-party-operators' && watchPartyId) {
             toggleNoData(false)
-            getWatchPartyUsers(
+            getWatchPartyHosts(
                 {
                     watchPartyId,
-                    limit: usersPageLimit,
+
+                    limit: operatorPageLimit,
                     skip
                 },
                 (data) => {
-                    updateUsers(data.users || []);
-                    updateTotalUsers(data.numberOfDocuments || 0)
+                    updateOperators(data.operators || []);
+                    updateTotalOperators(data.numberOfDocuments || 0)
                     console.log(data);
                 },
                 () => { }
@@ -82,105 +83,105 @@ const WatchPartyUsers = ({
                 <>
                     {userOptionAvailable &&
                         <div className='dropzone-div'>
-                <div className="overlay"></div>
-                <div className="dropzone-dialog">
-                    <div className="dropzone-content">
-                        <div className="dropzone-body">
-                                    <h3 className="mb-4 text-center">{'Add Hosts'}</h3>
-                                    <div>
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead>
-                                    {!!users.length && addHostColumns.map(party => {
-                                        return <th key={party.name}>{party.name}</th>
-                                    })}
-                                </thead>
-                                <tbody>
+                            <div className="overlay"></div>
+                            <div className="dropzone-dialog">
+                                <div className="dropzone-content">
+                                    <div className="dropzone-body">
+                                        <h3 className="mb-4 text-center">{'Add Hosts'}</h3>
+                                        <div>
+                                            <div className="table-responsive">
+                                                <table className="table">
+                                                    <thead>
+                                                        {!!operators.length && addHostColumns.map(party => {
+                                                            return <th key={party.name}>{party.name}</th>
+                                                        })}
+                                                    </thead>
+                                                    <tbody>
 
-                                    {users.length ?
-                                        <>
-                                            {users.map((user, index) => {
-                                                return <tr key={index}>
-                                                    <td >
-                                                        <img
-                                                            style={{ width: '40px', height: '40px', borderRadius: '50px' }}
-                                                            alt=''
-                                                            src={user.pictureUrl ? user.pictureUrl : require('../../../../assets/img/icons/profile-user.png')}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field"                                                        >
-                                                            {user.firstName}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="input_field">
-                                                            {user.email}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                    <div className="input_field">
-                                                    <Switch
-                                                        checked={hostsToAdd.has(user._id)}
-                                                        checkedIcon={false}
-                                                        height={24}
-                                                        onColor={'#64d2ff'}
-                                                                onChange={(val) => {
-                                                                    let addHosts = new Set(hostsToAdd);
-                                                                    console.log('val', val,'user',user);
-                                                                    if (val) {
-                                                                        addHosts.add(user._id);                                                                    
-                                                                    } else {
-                                                                        addHosts.delete(user._id);
-                                                                    }
-                                                                    setHostsToAdd(addHosts)
-                                                                }}
-                                                        uncheckedIcon={false}
-                                                        width={48}
-                                                    />
-                                                    </div>
-                                                </td>
-                                                </tr>
-                                            })}
-                                        </>
+                                                        {operators.length ?
+                                                            <>
+                                                                {operators.map((user, index) => {
+                                                                    return <tr key={index}>
+                                                                        <td >
+                                                                            <img
+                                                                                style={{ width: '40px', height: '40px', borderRadius: '50px' }}
+                                                                                alt=''
+                                                                                src={user.pictureUrl ? user.pictureUrl : require('../../../../assets/img/icons/profile-user.png')}
+                                                                            />
+                                                                        </td>
+                                                                        <td>
+                                                                            <div className="input_field"                                                        >
+                                                                                {user.firstName}
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div className="input_field">
+                                                                                {user.email}
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div className="input_field">
+                                                                                <Switch
+                                                                                    checked={hostsToAdd.has(user._id)}
+                                                                                    checkedIcon={false}
+                                                                                    height={24}
+                                                                                    onColor={'#64d2ff'}
+                                                                                    onChange={(val) => {
+                                                                                        let addHosts = new Set(hostsToAdd);
+                                                                                        console.log('val', val, 'user', user);
+                                                                                        if (val) {
+                                                                                            addHosts.add(user._id);
+                                                                                        } else {
+                                                                                            addHosts.delete(user._id);
+                                                                                        }
+                                                                                        setHostsToAdd(addHosts)
+                                                                                    }}
+                                                                                    uncheckedIcon={false}
+                                                                                    width={48}
+                                                                                />
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                })}
+                                                            </>
 
-                                        : 'No user found in this Watch Party.'}
-                                </tbody>
-                            </table>
+                                                            : 'No operator found in this Watch Party.'}
+                                                    </tbody>
+                                                </table>
 
-                        </div>
-                        {!!users.length && <CustomPagination
-                            limit={usersPageLimit}
-                            totalPages={totalUsers}
-                            onChangePageLimit={(val) => updateUsersPageLimit(val)}
-                            itemsCount={users.length}
-                            currentPage={currentPageIndex + 1}
-                            onPageChange={(value) => { _getJoinedUsers(value.selected * usersPageLimit); updateCurrentPageIndex(value.selected) }}
-                        />}
+                                            </div>
+                                            {!!operators.length && <CustomPagination
+                                                limit={operatorPageLimit}
+                                                totalPages={totalOperators}
+                                                onChangePageLimit={(val) => updateOperatorPageLimit(val)}
+                                                itemsCount={operators.length}
+                                                currentPage={currentPageIndex + 1}
+                                                onPageChange={(value) => { _getOperators(value.selected * operatorPageLimit); updateCurrentPageIndex(value.selected) }}
+                                            />}
+                                        </div>
+                                        <button type={'button'} className={'btn btn-md reject-button mr-2'} onClick={() => setUsersOptionVisible(false)}>{'Cancel'}</button>
+                                        <button type={'button'} className={'btn btn-md btn-primary'} onClick={() => setUsersOptionVisible(false)}>{'Add'}</button>
+
                                     </div>
-                        <button type={'button'} className={'btn btn-md reject-button mr-2'} onClick={() => setUsersOptionVisible(false)}>{'Cancel'}</button>
-                        <button type={'button'} className={'btn btn-md btn-primary'} onClick={() => setUsersOptionVisible(false)}>{'Add'}</button>
-                    
-                        </div>
-                    </div>
-                </div>
-            </div>}
+                                </div>
+                            </div>
+                        </div>}
                     <div>
                         <div className="col-sm-8 text-md-right">
-                                <button className={'btn btn-md btn-primary'} onClick={() => { setUsersOptionVisible(true) }}>{'Add Hosts'}</button>
-                            </div>
+                            <button className={'btn btn-md btn-primary'} onClick={() => { setUsersOptionVisible(true) }}>{'Add Hosts'}</button>
+                        </div>
                         <div className="table-responsive">
                             <table className="table">
                                 <thead>
-                                    {!!users.length && columns.map(party => {
+                                    {!!operators.length && columns.map(party => {
                                         return <th key={party.name}>{party.name}</th>
                                     })}
                                 </thead>
                                 <tbody>
 
-                                    {users.length ?
+                                    {operators.length ?
                                         <>
-                                            {users.map((user, index) => {
+                                            {operators.map((user, index) => {
                                                 return <tr key={index}>
                                                     <td >
                                                         <img
@@ -203,18 +204,18 @@ const WatchPartyUsers = ({
                                             })}
                                         </>
 
-                                        : 'No user found in this Watch Party.'}
+                                        : 'No operator found in this Watch Party.'}
                                 </tbody>
                             </table>
 
                         </div>
-                        {!!users.length && <CustomPagination
-                            limit={usersPageLimit}
-                            totalPages={totalUsers}
-                            onChangePageLimit={(val) => updateUsersPageLimit(val)}
-                            itemsCount={users.length}
+                        {!!operators.length && <CustomPagination
+                            limit={operatorPageLimit}
+                            totalPages={totalOperators}
+                            onChangePageLimit={(val) => updateOperatorPageLimit(val)}
+                            itemsCount={operators.length}
                             currentPage={currentPageIndex + 1}
-                            onPageChange={(value) => { _getJoinedUsers(value.selected * usersPageLimit); updateCurrentPageIndex(value.selected) }}
+                            onPageChange={(value) => { _getOperators(value.selected * operatorPageLimit); updateCurrentPageIndex(value.selected) }}
                         />}
                     </div>
                 </>
@@ -223,5 +224,5 @@ const WatchPartyUsers = ({
     );
 };
 
-export const Screen = WatchPartyUsers
+export const Screen = WatchPartyOperators
 
