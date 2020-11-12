@@ -13,4 +13,4 @@ const mapDispatchToProps = (dispatch) => {
         getWatchPartyHosts: (payload, success, failure) => dispatch(getWatchPartyHosts(payload, success, failure)),
     }
 }
-export const WatchPartyOperatorScreen = connect(mapStateToProps, mapDispatchToProps)(Screen);
+export const WatchPartyHostScreen = connect(mapStateToProps, mapDispatchToProps)(Screen);
