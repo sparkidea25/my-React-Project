@@ -9,7 +9,8 @@ const {
     Input,
 } = require(`../../../../components/atoms/input`);
 const { SPORTS_OPTIONS, PAGE_TITLES, NAME_REGX, LABELS, VALIDATION_MESSAGES, upcomingPartyTable, pastPartyTable } = require('../../../../shared/constants/constants')
-const { STRINGS } = require('../../../../shared/constants/us/strings')
+const { STRINGS } = require('../../../../shared/constants/us/strings');
+const { GROUP_ICON } = require('../../../../shared/constants');
 const { FieldDatePickerr } = require('../../../../components/atoms/field-date-picker')
 const { diff_minutes, convertToESTTimeZone, convertTimeForEdit } = require('../../../../helpers')
 
@@ -157,8 +158,8 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div onClick={() => history.push(`${ROUTES.WATCH_PARTY_OPERATORS}?watch_party_id=${party._id}`)} className="input_field">
-                                                        {party.host ? party.host : 'N/A'}
+                                                    <div onClick={() => history.push(`${ROUTES.WATCH_PARTY_OPERATORS}?watch_party_id=${party._id}`)} className="input_field group_icon">
+                                                        <img src={GROUP_ICON} height={25} width={25}/>
                                                     </div>
                                                 </td>
                                                 <td>
