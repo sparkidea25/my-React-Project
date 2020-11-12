@@ -59,12 +59,13 @@ const WatchPartyOperators = ({
             getWatchPartyHosts(
                 {
                     watchPartyId,
-
+                    filter: 0,
+                    name: '',
                     limit: operatorPageLimit,
                     skip
                 },
                 (data) => {
-                    updateOperators(data.operators || []);
+                    updateOperators(data.users || []);
                     updateTotalOperators(data.numberOfDocuments || 0)
                     console.log(data);
                 },
