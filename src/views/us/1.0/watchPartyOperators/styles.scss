@@ -1,6 +1,11 @@
 .btn_group {
-    button {
-        min-height: 48px;
-        min-width: 250px;
-    }
+  button {
+    min-height: 48px;
+    min-width: 250px;
+  }
+}
+.table-search {
+  input {
+    width: 100%;
+  }
 }
