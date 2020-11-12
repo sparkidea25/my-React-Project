@@ -158,8 +158,12 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div onClick={() => history.push(`${ROUTES.WATCH_PARTY_HOSTS}?watch_party_id=${party._id}`)} className="input_field group_icon">
-                                                        <img src={GROUP_ICON} height={25} width={25}/>
+                                                    <div
+                                                        onClick={() => history.push(`${ROUTES.WATCH_PARTY_OPERATORS}?watch_party_id=${party._id}`)}
+                                                        className="input_field group_icon watchcPartyName"
+                                                    >
+                                                        <img src={GROUP_ICON} height={25} width={25} />
+                                                         &nbsp;({party.host || 0})
                                                     </div>
                                                 </td>
                                                 <td>
@@ -272,9 +276,15 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     {pastParty.contentName}
                                                 </div>
                                                 </td>
-                                                <td><div onClick={() => history.push(`${ROUTES.WATCH_PARTY_HOSTS}?watch_party_id=${pastParty._id}`)} className="input_field group_icon">
-                                                        <img src={GROUP_ICON} height={25} width={25}/>
-                                                    </div></td>
+                                                <td>
+                                                    <div
+                                                        onClick={() => history.push(`${ROUTES.WATCH_PARTY_OPERATORS}?watch_party_id=${pastParty._id}`)}
+                                                        className="input_field group_icon watchcPartyName"
+                                                    >
+                                                        <img src={GROUP_ICON} height={25} width={25} />
+                                                        &nbsp;({pastParty.host || 0})
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <div className="input_field">
                                                         {pastParty && pastParty.sports === true ? 'Yes' : 'No'}
