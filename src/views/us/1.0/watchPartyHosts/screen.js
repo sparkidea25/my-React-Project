@@ -26,6 +26,7 @@ let columns = [
     { name: 'Pic' },
     { name: 'Name' },
     { name: 'Email' },
+    { name: 'Host Access' },
 ];
 
 let addHostColumns = [
@@ -37,39 +38,100 @@ let addHostColumns = [
 
 const WatchPartyOperators = ({
     history,
+    addRemoveHostsRequest,
     getWatchPartyHosts,
+    searchWatchPartyHostUsers,
 }) => {
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     }
     const [noData, toggleNoData] = useState(false)
     const [operators, updateOperators] = useState([])
+    const [searchedUsers, updateSearchedUsers] = useState([]);
     const [operatorPageLimit, updateOperatorPageLimit] = useState(STRINGS.SHOW_LIMIT);
-    const [currentPageIndex, updateCurrentPageIndex] = useState(0)
+    const [userPageLimit, updateUserPageLimit] = useState(STRINGS.SHOW_LIMIT);
+    const [currentPageIndex, updateCurrentPageIndex] = useState(0);
+    const [currentUsersPageIndex, updateCurrentUsersPageIndex] = useState(0)
     const [totalOperators, updateTotalOperators] = useState(0);
+    const [totalUsers, updateTotalUser] = useState(0);
     const [searchString, setSearchString] = useState('');
     const [userOptionAvailable, setUsersOptionVisible] = useState(false);
-    const [hostsToAdd, setHostsToAdd] = useState(new Set());
+    const [hostsToAdd, setHostsToAdd] = useState({});
 
     let query = useQuery();
     useEffect(() => { updateCurrentPageIndex(0); _getOperators() }, [operatorPageLimit]);
+    useEffect(() => { updateCurrentUsersPageIndex(0); _searchUsers(searchString) }, [userPageLimit]);
     const _getOperators = (skip = 0,) => {
         let path = history.location.pathname
         let watchPartyId = query.get("watch_party_id")
-        if (path == '/watch-party-operators' && watchPartyId) {
+        if (path == '/watch-party-hosts' && watchPartyId) {
             toggleNoData(false)
             getWatchPartyHosts(
                 {
                     watchPartyId,
-                    filter: 0,
-                    name: '',
+                    filter: 1,
                     limit: operatorPageLimit,
                     skip
                 },
                 (data) => {
-                    updateOperators(data.users || []);
-                    updateTotalOperators(data.numberOfDocuments || 0)
+                    updateOperators(data.hosts || []);
+                    updateTotalOperators(data.count || 0)
                     console.log(data);
+                },
+                () => { }
+            )
+        } else {
+            toggleNoData(true)
+        }
+    }
+
+    const _addRemoveHost = (users = []) => {
+        let path = history.location.pathname
+        let watchPartyId = query.get("watch_party_id")
+        if (path == '/watch-party-hosts' && watchPartyId) {
+            addRemoveHostsRequest(
+                {
+                    users,
+                    watchPartyId
+                },
+                () => {
+                    updateCurrentPageIndex(0);
+                    _getOperators();
+                    onCloseModal()
+                },
+                () => { },
+            )
+        }
+    }
+
+    const onCloseModal = () => {
+        setSearchString('');
+        setHostsToAdd({});
+        updateCurrentUsersPageIndex(0);
+        setUsersOptionVisible(false);
+    }
+
+    const _searchUsers = (name = '', skip = 0, showModal = false, searching = false) => {
+
+        let path = history.location.pathname;
+        let watchPartyId = query.get("watch_party_id")
+        if (path == '/watch-party-hosts' && watchPartyId) {
+            setSearchString(name);
+
+            searchWatchPartyHostUsers(
+                {
+                    watchPartyId,
+                    filter: 0,
+                    name,
+                    loading: !searching,
+                    limit: userPageLimit,
+                    skip
+                },
+                (data) => {
+                    updateSearchedUsers(data.users || []);
+                    updateTotalUser(data.count || 0)
+                    console.log(data);
+                    showModal && setUsersOptionVisible(true);
                 },
                 () => { }
             )
@@ -86,38 +148,37 @@ const WatchPartyOperators = ({
                 <>
                     {userOptionAvailable &&
                         <div className='dropzone-div'>
-                <div className="overlay"></div>
-                <div className="dropzone-dialog">
-                    <div className="dropzone-content">
-                        <div className="dropzone-body">
-                            <h3 className="mb-4 text-center">{'Add Hosts'}</h3>
-                            <div>
-                                        <div className='form-row'>
-                                            <input
-                                                className='form-control col-md-12'
-                                                            
-                                                label={'Search User'}
-                                                type="text"
-                                                value={searchString}
-                                                placeholder={'Search here...'}
-                                                onChange={e => {
-                                                    setSearchString(e.target.value);
-                                                }}
-                                                margin="0"
-                                            />
-                                        </div>
+                            <div className="overlay"></div>
+                            <div className="dropzone-dialog">
+                                <div className="dropzone-content">
+                                    <div className="dropzone-body">
+                                        <h3 className="mb-4 text-center">{`Add Hosts (${Object.keys(hostsToAdd).length} selected)`}</h3>
+                                        <div>
+                                            <div className='form-row'>
+                                                <input
+                                                    className='form-control col-md-12'
+                                                    label={'Search User'}
+                                                    type="text"
+                                                    value={searchString}
+                                                    placeholder={'Search here...'}
+                                                    onChange={e => {
+                                                        _searchUsers(e.target.value, 0, false, true); updateCurrentUsersPageIndex(0);
+                                                    }}
+                                                    margin="0"
+                                                />
+                                            </div>
                                             <div className="table-responsive">
                                                 <table className="table">
                                                     <thead>
-                                                        {!!operators.length && addHostColumns.map(party => {
+                                                        {!!searchedUsers.length && addHostColumns.map(party => {
                                                             return <th key={party.name}>{party.name}</th>
                                                         })}
                                                     </thead>
                                                     <tbody>
 
-                                                        {operators.length ?
+                                                        {searchedUsers.length ?
                                                             <>
-                                                                {operators.map((user, index) => {
+                                                                {searchedUsers.map((user, index) => {
                                                                     return <tr key={index}>
                                                                         <td >
                                                                             <img
@@ -139,19 +200,15 @@ const WatchPartyOperators = ({
                                                                         <td>
                                                                             <div className="input_field">
                                                                                 <Switch
-                                                                                    checked={hostsToAdd.has(user._id)}
+                                                                                    checked={!!hostsToAdd[user._id]}
                                                                                     checkedIcon={false}
                                                                                     height={24}
                                                                                     onColor={'#64d2ff'}
                                                                                     onChange={(val) => {
-                                                                                        let addHosts = new Set(hostsToAdd);
-                                                                                        console.log('val', val, 'user', user);
-                                                                                        if (val) {
-                                                                                            addHosts.add(user._id);
-                                                                                        } else {
-                                                                                            addHosts.delete(user._id);
-                                                                                        }
-                                                                                        setHostsToAdd(addHosts)
+                                                                                        setHostsToAdd(hosts => {
+                                                                                            val ? (hosts[user._id] = { userId: user._id, status: 1 }) : (delete hosts[user._id]);
+                                                                                            return { ...hosts }
+                                                                                        })
                                                                                     }}
                                                                                     uncheckedIcon={false}
                                                                                     width={48}
@@ -162,30 +219,30 @@ const WatchPartyOperators = ({
                                                                 })}
                                                             </>
 
-                                                            : 'No operator found in this Watch Party.'}
+                                                            : 'No User found.'}
                                                     </tbody>
                                                 </table>
 
                                             </div>
-                                            {!!operators.length && <CustomPagination
-                                                limit={operatorPageLimit}
-                                                totalPages={totalOperators}
-                                                onChangePageLimit={(val) => updateOperatorPageLimit(val)}
-                                                itemsCount={operators.length}
-                                                currentPage={currentPageIndex + 1}
-                                                onPageChange={(value) => { _getOperators(value.selected * operatorPageLimit); updateCurrentPageIndex(value.selected) }}
+                                            {!!searchedUsers.length && <CustomPagination
+                                                limit={userPageLimit}
+                                                totalPages={totalUsers}
+                                                onChangePageLimit={(val) => updateUserPageLimit(val)}
+                                                itemsCount={searchedUsers.length}
+                                                currentPage={currentUsersPageIndex + 1}
+                                                onPageChange={(value) => { _searchUsers(searchString, value.selected * userPageLimit); updateCurrentUsersPageIndex(value.selected) }}
                                             />}
                                         </div>
-                                        <button type={'button'} className={'btn btn-md reject-button mr-2'} onClick={() => setUsersOptionVisible(false)}>{'Cancel'}</button>
-                                        <button type={'button'} className={'btn btn-md btn-primary'} onClick={() => setUsersOptionVisible(false)}>{'Add'}</button>
+                                        <button type={'button'} className={'btn btn-md reject-button mr-2'} onClick={onCloseModal}>{'Cancel'}</button>
+                                        <button type={'button'} className={'btn btn-md btn-primary'} onClick={() => { _addRemoveHost(Object.values(hostsToAdd)) }}>{'Add'}</button>
 
                                     </div>
-                    </div>
-                </div>
-            </div>}
+                                </div>
+                            </div>
+                        </div>}
                     <div>
                         <div className="col-sm-8 text-md-right">
-                            <button className={'btn btn-md btn-primary'} onClick={() => { setUsersOptionVisible(true) }}>{'Add Hosts'}</button>
+                            <button className={'btn btn-md btn-primary'} onClick={() => { _searchUsers('', 0, true) }}>{'Add Hosts'}</button>
                         </div>
                         <div className="table-responsive">
                             <table className="table">
@@ -215,6 +272,19 @@ const WatchPartyOperators = ({
                                                     <td>
                                                         <div className="input_field">
                                                             {user.email}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="input_field">
+                                                            <Switch
+                                                                checked={true}
+                                                                checkedIcon={false}
+                                                                height={24}
+                                                                onColor={'#64d2ff'}
+                                                                onChange={(val) => _addRemoveHost([{ userId: user._id, status: 0 }])}
+                                                                uncheckedIcon={false}
+                                                                width={48}
+                                                            />
                                                         </div>
                                                     </td>
                                                 </tr>

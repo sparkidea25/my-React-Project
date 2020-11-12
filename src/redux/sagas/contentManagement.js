@@ -10,7 +10,7 @@ import {
     GET_WATCH_PARTY_BY_ID,
     setWatchPartyInfoById,
     GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, GET_WATCH_PARTY_VIDEO, setWatchPartyVideoList,
-    setSports, GET_SPORTS, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY, UPLOAD_IMAGE, GET_WATCH_PARTY_USERS, GET_WATCH_PARTY_HOSTS
+    setSports, GET_SPORTS, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY, UPLOAD_IMAGE, GET_WATCH_PARTY_USERS, GET_WATCH_PARTY_HOSTS, SEARCH_WATCH_PARTY_HOST_USERS, ADD_REMOVE_HOSTS_REQUEST
 } from '../actions';
 import qs from 'query-string'
 const api = require(`../../shared/api`);
@@ -138,6 +138,48 @@ function* listWatchparty({ data, success, failure }) {
     }
 }
 
+function* addRemoveHostsSaga({ payload, success, failure }) {
+    try {
+
+        yield put(startLoader());
+        console.log(payload);
+        const response = yield postRequest({
+            API: api.URL.ADD_REMOVE_HOSTS,
+            DATA: payload
+        });
+        console.log(response.data);
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success(response.data.data)
+                // yield put(setWatchListParty(response.data.data))
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
 function* getWatchPartyUsersSaga({ payload, success, failure }) {
     try {
         yield put(startLoader());
@@ -177,6 +219,44 @@ function* getWatchPartyUsersSaga({ payload, success, failure }) {
 function* getWatchPartyHostsSaga({ payload, success, failure }) {
     try {
         yield put(startLoader());
+        console.log(`${api.URL.GET_WATCH_PARTY_HOSTS}?${qs.stringify(payload)}`);
+        const response = yield getRequest({ API: `${api.URL.GET_WATCH_PARTY_HOSTS}?${qs.stringify(payload)}` });
+
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            failure({
+                msg: 'You appear to be offline. Please check your connection.'
+            })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success(response.data.data)
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
+function* searchWatchPartyHostUsersSaga({ payload, success, failure }) {
+    try {
+        yield payload.loading && put(startLoader());
+        console.log(`${api.URL.GET_WATCH_PARTY_HOSTS}?${qs.stringify(payload)}`);
         const response = yield getRequest({ API: `${api.URL.GET_WATCH_PARTY_HOSTS}?${qs.stringify(payload)}` });
 
         if (window.navigator.onLine === false) {
@@ -464,7 +544,9 @@ function* ContentSaga() {
         takeLatest(GET_SPORTS, getSports),
         takeLatest(GET_WATCH_PARTY_USERS, getWatchPartyUsersSaga),
         takeLatest(GET_WATCH_PARTY_HOSTS, getWatchPartyHostsSaga),
+        takeLatest(SEARCH_WATCH_PARTY_HOST_USERS, searchWatchPartyHostUsersSaga),
         takeLatest(GET_LIST_WATCH_PARTY, listWatchparty),
+        takeLatest(ADD_REMOVE_HOSTS_REQUEST, addRemoveHostsSaga),
         takeLatest(ADD_WATCH_PARTY, addWatchParty),
         takeLatest(UPLOAD_IMAGE, uploadFile),
         takeLatest(GET_WATCH_PARTY_VIDEO, getWatchPartyVideos),

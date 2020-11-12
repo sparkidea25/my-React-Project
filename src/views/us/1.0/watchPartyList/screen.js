@@ -159,7 +159,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                 </td>
                                                 <td>
                                                     <div
-                                                        onClick={() => history.push(`${ROUTES.WATCH_PARTY_OPERATORS}?watch_party_id=${party._id}`)}
+                                                        onClick={() => history.push(`${ROUTES.WATCH_PARTY_HOSTS}?watch_party_id=${party._id}`)}
                                                         className="input_field group_icon watchcPartyName"
                                                     >
                                                         <img src={GROUP_ICON} height={25} width={25} />
@@ -278,7 +278,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                 </td>
                                                 <td>
                                                     <div
-                                                        onClick={() => history.push(`${ROUTES.WATCH_PARTY_OPERATORS}?watch_party_id=${pastParty._id}`)}
+                                                        onClick={() => history.push(`${ROUTES.WATCH_PARTY_HOSTS}?watch_party_id=${pastParty._id}`)}
                                                         className="input_field group_icon watchcPartyName"
                                                     >
                                                         <img src={GROUP_ICON} height={25} width={25} />

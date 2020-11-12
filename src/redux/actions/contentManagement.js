@@ -15,7 +15,9 @@ export const GET_WATCH_PARTY_VIDEO = "GET_WATCH_PARTY_VIDEO"
 export const SET_WATCH_PARTY_VIDEOS = "SET_WATCH_PARTY_VIDEOS"
 export const GET_WATCH_PARTY_BY_ID = "GET_WATCH_PARTY_BY_ID"
 export const GET_WATCH_PARTY_USERS = "GET_WATCH_PARTY_USERS"
-export const GET_WATCH_PARTY_HOSTS = "GET_WATCH_PARTY_HOSTS"
+export const GET_WATCH_PARTY_HOSTS = "GET_WATCH_PARTY_HOSTS";
+export const ADD_REMOVE_HOSTS_REQUEST = "ADD_REMOVE_HOSTS_REQUEST";
+export const SEARCH_WATCH_PARTY_HOST_USERS = "SEARCH_WATCH_PARTY_HOST_USERS"
 export const SET_WATCH_PARTY_BY_ID = "SET_WATCH_PARTY_BY_ID"
 export const exportWatchParty = (data, success, failure) => {
     return {
@@ -37,6 +39,24 @@ export const getWatchPartyUsers = (payload, success, failure) => {
 export const getWatchPartyHosts = (payload, success, failure) => {
     return {
         type: GET_WATCH_PARTY_HOSTS,
+        payload,
+        success,
+        failure
+    }
+}
+
+export const addRemoveHostsRequest = (payload, success, failure) => {
+    return {
+        type: ADD_REMOVE_HOSTS_REQUEST,
+        payload,
+        success,
+        failure
+    }
+}
+
+export const searchWatchPartyHostUsers = (payload, success, failure) => {
+    return {
+        type: SEARCH_WATCH_PARTY_HOST_USERS,
         payload,
         success,
         failure
