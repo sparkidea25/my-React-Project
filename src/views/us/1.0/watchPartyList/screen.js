@@ -157,7 +157,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div className="input_field">
+                                                    <div onClick={() => history.push(`${ROUTES.WATCH_PARTY_OPERATORS}?watch_party_id=${party._id}`)} className="input_field">
                                                         {party.host ? party.host : 'N/A'}
                                                     </div>
                                                 </td>
