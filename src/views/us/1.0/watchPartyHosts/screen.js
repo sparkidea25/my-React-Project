@@ -291,7 +291,7 @@ const WatchPartyOperators = ({
                                             })}
                                         </>
 
-                                        : 'No operator found in this Watch Party.'}
+                                        : 'No host found in this Watch Party.'}
                                 </tbody>
                             </table>
 

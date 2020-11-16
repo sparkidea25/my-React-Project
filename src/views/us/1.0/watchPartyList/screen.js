@@ -163,7 +163,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                         className="input_field group_icon watchcPartyName"
                                                     >
                                                         <img src={GROUP_ICON} height={25} width={25} />
-                                                         &nbsp;({party.host || 0})
+                                                         &nbsp;({party.hostCount || 0})
                                                     </div>
                                                 </td>
                                                 <td>
@@ -282,7 +282,7 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                         className="input_field group_icon watchcPartyName"
                                                     >
                                                         <img src={GROUP_ICON} height={25} width={25} />
-                                                        &nbsp;({pastParty.host || 0})
+                                                        &nbsp;({pastParty.hostCount || 0})
                                                     </div>
                                                 </td>
                                                 <td>
