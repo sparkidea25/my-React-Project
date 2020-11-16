@@ -122,7 +122,7 @@ const WatchPartyOperators = ({
                 {
                     watchPartyId,
                     filter: 0,
-                    name,
+                    name: name.trim(),
                     loading: !searching,
                     limit: userPageLimit,
                     skip
