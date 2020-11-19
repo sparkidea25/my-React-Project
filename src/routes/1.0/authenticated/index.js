@@ -108,6 +108,7 @@ const AuthenticatedRouter = (props) => {
           <Route exact path={`${ROUTES.WATCH_PARTY}`} component={WatchPartyScreen} />
           <Route exact path={`${ROUTES.ADD_WATCH_PARTY}`} component={AddWatchPartyScreen} />
           <Route exact path={`${ROUTES.EDIT_WATCH_PARTY}`} component={AddWatchPartyScreen} />
+          <Route exact path={`${ROUTES.CLONE_WATCH_PARTY}`} component={AddWatchPartyScreen} />
           <Route exact path={`${ROUTES.UPLOAD_WATCH_PARTY}`} component={UploadWatchPartyScreen} />
           <Route exact path={`${ROUTES.WATCH_PARTY_USERS}`} component={WatchPartyUsersScreen} />
           <Route exact path={`${ROUTES.WATCH_PARTY_HOSTS}`} component={WatchPartyHostScreen} />

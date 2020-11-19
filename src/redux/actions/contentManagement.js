@@ -18,7 +18,9 @@ export const GET_WATCH_PARTY_USERS = "GET_WATCH_PARTY_USERS"
 export const GET_WATCH_PARTY_HOSTS = "GET_WATCH_PARTY_HOSTS";
 export const ADD_REMOVE_HOSTS_REQUEST = "ADD_REMOVE_HOSTS_REQUEST";
 export const SEARCH_WATCH_PARTY_HOST_USERS = "SEARCH_WATCH_PARTY_HOST_USERS"
-export const SET_WATCH_PARTY_BY_ID = "SET_WATCH_PARTY_BY_ID"
+export const SET_WATCH_PARTY_BY_ID = "SET_WATCH_PARTY_BY_ID";
+export const CLONE_WATCH_PARTY = 'CLONE_WATCH_PARTY';
+
 export const exportWatchParty = (data, success, failure) => {
     return {
         type: EXPORT_CSV,
@@ -152,7 +154,8 @@ export const setWatchListParty = (data) => {
 export const getSports = (success, failure) => {
     return {
         type: GET_SPORTS,
-        success, failure
+        success,
+        failure
     }
 }
 export const setSports = (success, failure) => {
@@ -166,11 +169,23 @@ export const addWatchParty = (data, success, failure) => {
         type: ADD_WATCH_PARTY,
         data,
         success, failure
-    }
-}
+    };
+};
+
 export const uploadImage = (data, success, failure) => {
     return {
         type: UPLOAD_IMAGE,
-        data, success, failure
-    }
-}
+        data,
+        success,
+        failure
+    };
+};
+
+export const cloneWatchParty = (data, success, failure) => {
+    return {
+        type: CLONE_WATCH_PARTY,
+        data,
+        success,
+        failure
+    };
+};

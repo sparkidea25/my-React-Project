@@ -28,5 +28,6 @@ module.exports = {
     GET_WATCH_PARTY_USERS: SERVER_URL + API_VERSION + '/watchParty/users/listing',
     GET_WATCH_PARTY_HOSTS: SERVER_URL + API_VERSION + '/watchParty/getoperators',
     ADD_REMOVE_HOSTS: SERVER_URL + API_VERSION + '/watchParty/makeOperators',
+    CLONE_WATCHPARTY:SERVER_URL + API_VERSION + '/watchParty/clone'
   }
 };

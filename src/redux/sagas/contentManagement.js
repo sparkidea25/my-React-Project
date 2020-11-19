@@ -10,7 +10,7 @@ import {
     GET_WATCH_PARTY_BY_ID,
     setWatchPartyInfoById,
     GET_PLATFORMS, setLeagues, setPlatforms, setWatchListParty, GET_WATCH_PARTY_VIDEO, setWatchPartyVideoList,
-    setSports, GET_SPORTS, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY, UPLOAD_IMAGE, GET_WATCH_PARTY_USERS, GET_WATCH_PARTY_HOSTS, SEARCH_WATCH_PARTY_HOST_USERS, ADD_REMOVE_HOSTS_REQUEST
+    setSports, GET_SPORTS, CLONE_WATCH_PARTY, GET_LIST_WATCH_PARTY, ADD_WATCH_PARTY, UPLOAD_IMAGE, GET_WATCH_PARTY_USERS, GET_WATCH_PARTY_HOSTS, SEARCH_WATCH_PARTY_HOST_USERS, ADD_REMOVE_HOSTS_REQUEST
 } from '../actions';
 import qs from 'query-string'
 const api = require(`../../shared/api`);
@@ -62,7 +62,6 @@ function* uploadFile({ data, success, failure }) {
         })
     }
 }
-
 
 function* exportWatchparty({ data, success, failure }) {
     // const formData = createFormData(data);
@@ -534,6 +533,46 @@ function* addWatchParty({ data, success, failure }) {
     }
 }
 
+function* cloneWatchParty({ data, success, failure }) {
+    console.log('data upload fil;eee', data)
+    const formData = createFormData(data);
+    console.log('formdsata', formData)
+    for (const entry of formData.entries()) {
+        console.log(entry, 'entrey')
+    }
+    try {
+        yield put(startLoader());
+        const response = yield postRequest({ API: `${api.URL.CLONE_WATCHPARTY}`, DATA: data });
+        if (window.navigator.onLine === false) {
+            yield put(stopLoader())
+            // failure({
+            //     msg: 'You appear to be offline. Please check your connection.'
+            // })
+        } else {
+            if (response.status === STATUS_CODE.unAuthorized) {
+                yield put(setAuthorization(null));
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            if (response.status !== STATUS_CODE.successful) {
+                yield put(setAuthorization(null))
+                yield put(stopLoader());
+                failure(response.data)
+            }
+            else {
+                success(response.data)
+                yield put(stopLoader());
+            }
+        }
+    }
+    catch (error) {
+        yield put(stopLoader());
+        failure({
+            msg: 'Sorry, something went wrong.'
+        })
+    }
+}
+
 function* ContentSaga() {
     yield all([
         takeLatest(EXPORT_CSV, exportWatchparty),
@@ -550,7 +589,8 @@ function* ContentSaga() {
         takeLatest(ADD_WATCH_PARTY, addWatchParty),
         takeLatest(UPLOAD_IMAGE, uploadFile),
         takeLatest(GET_WATCH_PARTY_VIDEO, getWatchPartyVideos),
-        takeLatest(GET_WATCH_PARTY_BY_ID, getWatchpartyInfoById)
+        takeLatest(GET_WATCH_PARTY_BY_ID, getWatchpartyInfoById),
+        takeLatest(CLONE_WATCH_PARTY, cloneWatchParty)
     ]);
 }
 

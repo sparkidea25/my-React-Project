@@ -78,8 +78,8 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
         message: ''
     });
 
-    const [liveTableIndex, setLiveTableIndex] = useState(0)
-    const [PastTableIndex, setPastTableIndex] = useState(0)
+    const [liveTableIndex, setLiveTableIndex] = useState(0);
+    const [PastTableIndex, setPastTableIndex] = useState(0);
 
 
     const sortAscending = (sortKey, sortOrder, isLive = false) => {
@@ -201,11 +201,6 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                         {party.joined}
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <div className="input_field">
-                                                        {party && party.videoInfo && party.videoInfo.name ? party.videoInfo.name : 'N/A'}
-                                                    </div>
-                                                </td>
                                                 <td><div className="input_field">{party.source}</div></td>
                                                 <td>
                                                     <div className="input_field">
@@ -221,10 +216,14 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div className="input_field">
+                                                    <div className="input_field" style={{minWidth:'150px'}}>
                                                         <button className="btn btn-sm btn-secondary" onClick={() => {
                                                             history.push(`${ROUTES.EDIT_WATCH_PARTY}?watch_party_id=${party._id}`)
-                                                        }}>Edit</button></div></td>
+                                                        }}>Edit</button>
+                                                        <button className="btn btn-sm btn-secondary ml-2" onClick={() => {
+                                                            history.push(`${ROUTES.CLONE_WATCH_PARTY}?watch_party_id=${party._id}`)
+                                                        }}>Clone</button>
+                                                        </div></td>
                                             </tr>
                                         })}
                                     </>
@@ -241,7 +240,11 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                         itemsCount={upcomingAndLiveListing && upcomingAndLiveListing.length}
                         currentPage={liveTableIndex + 1}
                         onPageChange={(value) => {
-                            getLiveWatchParties({ limit: livePageLimit, skip: (value && value.selected) * livePageLimit, filter: 2, ...liveSortFilter })
+                            getLiveWatchParties({
+                                limit: livePageLimit,
+                                skip: (value && value.selected) * livePageLimit,
+                                filter: 2, ...liveSortFilter
+                            })
                             setLiveTableIndex(value && value.selected)
                         }}
                     />}
@@ -314,7 +317,6 @@ export const Screen = ({ listWatchParty, history, setWatchListParty,
                                                 </div>
                                                 </td>
                                                 <td><div className="input_field">{pastParty.joined}</div></td>
-                                                <td><div className="input_field">{pastParty && pastParty.videoInfo && pastParty.videoInfo.name ? pastParty.videoInfo.name : 'N/A'}</div></td>
                                                 <td><div className="input_field">{pastParty.source}</div></td>
                                                 <td style={{ minWidth: '86px' }}> </td>
                                             </tr>

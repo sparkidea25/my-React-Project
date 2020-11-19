@@ -14,5 +14,6 @@ export const ROUTES = {
     UPLOAD_WATCH_PARTY: '/upload-watch-party',
     FORGOT_PASSWORD: '/forget-password',
     RESET_PASSWORD: '/admin/reset-password',
-    USERS: '/users'
+    USERS: '/users',
+    CLONE_WATCH_PARTY:'/clone-watch-party'
 }

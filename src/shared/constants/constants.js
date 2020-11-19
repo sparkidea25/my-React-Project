@@ -17,7 +17,8 @@ export const PAGE_TITLES = {
   USER_MANAGEMENT: 'User Management',
   ADD_NEW_WATCH_PARTY: 'Add New Watch Party',
   CONTENT_MANGEMENT: 'Content Management',
-  EDIT_WATCH_PARTY: 'Update Watch Party'
+  EDIT_WATCH_PARTY: 'Update Watch Party',
+  CLONE_WATCH_PARTY:'Clone Watch Party'
 }
 
 export const KEY_CODES = {
@@ -235,7 +236,6 @@ export const pastPartyTable = [
   { name: 'End Time' },
   { name: 'Created Date', key: 'createdAt' },
   { name: 'Joined', key: 'joined' },
-  { name: 'Video' },
   { name: 'Source', key: 'source' },
 ]
 
@@ -258,7 +258,6 @@ export const upcomingPartyTable = [
   { name: 'End Time' },
   { name: 'Created Date', key: 'createdAt' },
   { name: 'Joined', key: 'joined' },
-  { name: 'Video' },
   { name: 'Source', key: 'source' },
   { name: 'Shown', key: 'isHidden' },
   { name: '' },

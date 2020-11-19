@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Screen } from "./screen";
 
-const { addWatchParty, getPlatforms, getLeagues, uploadImage, getWatchPartyVideos, updateWatchParty, getWatchPartyInfo } = require(`../../../../redux/actions`);
+const { addWatchParty, getPlatforms, getLeagues, uploadImage, getWatchPartyVideos, cloneWatchParty, updateWatchParty, getWatchPartyInfo } = require(`../../../../redux/actions`);
 
 const mapStateToProps = (state) => {
     return ({
@@ -22,7 +22,8 @@ const mapDispatchToProps = (dispatch) => {
         uploadFile: (data, success, failure) => dispatch(uploadImage(data, success, failure)),
         getWatchPartyVideos: (token, success, failure) => dispatch(getWatchPartyVideos(token, success, failure)),
         updateParty: (data, success, failure) => dispatch(updateWatchParty(data, success, failure)),
-        getWatchPartyInfo: (data, success, failure) => dispatch(getWatchPartyInfo(data, success, failure))
+        getWatchPartyInfo: (data, success, failure) => dispatch(getWatchPartyInfo(data, success, failure)),
+        cloneWatchParty: (data, success, failure) => dispatch(cloneWatchParty(data, success, failure))
     }
 }
 export const AddWatchPartyScreen = connect(mapStateToProps, mapDispatchToProps)(Screen);
