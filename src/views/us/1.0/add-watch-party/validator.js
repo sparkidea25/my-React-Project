@@ -73,14 +73,14 @@ const validator = values => {
 
     currTime = calculateCurrentTimeInEst()
 
-    if (values[STRINGS.START_TIME]) {
-        let pickedTime = values[STRINGS.START_TIME]
+    // if (values[STRINGS.START_TIME]) {
+    //     let pickedTime = values[STRINGS.START_TIME]
 
-        if (new Date(pickedTime) < new Date(currTime)) {
-            errors[STRINGS.START_TIME] =
-                VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST;
-        }
-    }
+    //     if (new Date(pickedTime) < new Date(currTime)) {
+    //         errors[STRINGS.START_TIME] =
+    //             VALIDATION_MESSAGES.TIME_SHOUDLD_NOT_BE_IN_PAST;
+    //     }
+    // }
     if (values[STRINGS.END_TIME]) {
         let pickedTime = values[STRINGS.END_TIME]
         if (new Date(pickedTime) < new Date(currTime)) {
