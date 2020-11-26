@@ -94,7 +94,7 @@ const WatchPartyForm = ({
             setFields({
                 ...fields,
                 watchPartyId: watchPartyForUpdate._id,
-                show: !!cloneMode?'':watchPartyForUpdate && watchPartyForUpdate.contentName,
+                show: !!cloneMode ? '' : watchPartyForUpdate && watchPartyForUpdate.contentName,
                 isHidden: watchPartyForUpdate.isHidden,
                 sports: watchPartyForUpdate.sports === true ? 'Yes' : 'No',
                 league: watchPartyForUpdate && watchPartyForUpdate.leagueInfo && watchPartyForUpdate.leagueInfo._id,
@@ -112,7 +112,7 @@ const WatchPartyForm = ({
         let path = history.location.pathname
         let watch_party_id = query.get("watch_party_id")
         if ((path == '/edit-watch-party' || path == '/clone-watch-party') && watch_party_id) {
-            if (path == '/edit-watch-party') {                
+            if (path == '/edit-watch-party') {
                 updateEditMode(true);
             }
             else {
@@ -166,12 +166,12 @@ const WatchPartyForm = ({
             )
         }
         else {
-            !!editMode ? edit_WatchParty('') : !!cloneMode?clone_WatchParty(''):add_WatchParty(credentials, '')
+            !!editMode ? edit_WatchParty('') : !!cloneMode ? clone_WatchParty('') : add_WatchParty(credentials, '')
         }
     }
     const edit_WatchParty = (url) => {
-        let st = convertToESTTimeZone(new Date(fields.startTime))
-        let et = convertToESTTimeZone(new Date(fields.endTime))
+        let st = convertToESTTimeZone(new Date(new Date(fields.startTime).setSeconds(0, 0)))
+        let et = convertToESTTimeZone(new Date(new Date(fields.endTime).setSeconds(0, 0)))
 
         const postData = {
             "watchPartyId": fields.watchPartyId,
@@ -205,9 +205,8 @@ const WatchPartyForm = ({
 
     }
     const clone_WatchParty = (url) => {
-
-        let st = convertToESTTimeZone(new Date(fields.startTime))
-        let et = convertToESTTimeZone(new Date(fields.endTime))
+        let st = convertToESTTimeZone(new Date(new Date(fields.startTime).setSeconds(0, 0)))
+        let et = convertToESTTimeZone(new Date(new Date(fields.endTime).setSeconds(0, 0)))
 
         if (fields.show == watchPartyForUpdate.contentName) {
             setSnackBarData({
@@ -231,7 +230,7 @@ const WatchPartyForm = ({
             "isCustom": isCustom,
             "videoName": fields.videoName
         }
-        console.log('postData clone',postData)
+        console.log('postData clone', postData)
         cloneWatchParty(postData, (response) => {
             setSnackBarData({
                 variant: response.status ? 'success' : 'error',
@@ -279,9 +278,8 @@ const WatchPartyForm = ({
     }, [allWatchPartyVideosList])
 
     const add_WatchParty = (credentials, url) => {
-
-        let st = convertToESTTimeZone(fields.startTime)
-        let et = convertToESTTimeZone(fields.endTime)
+        let st = convertToESTTimeZone(new Date(new Date(fields.startTime).setSeconds(0, 0)))
+        let et = convertToESTTimeZone(new Date(new Date(fields.endTime).setSeconds(0, 0)))
         let postData = {
             "contentName": fields.show,
             "startTime": st,
@@ -342,7 +340,7 @@ const WatchPartyForm = ({
 
 
     useEffect(() => {
-        if (editMode||cloneMode) {
+        if (editMode || cloneMode) {
             initialParty = { ...fields }
         }
     }, [fields])
@@ -374,7 +372,7 @@ const WatchPartyForm = ({
                     />
                     <div class="content-panel">
                         <div class="page-title">
-                            <h1>{!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : !!cloneMode?PAGE_TITLES.CLONE_WATCH_PARTY:PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
+                            <h1>{!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : !!cloneMode ? PAGE_TITLES.CLONE_WATCH_PARTY : PAGE_TITLES.ADD_NEW_WATCH_PARTY}</h1>
                         </div>
 
                         <Form onSubmit={handleSubmit(onsubmit)} >
@@ -395,7 +393,7 @@ const WatchPartyForm = ({
                                         }}
                                     />
                                 </div>
-                                
+
                                 <div class='col-md-6'>
                                     <label>{STRINGS.SPORTS} </label>
                                     <Field
@@ -506,7 +504,7 @@ const WatchPartyForm = ({
                                         </div>
                                     </div>
                                 </div>
-                                <div class={`col-md-${editMode||cloneMode ? '4' : '6'}`}>
+                                <div class={`col-md-${editMode || cloneMode ? '4' : '6'}`}>
                                     <label>{STRINGS.CONTENT}</label>
                                     <Field
                                         name={STRINGS.CONTENT_LENGTH}
@@ -519,7 +517,7 @@ const WatchPartyForm = ({
                                         }}
                                     />
                                 </div>
-                                {(!!editMode||!!cloneMode) && <div style={{ display: 'flex', flexDirection: 'column' }} class="col-md-2">
+                                {(!!editMode || !!cloneMode) && <div style={{ display: 'flex', flexDirection: 'column' }} class="col-md-2">
                                     <label>{STRINGS.SHOWN} </label>
                                     <div className='css-yk16xz-control' style={{ alignItems: 'center', borderWidth: 0 }} >
                                         <Switch
@@ -591,7 +589,7 @@ const WatchPartyForm = ({
 
                             </div>
                             <div className="btn_group  col-md-12" style={{ alignSelf: 'left' }}>
-                                <InputSubmit buttonLabel={!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : !!cloneMode?PAGE_TITLES.CLONE_WATCH_PARTY:PAGE_TITLES.ADD_WATCH_PARTY} />
+                                <InputSubmit buttonLabel={!!editMode ? PAGE_TITLES.EDIT_WATCH_PARTY : !!cloneMode ? PAGE_TITLES.CLONE_WATCH_PARTY : PAGE_TITLES.ADD_WATCH_PARTY} />
                             </div>
                         </Form>
 
@@ -609,12 +607,12 @@ const showForm = reduxForm({
     enableReinitialize: true
 })(WatchPartyForm);
 
-const mapStateToProps = (state,props) => {
+const mapStateToProps = (state, props) => {
     let path = props.history.location.pathname;
     let cloneMode = path == '/clone-watch-party';
     if (Object.keys(initialParty).length > 0) {
         let initialValues = {
-            show: !!cloneMode?'':initialParty && initialParty.show,
+            show: !!cloneMode ? '' : initialParty && initialParty.show,
             host: initialParty.host,
             sports: initialParty.sports,
             league: initialParty && initialParty.league,

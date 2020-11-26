@@ -20,18 +20,21 @@ const UploadScreen = ({ allPlatforms, history, exportWatchParty, allLeagues, get
 
         if (credentials && credentials.WatchParty && credentials.WatchParty.length > 0) {
 
-            credentials.WatchParty.map(party => {
-
-                party.contentLength = diff_minutes(party.startTime, party.endTime)
-                party.startTime = convertToESTTimeZone(party.startTime);
-                party.endTime = convertToESTTimeZone(party.endTime);
-                party.league =party && party.league && party.league.value
-                party.platform = party.platform.value
-                party.sports = party.sports.value === 'Yes' ? true : false
+            let data = credentials.WatchParty.map(party => {
+                let startTime = new Date(new Date(party.startTime).setSeconds(0, 0));
+                let endTime = new Date(new Date(party.endTime).setSeconds(0, 0));
+                return ({
+                    ...party,
+                    contentLength: diff_minutes(startTime, endTime),
+                    startTime: convertToESTTimeZone(startTime),
+                    endTime: convertToESTTimeZone(endTime),
+                    league: party && party.league && party.league.value,
+                    platform: party.platform.value,
+                    sports: party.sports.value === 'Yes' ? true : false,
+                })
 
             })
-
-            exportWatchParty(credentials.WatchParty, (response) => {
+            exportWatchParty(data, (response) => {
                 setSnackBarData({
                     variant: response.status ? 'success' : 'error',
                     message: response.msg
