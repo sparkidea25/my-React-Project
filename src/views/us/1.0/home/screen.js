@@ -11,7 +11,6 @@ export const Screen = ({
 
     return (
         <>
-
             <Helmet>
                 <title>{PAGE_TITLES.dashboard}</title>
             </Helmet>
